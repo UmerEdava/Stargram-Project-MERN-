@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from "react";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+
+import Axios from 'axios';
 
 function Copyright() {
   return (
@@ -46,8 +48,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 export default function Login() {
   const classes = useStyles();
+  const [loginUser, setLoginUser] = useState({
+    userName: "",
+    emailOrPhone: "",
+    password: "",
+    Cpassword: "",
+  });
 
   return (
     <Container component="main" maxWidth="xs">
@@ -57,7 +67,7 @@ export default function Login() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Log in
         </Typography>
         <form className={classes.form} noValidate>
           
@@ -97,7 +107,7 @@ export default function Login() {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            Log In
           </Button>
           <Grid container>
             <Grid item xs>
@@ -106,7 +116,7 @@ export default function Login() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/register" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
