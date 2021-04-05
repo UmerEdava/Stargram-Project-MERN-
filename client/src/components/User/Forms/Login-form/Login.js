@@ -14,6 +14,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 import Axios from 'axios';
+import { useHistory } from "react-router";
+import Logo from '../../../../images/Stargram icon.jpg';
+
 
 function Copyright() {
   return (
@@ -64,23 +67,21 @@ export default function Login() {
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
+        <img src={Logo} alt='Logo' height="40px;"></img>
         </Avatar>
         <Typography component="h1" variant="h5">
           Log in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form}>
           
           <Grid item xs={12}>
             <TextField
               margin="normal"
-              id="email"
-              name="email"
+              id="emailOrPhone"
+              name="emailOrPhone"
               fullWidth
               required
-              type="email"
-              label="Email"
-              autoComplete="email"
+              label="Email/Phone"
               autoFocus
             />
           </Grid>

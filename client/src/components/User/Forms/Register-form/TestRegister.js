@@ -102,9 +102,51 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-export default function Register(props) {
+export default function TestRegister(props) {
   const classes = useStyles();
   
+  function checkAndNext(){
+      console.log('ok faster',values);
+      let cPass = document.getElementById('Cpassword').value
+      if (values.password !== cPass) {
+         document.getElementById('cPasswordError').innerHTML = "Passwords doesn't match"
+      }else{
+      Axios({
+        method: "post",
+        url: "http://localhost:3001/checkExisting",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: values
+      })
+        .then((response) => {
+            if(response){
+                console.log('***',response);
+            }
+           
+
+        //   if(response.data.email){
+        //     console.log('ok',response);
+        //     document.getElementById('signupForm').style.display = "none"
+        //     //history.push("/");
+        //   }else if(response.data.existingEmail){
+        //     console.log('Existing email')
+        //     document.getElementById('cPasswordError').innerHTML = "Another account is using this email address"
+        //   }else if(response.data.existingPhone){
+        //     console.log('Existing phone');
+        //     document.getElementById('cPasswordError').innerHTML = "Another account is using this phone number"
+        //   }
+          
+        })
+        .catch((error) => {
+           console.error(`Error :${error}`);
+        });
+    }
+}
+  
+  
+  const { values, handleChange } = props;
+
   const history = useHistory();
 
   const [registerUser, setRegisterUser] = useState({
@@ -146,8 +188,8 @@ export default function Register(props) {
 
           if(response.data.email){
             console.log('ok',response);
-            //document.getElementById('signupForm').style.display = "none"
-            history.push("/");
+            document.getElementById('signupForm').style.display = "none"
+            //history.push("/");
           }else if(response.data.existingEmail){
             console.log('Existing email')
             document.getElementById('cPasswordError').innerHTML = "Another account is using this email address"
@@ -186,9 +228,9 @@ export default function Register(props) {
               label="Username"
               
               autoFocus              
-              onChange={changeHandler}
-              //onChange={handleChange('username')}                
-              //defaultValue={values.email}
+              //onChange={changeHandler}
+              onChange={handleChange('username')}                
+              defaultValue={values.username}
             />
           </Grid>
           <Grid item xs={12}>
@@ -202,9 +244,9 @@ export default function Register(props) {
               label="Email"
               autoComplete="email"
                             
-              onChange={changeHandler}
-              //onChange={handleChange('email')}                
-              //defaultValue={values.email}
+              //onChange={changeHandler}
+              onChange={handleChange('email')}                
+              defaultValue={values.email}
             />
           </Grid>
           <Grid item xs={12}>
@@ -217,9 +259,9 @@ export default function Register(props) {
               type="number"
               label="Mobile"
               autoComplete="number"
-              onChange={changeHandler}
-              //onChange={handleChange('phone')}                
-              //defaultValue={values.phone}
+              //onChange={changeHandler}
+              onChange={handleChange('phone')}                
+              defaultValue={values.phone}
             />
           </Grid>
           <Grid item xs={12}>
@@ -231,9 +273,9 @@ export default function Register(props) {
               required
               type="password"
               label="password"
-              onChange={changeHandler}
-              //onChange={handleChange('password')}                
-              //defaultValue={values.password}
+              //onChange={changeHandler}
+              onChange={handleChange('password')}                
+              defaultValue={values.password}
             />
           </Grid>
           <Grid item xs={12}>
@@ -244,8 +286,8 @@ export default function Register(props) {
               required
               type="password"
               label="Confirm password"
-              //onChange={handleChange('cPassword')}                
-              //defaultValue={values.email}
+              onChange={handleChange('cPassword')}                
+              defaultValue={values.email}
               
             />
             
@@ -257,14 +299,14 @@ export default function Register(props) {
           />
           
           <Button
-            type="submit"
+            //type="submit"
             fullWidth
             variant="contained"
             color="primary"
-            className={classes.submit}
-            //onClick={props.nextStep}
+            //className={classes.submit}
+            onClick={checkAndNext}
           >
-            Sign up
+            Next
           </Button>
           { showOtp ? <SendOtp /> : null }
           <Grid container>
