@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import UserDetails from './UserDetails'
-import PersonalDetails from './PersonalDetails';
+import SendOtp from './SendOtp';
 import Confirm from './Confirm';
 import Success from './Success';
-import TestRegister from './TestRegister'
+import FirstPage from './FirstPage'
 
 
 export class MultiRegistration extends Component {
@@ -47,7 +46,7 @@ export class MultiRegistration extends Component {
         switch(step) {
             case 1: 
                return(
-                    <TestRegister
+                    <FirstPage
                       nextStep = {this.nextStep}
                       handleChange = {this.handleChange}
                       values = {values}
@@ -55,7 +54,7 @@ export class MultiRegistration extends Component {
                 )
                 case 2:
                     return(
-                        <PersonalDetails
+                        <SendOtp
                           nextStep = {this.nextStep}
                           previousStep = {this.previousStep}
                           handleChange = {this.handleChange}

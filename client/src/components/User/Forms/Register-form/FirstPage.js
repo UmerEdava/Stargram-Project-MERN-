@@ -98,51 +98,71 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-}));
+ }));
 
 
 
-export default function TestRegister(props) {
+ export default function FirstPage(props) {
   const classes = useStyles();
   
-  function checkAndNext(){
-      console.log('ok faster',values);
+  function checkAndNext(e){
+    e.preventDefault()
+      
       let cPass = document.getElementById('Cpassword').value
-      if (values.password !== cPass) {
-         document.getElementById('cPasswordError').innerHTML = "Passwords doesn't match"
-      }else{
-      Axios({
-        method: "post",
-        url: "http://localhost:3001/checkExisting",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: values
-      })
-        .then((response) => {
-            if(response){
-                console.log('***',response);
-            }
-           
-
-        //   if(response.data.email){
-        //     console.log('ok',response);
-        //     document.getElementById('signupForm').style.display = "none"
-        //     //history.push("/");
-        //   }else if(response.data.existingEmail){
-        //     console.log('Existing email')
-        //     document.getElementById('cPasswordError').innerHTML = "Another account is using this email address"
-        //   }else if(response.data.existingPhone){
-        //     console.log('Existing phone');
-        //     document.getElementById('cPasswordError').innerHTML = "Another account is using this phone number"
-        //   }
+      if (
+        values.username !== "" &&
+        values.email !== "" &&
+        values.phone !== "" &&
+        values.password !== "" &&
+        values.cPassword !== ""
+      ) {
+        if (values.password !== cPass) {
+            console.log('ifil',cPass);
+            document.getElementById('cPasswordError').innerHTML = "Passwords doesn't match"
+        }else{
+            Axios({
+              method: "post",
+              url: "http://localhost:3001/checkExisting",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              data: values
+            })
+              .then((response) => {
+                  if(response.data.existingEmail){
+                    document.getElementById('cPasswordError').innerHTML = "Another account is using this email address"
+                  }else if(response.data.existingPhone){
+                    document.getElementById('cPasswordError').innerHTML = "Another account is using this phone number"
+                  }else if(response.data.existingUsername){
+                    document.getElementById('cPasswordError').innerHTML = "Sorry, this username is already exists"
+                  }else if(response.data.newUser){
+                      props.nextStep()
+                  }
+                 
+      
+              //   if(response.data.email){
+              //     console.log('ok',response);
+              //     document.getElementById('signupForm').style.display = "none"
+              //     //history.push("/");
+              //   }else if(response.data.existingEmail){
+              //     console.log('Existing email')
+              //     document.getElementById('cPasswordError').innerHTML = "Another account is using this email address"
+              //   }else if(response.data.existingPhone){
+              //     console.log('Existing phone');
+              //     document.getElementById('cPasswordError').innerHTML = "Another account is using this phone number"
+              //   }
+                
+              })
+              .catch((error) => {
+                 console.error(`Error :${error}`);
+              });
+          }
           
-        })
-        .catch((error) => {
-           console.error(`Error :${error}`);
-        });
-    }
-}
+      }else{
+        document.getElementById('cPasswordError').innerHTML = "Please fill the form"
+
+      }
+ }
   
   
   const { values, handleChange } = props;
@@ -299,14 +319,14 @@ export default function TestRegister(props) {
           />
           
           <Button
-            //type="submit"
+            type="submit"
             fullWidth
             variant="contained"
             color="primary"
             //className={classes.submit}
             onClick={checkAndNext}
           >
-            Next
+            Continue
           </Button>
           { showOtp ? <SendOtp /> : null }
           <Grid container>
