@@ -2,7 +2,15 @@ import { response } from 'express';
 import { userDetails, celebrityDetails } from '../models/users.js';
 import bcrypt from 'bcrypt';
 
+const OTP={
+    serviceID:"	VAa370d48c33fdc1a601adbb52dc40e8df",
+    accountSID:"ACedbb4cb77b0bcc9c9a1076bf1e14f031",
+    authToken:"9b466a0b29a22f5dfba3b74008ff8550"
+}
 
+import twilio from 'twilio'
+
+var client = new twilio(OTP.accountSID, OTP.authToken);
 
 export const getLogin = (req, res) => {
 
@@ -59,6 +67,67 @@ export const checkExisting = async(req,res) => {
     }
 }
 
+export const sendOTP = async(req,res) => {
+    console.log(req.body);
+    var response = {}
+
+    client
+      .verify
+      .services(OTP.serviceID)
+      .verifications
+      .create({
+        to: `+91${req.body.phone}`,
+        channel: req.body.method
+      }).then((data) => {
+        
+        if(data){
+            response.sent=true
+            console.log(data);
+            res.json(response)
+        }
+        
+      }).catch((error)=>{
+          console.log(error);
+          if(error.status=400){
+              response.invalid = true
+              res.json(response)
+          }
+      })
+}
+
+export const verifyOTP =  (req,res) => {
+    console.log('back',req.body);
+    let userDetail = req.body.userDetails
+    let response = {}
+
+    client
+    .verify
+    .services(OTP.serviceID)
+    .verificationChecks
+    .create({
+      to: `+91${req.body.phone}`, 
+      code: req.body.VerifyOTP
+    }).then(async(data) => {
+      console.log(data);
+      response.verified = true
+
+      userDetail.password =await bcrypt.hash(userDetail.password, 10)
+      console.log('**',userDetail.password);
+      const newUser = new userDetails(userDetail)
+            
+
+            newUser.save().then((response) => {
+                console.log('added',response);
+                response.verified = true
+                res.json(response)
+            })
+    }).catch((data) => {
+      console.log('backinval',data);
+      response.invalid = true
+      res.json(response)
+    })
+}
+
 export const userSignup = async(req, res) => {
     const user = req.body
     console.log('ipparam',user);
@@ -109,6 +178,21 @@ export const userSignup = async(req, res) => {
         res.status(409).json({
             message: error.message
         });
+    }
+}
+
+export const addProfilePic =  (req,res) => {
+    console.log('back');
+    let response = {}
+    try {
+        let id = 'test'
+        let profilePic = req.body.profilePic
+        console.log(req.body)
+        profilePic.mv('../public/images/profile-pictures/' + id + '.jpg')
+        response.success = true
+        res.json(response)
+    } catch {
+
     }
 }
 

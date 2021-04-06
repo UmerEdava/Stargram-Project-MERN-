@@ -34,6 +34,7 @@ import RadioGroup from '@material-ui/core/RadioGroup'
 import FormLabel from '@material-ui/core/FormLabel'
 
 
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -110,18 +111,30 @@ export default function SendOtp(props) {
   const classes = useStyles();
   
   function checkAndNext(){
+
+      otpMethod.phone = props.values.phone
       
       console.log('functionil keriye..',otpMethod);
+
       
         
-            // Axios({
-            //   method: "post",
-            //   url: "http://localhost:3001/sendOtp",
-            //   headers: {
-            //     "Content-Type": "application/json",
-            //   },
-            //   data: values
-            // })
+            Axios({
+              method: "post",
+              url: "http://localhost:3001/sendOTP",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              data: otpMethod,                
+              
+            }).then((response)=>{
+              if(response.data.sent){
+                console.log('sent..next');
+                
+                props.nextStep()
+
+              }
+
+            })
             //   .then((response) => {
             //       if(response.data.existingEmail){
             //         document.getElementById('cPasswordError').innerHTML = "Another account is using this email address"
@@ -156,13 +169,17 @@ export default function SendOtp(props) {
 }
   
   
-  var [otpMethod,setOtpMethod] = useState("phone")
+  var [otpMethod,setOtpMethod] = useState({
+    method:'sms'
+  })
 
-  const otpChoose = e => {
+  const methodChange = e => {
+    const method = e.target.value
+    console.log(method);
   
     setOtpMethod({
-      ...otpMethod=
-       e.target.value,
+      ...otpMethod,
+       method: method
     });
   };
 
@@ -236,9 +253,9 @@ export default function SendOtp(props) {
         <Typography component="h1" variant="h5">
           Choose OTP method
         </Typography>
-        <form className={classes.form} onSubmit={submitButton}>
+        <form className={classes.form} >
           
-        <RadioGroup aria-label="gender" name="gender1"   onChange={otpChoose}>
+        <RadioGroup aria-label="otpMethod" name="otpMethod" value={otpMethod.method} >
 
       <Card className={classes.root}>
       <Button size="small" color="primary" onClick={props.previousStep}>
@@ -256,7 +273,7 @@ export default function SendOtp(props) {
            </Typography> */}
            
 
-    <FormControlLabel value="phone" control={<Radio />} label="Send OTP to this number" />
+    <FormControlLabel value="sms" onChange={methodChange} control={<Radio />} label="Send OTP to this number" />
   
          </CardContent>
          </CardActionArea>
@@ -277,7 +294,7 @@ export default function SendOtp(props) {
            </Typography> */}
            
 
-    <FormControlLabel value="email" control={<Radio />} label="Send OTP to this address" />
+    <FormControlLabel value="email" onChange={methodChange} control={<Radio />} label="Send OTP to this address" />
   
          </CardContent>
          </CardActionArea>
@@ -288,7 +305,7 @@ export default function SendOtp(props) {
           
           
           <Button
-            type="submit"
+            //type="submit"
             fullWidth
             variant="contained"
             color="primary"

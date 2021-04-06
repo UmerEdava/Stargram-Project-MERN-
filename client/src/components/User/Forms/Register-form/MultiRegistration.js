@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import SendOtp from './SendOtp';
-import Confirm from './Confirm';
-import Success from './Success';
+import VerifyOTP from './VerifyOTP';
+import ChangeProfilePicture from './changeProfilePic';
 import FirstPage from './FirstPage'
 
 
@@ -63,7 +63,7 @@ export class MultiRegistration extends Component {
                     )
                 case 3:
                     return(
-                        <Confirm
+                        <VerifyOTP
                         nextStep = {this.nextStep}
                         previousStep = {this.previousStep}
                         handleChange = {this.handleChange}
@@ -72,7 +72,7 @@ export class MultiRegistration extends Component {
                     )
                 case 4:
                     return(
-                        <Success
+                        <ChangeProfilePicture
                         nextStep = {this.nextStep}
                         previousStep = {this.previousStep}
                         handleChange = {this.handleChange}
@@ -83,6 +83,6 @@ export class MultiRegistration extends Component {
         }
          
     }
-}
+} 
 
 export default MultiRegistration

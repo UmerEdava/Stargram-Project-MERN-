@@ -6,6 +6,7 @@ import Register from './components/User/Forms/Register-form/Register';
 import MultiRegister from './components/User/Forms/Register-form/MultiRegistration';
 import MainMulti from './components/User/Forms/Register-form/MainMulti';
 import Login from './components/User/Forms/Login-form/Login';
+import PP from './components/User/Forms/Register-form/changeProfilePic';
 
 function App() {
   return (
@@ -22,6 +23,9 @@ function App() {
             </Route>
             <Route path="/login">
               <Login/>
+            </Route>
+            <Route path="/testPP">
+              <PP/>
             </Route>
         </Router>
     </div>

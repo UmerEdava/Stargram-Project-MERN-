@@ -43,7 +43,12 @@ function Copyright() {
   );
 }
 
-
+// function clickevent(first,last){
+      
+//     if(first.value.length){
+//         document.getElementById(last).focus();
+//     }
+// } 
 
 function SendOtp() {
   const classes = useStyles();
@@ -98,13 +103,52 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-}));
+ }));
 
 
 
-export default function Register(props) {
+ export default function VerifyOTP(props) {
   const classes = useStyles();
+
+//   const [verifyOTP, setVerifyOTP] = useState();
+
   
+  
+  function checkAndNext(){
+    let phone = props.values.phone
+    let userDetails = props.values
+
+    console.log('in function',phone);
+    console.log('total value',userDetails);
+
+    
+    let otp = document.getElementById('1st').value+document.getElementById('2nd').value+document.getElementById('3rd').value+document.getElementById('4th').value+document.getElementById('5th').value+document.getElementById('6th').value
+
+    console.log('*&*&',otp);
+
+    console.log("form submitting...");
+
+      Axios({
+        method: "post",
+        url: "http://localhost:3001/verifyOTP",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: {VerifyOTP:otp,phone:phone,userDetails:userDetails},
+      }).then((response)=>{
+          if(response.data.verified){
+              console.log('verified');
+              props.nextStep()
+          }else{
+              console.log('invalid');
+          }
+      })
+    
+  }
+  
+  const [otp, setOtp] = useState()
+  const { values, handleChange } = props;
+
   const history = useHistory();
 
   const [registerUser, setRegisterUser] = useState({
@@ -122,7 +166,8 @@ export default function Register(props) {
       [event.target.name]: event.target.value,
     });
   };
- 
+
+  
     
 
   const submitButton = (event) => {
@@ -146,8 +191,8 @@ export default function Register(props) {
 
           if(response.data.email){
             console.log('ok',response);
-            //document.getElementById('signupForm').style.display = "none"
-            history.push("/");
+            document.getElementById('signupForm').style.display = "none"
+            //history.push("/");
           }else if(response.data.existingEmail){
             console.log('Existing email')
             document.getElementById('cPasswordError').innerHTML = "Another account is using this email address"
@@ -171,114 +216,121 @@ export default function Register(props) {
           <img src={Logo} alt='Logo' height="40px;"></img>
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          Verify OTP
+        </Typography>
+        <Typography component="p" variant="p">
+          Enter the OTP which have sent to your mobile
         </Typography>
         <form className={classes.form} onSubmit={submitButton}>
           
-          <Grid item xs={12}>
-            <TextField
-              margin="normal"
-              id="username"
-              name="username"
-              fullWidth
-              required
-              type="text"
-              label="Username"
-              
-              autoFocus              
-              onChange={changeHandler}
-              //onChange={handleChange('username')}                
-              //defaultValue={values.email}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              margin="normal"
-              id="email"
-              name="email"
-              fullWidth
-              required
-              type="email"
-              label="Email"
-              autoComplete="email"
-                            
-              onChange={changeHandler}
-              //onChange={handleChange('email')}                
-              //defaultValue={values.email}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              margin="normal"
-              id="phone"
-              name="phone"
-              fullWidth
-              required
-              type="number"
-              label="Mobile"
-              autoComplete="number"
-              onChange={changeHandler}
-              //onChange={handleChange('phone')}                
-              //defaultValue={values.phone}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              margin="normal"
-              id="password"
-              name="password"
-              fullWidth
-              required
-              type="password"
-              label="password"
-              onChange={changeHandler}
-              //onChange={handleChange('password')}                
-              //defaultValue={values.password}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              margin="normal"
-              id="Cpassword"
-              fullWidth
-              required
-              type="password"
-              label="Confirm password"
-              //onChange={handleChange('cPassword')}                
-              //defaultValue={values.email}
-              
-            />
+        <Grid container spacing={24} >
+    <Grid item xs={2}>
+        <TextField
+            id="1st"
+            // onKeyUp={clickevent(this,'2nd')}
+            //label="PS"
+            //value={this.state.re_pe_value}
             
-          </Grid>
-          <p id="cPasswordError" style={{ color: 'rgb(255 0 0)' }}></p>
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" id="signupForm" />}
-            label="Remember me"
-          />
+            onInput={(e)=>{ 
+                e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,1)
+            }}
+            min={0}
+            autoFocus
+            margin="normal"
+            type="number"
+            margin = "dense"
+            variant = "filled"
+            style={{paddingRight: "20px", width: "80px"}}
+        />
+    </Grid>
+    <Grid item xs={2}>
+        <TextField
+            id="2nd"
+            // onKeyUp={clickevent(this,'3rd')}
+            //label="MOOE"
+            //value={this.state.re_mooe_value}
+            
+            margin="normal"
+            type="number"
+            margin = "dense"
+            variant = "filled"
+            style={{paddingRight: "20px", width: "80px"}}
+        />
+    </Grid>
+    <Grid item xs={2}>
+        <TextField
+            id="3rd"
+            // onKeyUp={clickevent(this,'4th')}
+            //label="CO"
+            //value={this.state.re_co_value}
+            
+            margin="normal"
+            type="number"
+            margin = "dense"
+            variant = "filled"
+            style={{paddingRight: "20px", width: "80px"}}
+        />
+    </Grid>
+    <Grid item xs={2}>
+        <TextField
+            id="4th"
+            // onKeyUp={clickevent(this,'5th')}
+            //label="CO"
+            //value={this.state.re_co_value}
+            
+            margin="normal"
+            type="number"
+            margin = "dense"
+            variant = "filled"
+            style={{paddingRight: "20px", width: "80px"}}
+        />
+    </Grid>
+    <Grid item xs={2}>
+        <TextField
+            id="5th"
+            // onKeyUp={clickevent(this,'6th')}
+            //label="CO"
+            //value={this.state.re_co_value}
+            
+            margin="normal"
+            type="number"
+            margin = "dense"
+            variant = "filled"
+            style={{paddingRight: "20px", width: "80px"}}
+        />
+    </Grid>
+    <Grid item xs={2}>
+        <TextField
+            id="6th"
+            //label="CO"
+            //value={this.state.re_co_value}
+            
+            margin="normal"
+            type="number"
+            margin = "dense"
+            variant = "filled"
+            style={{paddingRight: "20px", width: "80px"}}
+        />
+    </Grid>
+</Grid>
+  
+          <p id="cPasswordError" style={{ color: 'rgb(255 0 0)' }}></p>          
           
           <Button
-            type="submit"
+            //type="submit"
             fullWidth
             variant="contained"
             color="primary"
-            // className={classes.submit}
-            //onClick={props.nextStep}
+            //className={classes.submit}
+            onClick={checkAndNext}
           >
-            Sign up
+            Continue
           </Button>
+          <Button size="small" color="primary" onClick={props.previousStep}>
+             Didn't get code? Resend
+           </Button>
           { showOtp ? <SendOtp /> : null }
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="/login" variant="body2">
-                {"Already a user? Log in"}
-              </Link>
-            </Grid>
-          </Grid>
+          
         </form>
       </div>
       <Box mt={8}>

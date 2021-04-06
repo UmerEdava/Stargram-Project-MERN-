@@ -4,7 +4,7 @@ const userSchema = mongoose.Schema({
     username: String,
     password: String,
     email: String,
-    phone: Number
+    phone: Number,
 })
 
 const celebritySchema = mongoose.Schema({
