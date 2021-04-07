@@ -12,7 +12,40 @@ import twilio from 'twilio'
 
 var client = new twilio(OTP.accountSID, OTP.authToken);
 
-export const getLogin = (req, res) => {
+export const getLogin = async(req, res) => {
+    let response = {}
+
+    try {
+        let loginDetails = req.body
+        console.log('in back',loginDetails);
+        
+        let user = await userDetails.find({ email: loginDetails.emailOrPhone })
+        console.log('in back',loginDetails.password);
+        console.log('in back',user[0].password);
+
+        if(user){
+            bcrypt.compare(loginDetails.password, user[0].password).then((status) => {
+                if(status){
+                    response.valid = true
+                    console.log('in back valid',status);
+
+                    res.json(response)
+                }else{
+                    response.wrong = true
+                    console.log('in back wrong',status);
+
+                    res.json(response)
+                }
+            })
+        }else{
+            response.notUser = true
+            console.log('in back not user');
+
+            res.json(response)
+        }
+    } catch (error) {
+        
+    }
 
 }
 
@@ -98,7 +131,7 @@ export const sendOTP = async(req,res) => {
 export const verifyOTP =  (req,res) => {
     console.log('back',req.body);
     let userDetail = req.body.userDetails
-    let response = {}
+    let status = {}
 
     client
     .verify
@@ -118,13 +151,13 @@ export const verifyOTP =  (req,res) => {
 
             newUser.save().then((response) => {
                 console.log('added',response);
-                response.verified = true
-                res.json(response)
+                status.verified = true
+                res.json(status)
             })
     }).catch((data) => {
       console.log('backinval',data);
-      response.invalid = true
-      res.json(response)
+      status.invalid = true
+      res.json(status)
     })
 }
 
@@ -178,6 +211,22 @@ export const userSignup = async(req, res) => {
         res.status(409).json({
             message: error.message
         });
+    }
+}
+
+export const googleSignup = async(req,res) => {
+    const user = req.body
+    console.log('in back',user);
+    let existingAccount = await userDetails.find({ email: user.email })
+    if(existingAccount){
+        res.json(existingAccount)
+    }else{
+        const newUser = new userDetails(user)            
+
+        newUser.save().then((response) => {
+                
+            res.json(response)
+        })
     }
 }
 

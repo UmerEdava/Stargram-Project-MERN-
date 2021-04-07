@@ -16,11 +16,11 @@ function App() {
               <Appbar/>
             </Route>
             <Route path="/register">
-              <Register/>
-            </Route>
-            <Route path="/testregister">
               <MainMulti/>
             </Route>
+            {/* <Route path="/testregister">
+               <Register/>
+            </Route> */}
             <Route path="/login">
               <Login/>
             </Route>

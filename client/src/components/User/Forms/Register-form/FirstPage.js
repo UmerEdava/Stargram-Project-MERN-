@@ -28,7 +28,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 
 import CardMedia from '@material-ui/core/CardMedia';
-
+import GoogleLogin from 'react-google-login';
 
 function Copyright() {
   return (
@@ -225,6 +225,29 @@ const useStyles = makeStyles((theme) => ({
       }
   };
 
+  const responseSuccessGoogle = (response) => {
+     console.log(response.profileObj.name,response.profileObj.email)
+     console.log(response);
+     console.log(values);
+     values.username = response.profileObj.name
+     values.email = response.profileObj.email
+     console.log(values);
+     Axios({
+      method: "post",
+      url: "http://localhost:3001/googleSignup",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: values
+    }).then((response)=>{
+
+    })
+  }
+
+  const responseErrorGoogle = (response) => {
+    console.log(response);    
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -235,6 +258,13 @@ const useStyles = makeStyles((theme) => ({
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
+        <GoogleLogin
+    clientId="810147001315-mq6dijpgu99sfuu9ibb4tced7rhqe84g.apps.googleusercontent.com"
+    buttonText="Sign up with Google"
+    onSuccess={responseSuccessGoogle}
+    onFailure={responseErrorGoogle}
+    cookiePolicy={'single_host_origin'}
+  />
         <form className={classes.form} onSubmit={submitButton}>
           
           <Grid item xs={12}>

@@ -136,6 +136,7 @@ const useStyles = makeStyles((theme) => ({
         },
         data: {VerifyOTP:otp,phone:phone,userDetails:userDetails},
       }).then((response)=>{
+          console.log(response);
           if(response.data.verified){
               console.log('verified');
               props.nextStep()

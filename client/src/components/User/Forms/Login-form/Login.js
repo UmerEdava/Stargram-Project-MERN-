@@ -55,12 +55,40 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login() {
   const classes = useStyles();
-  const [loginUser, setLoginUser] = useState({
-    userName: "",
-    emailOrPhone: "",
-    password: "",
-    Cpassword: "",
-  });
+ 
+  const [login, setLogin] = useState();
+
+  const changeHandler = (event) => {
+    setLogin({
+      ...login,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const history = useHistory();
+
+  const loginSubmit = (event) => {
+    event.preventDefault();
+    
+      console.log("form submitting...");
+      Axios({
+        method: "post",
+        url: "http://localhost:3001/login",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: login
+      }).then((response)=>{
+        if(response.data.valid){
+          console.log('valid');
+          history.push("/");
+        }else if (response.data.wrong){
+          console.log('wrong')
+        }else if (response.data.notUser){
+          console.log('not a user');
+        }
+      })
+    }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -72,7 +100,7 @@ export default function Login() {
         <Typography component="h1" variant="h5">
           Log in
         </Typography>
-        <form className={classes.form}>
+        <form className={classes.form} onSubmit={loginSubmit}>
           
           <Grid item xs={12}>
             <TextField
@@ -82,6 +110,7 @@ export default function Login() {
               fullWidth
               required
               label="Email/Phone"
+              onChange={changeHandler}
               autoFocus
             />
           </Grid>
@@ -95,6 +124,7 @@ export default function Login() {
               type="password"
               label="password"
               autoComplete="current-password"
+              onChange={changeHandler}
             />
           </Grid>
           <FormControlLabel
