@@ -9,6 +9,7 @@ const OTP={
 }
 
 import twilio from 'twilio'
+import fs from 'fs'
 
 var client = new twilio(OTP.accountSID, OTP.authToken);
 
@@ -219,24 +220,44 @@ export const googleSignup = async(req,res) => {
     console.log('in back',user);
     let existingAccount = await userDetails.find({ email: user.email })
     if(existingAccount){
+        
         res.json(existingAccount)
     }else{
         const newUser = new userDetails(user)            
 
         newUser.save().then((response) => {
-                
+            console.log('in back',response);    
             res.json(response)
         })
     }
 }
 
+export const googleLogin = async(req,res) => {
+    const user = req.body
+    console.log('back',user);
+    let existingAccount = await userDetails.find({ email: user.email,phone: user.phone })
+    if(existingAccount){
+        res.json(existingAccount)
+    }else{
+        const newUser = new userDetails(user)            
+
+        newUser.save().then((response) => {
+            console.log('in back',response);    
+            res.json(response)
+        })
+    }
+} 
+
 export const addProfilePic =  (req,res) => {
-    console.log('back');
+    console.log('in back',req.body);
+    let id = 'test'
+    let profilePic = req.body.profilePic
+    console.log('back',profilePic,id);
+    
     let response = {}
     try {
-        let id = 'test'
-        let profilePic = req.body.profilePic
-        console.log(req.body)
+        
+        
         profilePic.mv('../public/images/profile-pictures/' + id + '.jpg')
         response.success = true
         res.json(response)
@@ -257,4 +278,9 @@ export const addCelebrity = async (req, res) => {
             message: error.message
         });
     }
+}
+
+export const getUserDetails = (req,res) => {
+    
+    return(chatMessage.json({ success: true, chatMessage}))
 }

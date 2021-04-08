@@ -16,6 +16,7 @@ import Container from '@material-ui/core/Container';
 import Axios from 'axios';
 import { useHistory } from "react-router";
 import Logo from '../../../../images/Stargram icon.jpg';
+import GoogleLogin from 'react-google-login';
 
 
 function Copyright() {
@@ -90,6 +91,33 @@ export default function Login() {
       })
     }
 
+    let values = {}
+
+    const responseSuccessGoogle = (response) => {
+      console.log(response.profileObj.name,response.profileObj.email)
+      console.log(response);
+      console.log(values);
+      values.username = response.profileObj.name
+      values.email = response.profileObj.email
+      console.log(values);
+      Axios({
+       method: "post",
+       url: "http://localhost:3001/googleLogin",
+       headers: {
+         "Content-Type": "application/json",
+       },
+       data: values
+     }).then((response)=>{
+       if(response){
+         history.push("/")
+       }
+     })
+   }
+ 
+   const responseErrorGoogle = (response) => {
+     console.log(response);    
+   }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -100,6 +128,13 @@ export default function Login() {
         <Typography component="h1" variant="h5">
           Log in
         </Typography>
+        <GoogleLogin
+          clientId="810147001315-mq6dijpgu99sfuu9ibb4tced7rhqe84g.apps.googleusercontent.com"
+          buttonText="Log in with Google"
+          onSuccess={responseSuccessGoogle}
+          onFailure={responseErrorGoogle} 
+          cookiePolicy={'single_host_origin'}
+        />
         <form className={classes.form} onSubmit={loginSubmit}>
           
           <Grid item xs={12}>

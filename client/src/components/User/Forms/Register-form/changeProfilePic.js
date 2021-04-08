@@ -95,18 +95,29 @@ export default function ChangeProfilePicture(props) {
 
   const [profilePic, setProfilePic] = useState();
 
+ 
   const uploadImage = (event) => {
-    console.log("Changing image",event.target.files[0]);
-    let type = event.target.files[0].type;
-    if (type === "image/jpeg" || type === "image/jpg") {
-      setProfilePic({...profilePic,
-        profilePic: URL.createObjectURL(event.target.files[0])});
-    }
+    console.log('changed',event.target.files[0]);
+      setProfilePic({
+      ...profilePic,
+      [event.target.name]: event.target.files[0],
+    });
   };
+  
 
   function addProfilePicture(event){
     console.log('sending',profilePic);
     event.preventDefault();
+
+    const formData = new FormData()
+    formData.append('file', profilePic)
+
+    Axios.post("http://localhost:3001/addProfilePic", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    
     Axios({
         method: "post",
         url: "http://localhost:3001/addProfilePic",
@@ -117,6 +128,7 @@ export default function ChangeProfilePicture(props) {
       }).then((response)=>{
           if(response.data.success){
               console.log('ok')
+              history.push("/")
           }
       })
         
@@ -132,14 +144,13 @@ export default function ChangeProfilePicture(props) {
         
         {/* <Avatar alt="Remy Sharp" src={User} className={classes.img} /> */}
         
-        <Image src={User} className={classes.img} roundedCircle />
-        <form className={classes.form} onSubmit={addProfilePicture} enctype='multipart/form-data'>
+        <Image src={User} className={classes.img} roundedCircle onClick={clickPicture}/>
+        <form className={classes.form} onSubmit={addProfilePicture} encType='multipart/form-data'>
             <input type="file" name="profilePic" id="profilePicInput" onChange={uploadImage}  hidden></input>
           
           <Grid item xs={12}>
           
-          </Grid>
-          
+          </Grid>          
        
           <p id="cPasswordError" style={{ color: 'rgb(255 0 0)' }}></p>
           

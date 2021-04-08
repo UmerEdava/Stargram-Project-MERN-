@@ -7,10 +7,11 @@ import MultiRegister from './components/User/Forms/Register-form/MultiRegistrati
 import MainMulti from './components/User/Forms/Register-form/MainMulti';
 import Login from './components/User/Forms/Login-form/Login';
 import PP from './components/User/Forms/Register-form/changeProfilePic';
+import Profile from './components/User/Profile/Profile';
 
 function App() {
   return (
-    <div>
+    <div style={{ background: "" }} id="main">
         <Router>
             <Route path="/" exact>
               <Appbar/>
@@ -21,11 +22,14 @@ function App() {
             {/* <Route path="/testregister">
                <Register/>
             </Route> */}
-            <Route path="/login">
+            <Route path="/login"> 
               <Login/>
             </Route>
             <Route path="/testPP">
               <PP/>
+            </Route>
+            <Route path="/profile" onClick={() => this.changeColor("#282c34")}>
+              <Profile/>
             </Route>
         </Router>
     </div>

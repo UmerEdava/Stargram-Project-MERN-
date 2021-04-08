@@ -29,6 +29,8 @@ import CardContent from '@material-ui/core/CardContent';
 
 import CardMedia from '@material-ui/core/CardMedia';
 import GoogleLogin from 'react-google-login';
+import FacebookLogin from 'react-facebook-login';
+import GitHubLogin from 'react-github-login';
 
 function Copyright() {
   return (
@@ -240,13 +242,36 @@ const useStyles = makeStyles((theme) => ({
       },
       data: values
     }).then((response)=>{
-
+      if(response){
+        history.push("/")
+      }
     })
   }
 
   const responseErrorGoogle = (response) => {
     console.log(response);    
   }
+
+  const responseFacebook = (response) => {
+    console.log(response.name);
+    values.username = response.name
+     console.log(values);
+     Axios({
+      method: "post",
+      url: "http://localhost:3001/googleSignup",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: values
+    }).then((response)=>{
+      if(response){
+        history.push("/")
+      }
+    })
+  }
+
+  const onSuccess = response => console.log(response);
+  const onFailure = response => console.error(response);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -265,6 +290,16 @@ const useStyles = makeStyles((theme) => ({
     onFailure={responseErrorGoogle}
     cookiePolicy={'single_host_origin'}
   />
+
+    <FacebookLogin
+    appId="448548032895347"
+    autoLoad={false}
+    callback={responseFacebook} />
+
+<GitHubLogin clientId="38e3ed84887a175bf699"
+    onSuccess={onSuccess}
+    onFailure={onFailure}/>
+
         <form className={classes.form} onSubmit={submitButton}>
           
           <Grid item xs={12}>
