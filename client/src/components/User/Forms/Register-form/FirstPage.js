@@ -32,6 +32,11 @@ import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login';
 import GitHubLogin from 'react-github-login';
 
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
+
+
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -44,6 +49,8 @@ function Copyright() {
     </Typography>
   );
 }
+
+
 
 
 
@@ -106,6 +113,8 @@ const useStyles = makeStyles((theme) => ({
 
  export default function FirstPage(props) {
   const classes = useStyles();
+  const [phone,setPhone] = useState()
+
   
   function checkAndNext(e){
     e.preventDefault()
@@ -270,7 +279,7 @@ const useStyles = makeStyles((theme) => ({
     })
   }
 
-  const onSuccess = response => console.log(response);
+  const onSuccess = response => console.log("ddd",response);
   const onFailure = response => console.error(response);
 
   return (
@@ -283,22 +292,7 @@ const useStyles = makeStyles((theme) => ({
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <GoogleLogin
-    clientId="810147001315-mq6dijpgu99sfuu9ibb4tced7rhqe84g.apps.googleusercontent.com"
-    buttonText="Sign up with Google"
-    onSuccess={responseSuccessGoogle}
-    onFailure={responseErrorGoogle}
-    cookiePolicy={'single_host_origin'}
-  />
-
-    <FacebookLogin
-    appId="448548032895347"
-    autoLoad={false}
-    callback={responseFacebook} />
-
-<GitHubLogin clientId="38e3ed84887a175bf699"
-    onSuccess={onSuccess}
-    onFailure={onFailure}/>
+        
 
         <form className={classes.form} onSubmit={submitButton}>
           
@@ -335,10 +329,24 @@ const useStyles = makeStyles((theme) => ({
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField
+          <PhoneInput
               margin="normal"
               id="phone"
               name="phone"
+              fullWidth
+              required
+              international
+              label="Mobile"
+              countryCallingCodeEditable={false}
+              defaultCountry="RU"
+              value={phone}
+              onChange={setPhone}
+              />
+          </Grid>
+          
+          <Grid item xs={12}>
+            <TextField
+              
               fullWidth
               required
               type="number"
@@ -407,6 +415,38 @@ const useStyles = makeStyles((theme) => ({
             </Grid>
           </Grid>
         </form>
+        <div className="row">
+          <div className="col-sm-4">
+          <GoogleLogin
+            clientId="810147001315-mq6dijpgu99sfuu9ibb4tced7rhqe84g.apps.googleusercontent.com"
+            buttonText="Google"
+            onSuccess={responseSuccessGoogle}
+            onFailure={responseErrorGoogle}
+            cookiePolicy={'single_host_origin'}
+          />
+          </div>
+          <div className="col-sm-4">
+          <FacebookLogin
+    appId="448548032895347"
+    autoLoad={false}
+    callback={responseFacebook}
+    style={{width: "11.6rem",
+      height: "2rem",
+      fontSize: "11px",
+      paddingTop: "8px"
+      }} />
+
+          </div>
+          <div className="col-sm-4">
+          <GitHubLogin clientId="38e3ed84887a175bf699"
+    onSuccess={onSuccess}
+    onFailure={onFailure}/>
+          </div>
+        </div>
+        
+
+    
+
       </div>
       <Box mt={8}>
         <Copyright />

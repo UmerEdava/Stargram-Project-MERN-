@@ -1,6 +1,7 @@
 import { response } from 'express';
 import { userDetails, celebrityDetails } from '../models/users.js';
 import bcrypt from 'bcrypt';
+import base64ToImage from 'base64-to-image';
 
 const OTP={
     serviceID:"	VAa370d48c33fdc1a601adbb52dc40e8df",
@@ -10,8 +11,25 @@ const OTP={
 
 import twilio from 'twilio'
 import fs from 'fs'
+import jwt from 'jsonwebtoken'
 
 var client = new twilio(OTP.accountSID, OTP.authToken);
+
+const verifyJWT = (req, res, next) => {
+    const token = req.headers["x-access-token"];
+    if(!token){
+        res.send("Not authenticated")
+    } else {
+        jwt.verify(token, "stargramSecret", (err, decoded)=>{
+            if(err){
+                res.json({ auth: false, message: "Failed to authenticate"})
+            } else {
+                req.userId = decoded._id
+                next();
+            }
+        })
+    }
+}
 
 export const getLogin = async(req, res) => {
     let response = {}
@@ -22,27 +40,30 @@ export const getLogin = async(req, res) => {
         
         let user = await userDetails.find({ email: loginDetails.emailOrPhone })
         console.log('in back',loginDetails.password);
-        console.log('in back',user[0].password);
 
-        if(user){
+        if(user.length>0){
+            console.log('db',user[0].username);
             bcrypt.compare(loginDetails.password, user[0].password).then((status) => {
                 if(status){
                     response.valid = true
                     console.log('in back valid',status);
 
-                    res.json(response)
+                    const id = user._id
+                    const token = jwt.sign({id}, "stargramSecret", {
+                        expiresIn:3000,
+                    })
+                    console.log('456',user[0]);
+                    res.json({auth: true, token: token, userId: user[0]._id, username: user[0].username, user:user[0]})
                 }else{
-                    response.wrong = true
                     console.log('in back wrong',status);
 
-                    res.json(response)
+                    res.json({auth: false, message: "invalid credentials", wrong: true})
                 }
             })
         }else{
             response.notUser = true
             console.log('in back not user');
-
-            res.json(response)
+            res.json({auth: false, message: "no user exists", notUser: true})
         }
     } catch (error) {
         
@@ -280,7 +301,43 @@ export const addCelebrity = async (req, res) => {
     }
 }
 
-export const getUserDetails = (req,res) => {
-    
-    return(chatMessage.json({ success: true, chatMessage}))
+export const profile = (req,res) => {
+
+    try {
+        let user = userDetails.find({ email: "umeredava@gmail.com"})
+        res.json(user)
+    } catch (error) {
+        console.log(error);        
+    }
+
+    // return(chatMessage.json({ success: true, chatMessage}))
 }
+
+export const getUserDetails = (req,res) => {
+    try {
+        console.log('detailsilethi',req.userId)
+        res.json({return : "452"})
+        // userDetails.findOne({ _id : ObjectId('req.params.id') }
+    } catch (error) {
+        
+    }
+}
+
+export const changeProfilePic = (req,res) => {
+    try {
+        let userId = req.body.userId
+        // console.log('body',req.files)
+        var base64Str = req.body.profilePic;
+        var path ="./public/images/profile-pictures/";
+        var optionalObj = {'fileName': userId, 'type':'jpg'};
+
+        base64ToImage(base64Str,path,optionalObj); 
+        
+
+        res.send('/images/profile-pictures/' + req.body.userId + '.jpg')
+
+    } catch (error) {
+        
+    }
+}
+                                             

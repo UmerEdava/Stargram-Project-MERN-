@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -17,6 +17,8 @@ import Axios from 'axios';
 import { useHistory } from "react-router";
 import Logo from '../../../../images/Stargram icon.jpg';
 import GoogleLogin from 'react-google-login';
+
+
 
 
 function Copyright() {
@@ -58,6 +60,7 @@ export default function Login() {
   const classes = useStyles();
  
   const [login, setLogin] = useState();
+  const [loginStatus,setLoginStatus] = useState(false);
 
   const changeHandler = (event) => {
     setLogin({
@@ -80,18 +83,39 @@ export default function Login() {
         },
         data: login
       }).then((response)=>{
-        if(response.data.valid){
-          console.log('valid');
+        // if(response.data.valid){
+        //   console.log('valid');
+        //   history.push("/");
+        // }else if (response.data.wrong){
+        //   console.log('wrong')
+        // }else if (response.data.notUser){
+        //   console.log('not a user');
+        // }
+        console.log('front', response.data.user);
+        if(!response.data.auth){
+          setLoginStatus(false)
+          if(response.data.wrong){
+            console.log('thettu');
+            document.getElementById('loginError').innerHTML = "Invalid username or password"
+          }else if(response.data.notUser){
+            console.log('kallan');
+            document.getElementById('loginError').innerHTML = "User not valid"
+          }
+          
+        }else{
+          setLoginStatus(true)
+          localStorage.setItem("token", response.data.token)
+          localStorage.setItem('userId', response.data.userId)
+          // localStorage.setItem('username', response.data)
+          localStorage.setItem('username', response.data.username)
           history.push("/");
-        }else if (response.data.wrong){
-          console.log('wrong')
-        }else if (response.data.notUser){
-          console.log('not a user');
         }
       })
     }
 
     let values = {}
+
+    
 
     const responseSuccessGoogle = (response) => {
       console.log(response.profileObj.name,response.profileObj.email)
@@ -118,6 +142,17 @@ export default function Login() {
      console.log(response);    
    }
 
+   useEffect(() => {
+    var user = localStorage.getItem('user')
+    let token = localStorage.getItem('token')
+    console.log("effect...",user,token);
+
+      if(token){
+          history.push('/')
+      }
+    })
+
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -136,7 +171,7 @@ export default function Login() {
           cookiePolicy={'single_host_origin'}
         />
         <form className={classes.form} onSubmit={loginSubmit}>
-          
+        
           <Grid item xs={12}>
             <TextField
               margin="normal"
@@ -166,6 +201,7 @@ export default function Login() {
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
+          <p id="loginError" className="text-center" style={{color: "red"}}></p>
           <Button
             type="submit"
             fullWidth

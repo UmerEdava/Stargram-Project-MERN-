@@ -1,8 +1,23 @@
-.bio{
+.bio {
     margin-top: 2rem;
     font-size: 18px;
     font-weight: 400;
 }
-.belongings{
+
+.belongings {
     font-size: 20px;
+}
+
+.rounded-circle {
+    border: 1px solid;
+    border-radius: 50%;
+    width: 7rem;
+    height: 7rem;
+}
+
+.rounded-circlem {
+    border: 1px solid;
+    border-radius: 50%;
+    width: 9rem;
+    height: 9rem;
 }

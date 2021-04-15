@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import {useHistory} from 'react-router'
 import Appbar from '../Appbar/Appbar';
 import {Row, Col} from 'react-bootstrap'; 
 import defaultDp from '../../../images/stargram-user.jpg';
@@ -7,18 +8,70 @@ import {Button} from 'react-bootstrap'
 import { Icon, InlineIcon } from '@iconify/react';
 import shareAlt from '@iconify/icons-el/share-alt';
 import screenSmartphone from '@iconify/icons-simple-line-icons/screen-smartphone';
+import Axios from 'axios'
 
 export default function Profile(){
+
+    useEffect(() => {
+        let username = localStorage.getItem('username')
+        let token = localStorage.getItem('token')
+        // console.log("effect...",user);
+        document.getElementById('username').innerHTML = username
+
+        if(!token){
+            history.push('/login')
+        }
+
+        // const [img, setImg] = useState()
+
+        let userId = localStorage.getItem('userId')
+
+        if("http://localhost:3001/images/profile-pictures"+userId+'.jpg'){    
+          document.getElementById('profilePicture').src = "http://localhost:3001/images/profile-pictures/"+userId+'.jpg'
+        }else{
+          document.getElementById('profilePicture').src = defaultDp
+        }
+        
+    })
+
+    // Axios.get('/user?ID=12345')
+    //     .then(function (response) {
+    //       // handle success
+    //       console.log(response);
+    //     })
+
+    const profile = () => {
+        Axios.get('http://localhost:3001/profile', {
+          headers: {
+            "x-access-token": localStorage.getItem("token")
+          },
+        }).then((response) => {
+          console.log(response);
+        })
+      }
+
+      let history = useHistory()
+
+      function editProfile(){
+          history.push('/edit_profile')
+      }
+
+      function buy(){
+          console.log('whaaa');
+          history.push("/buy_message")
+      }
+
+
     return(
         <>
         <Appbar/>
         <div className="body">
         <Row className='pt-5 container-fluid' style={{marginRight: "0",marginLeft: "0"}}>
             <Col className="text-center" md={5}>
-                <img src={defaultDp} className="rounded-circle" style={{height: "9rem"}}></img>            
+                <img src="" id="profilePicture" className="rounded-circlem"></img>            
             </Col>
             <Col className="text-center mt-5" md={7} >
-                <h4>Username</h4>
+                <h4 id="username"></h4>
                 <div style={{marginTop: "3rem"}}>
                     {/* <h6 style={{float:"left"}}>1 Credits</h6>
                     <h6 >0 Messages</h6>
@@ -28,11 +81,11 @@ export default function Profile(){
                     <span className="belongings">0 Followers</span>
                     <p style={{marginTop:"2rem"}} className="bio">Hi guys!! please support me on stargram</p>
                 </div>
-                <Button variant="outline-secondary" size="lg">Edit Profile</Button>{' '}
+                <Button variant="outline-secondary" size="lg" onClick={editProfile}>Edit Profile</Button>{' '}
                 <Button variant="outline-secondary" size="lg">Payments</Button>
                 <div className="mt-2">
                     <Button variant="outline-primary" size="lg" style={{width: "5.5rem"}}><Icon icon={shareAlt} style={{color: '#3278FF'}} /></Button>{' '}
-                    <Button variant="primary" size="lg">Buy Messages</Button>
+                    <Button variant="primary" size="lg" onClick={buy}>Buy Messages</Button>
                 </div>
             </Col>
             <Col className="text-right pt-5" md={5}>

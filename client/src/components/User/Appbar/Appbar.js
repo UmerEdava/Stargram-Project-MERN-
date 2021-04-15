@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -16,6 +16,8 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import logo from '../../../images/stargram_logo.png'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { useHistory } from 'react-router';
+import appbar from './appbar.css';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -29,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
+    cursor: 'pointer'
   },
   search: {
     left: '50%',
@@ -85,7 +88,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 export default function Appbar() {
+  useEffect(() => {
+    var user = localStorage.getItem('user')
+   
+    console.log("effect...",user);
+    
+  })
+
+  let user = localStorage.getItem('username')
+  let history = useHistory()
+
+  function logout(){
+    localStorage.removeItem('user')
+    localStorage.removeItem('token')
+    history.push('/login')
+  }
+
+  function profile(){
+    history.push('/profile')
+  }
+
+  function home(){
+    console.log('***');
+    history.push('/')
+  }
+
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -121,8 +151,8 @@ export default function Appbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={profile}>{user}</MenuItem>
+      <MenuItem onClick={logout}>Logout</MenuItem>
     </Menu>
   );
 
@@ -173,11 +203,11 @@ export default function Appbar() {
         <Toolbar>
           
 
-          <img src={logo} alt="logo" height="40px"></img>
+          <img src={logo} onClick={home} id="logo" alt="logo" height="40px"></img>
 
             
           
-          <Typography className={classes.title} variant="h6" style={{ color: '#FDDC03' }} noWrap>
+          <Typography className={classes.title} onClick={home} variant="h6" style={{ color: '#FDDC03' }} noWrap>
             Stargram
           </Typography>
           <div className={classes.search} style={{ backgroundColor : '#E5E5E5' }}>
@@ -196,12 +226,12 @@ export default function Appbar() {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
+            <IconButton aria-label="show 4 new mails" >
               <Badge badgeContent={4} color="secondary">
                 <MailIcon />
               </Badge>
             </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
+            <IconButton aria-label="show 17 new notifications" >
               <Badge badgeContent={17} color="secondary">
                 <NotificationsIcon />
               </Badge>
@@ -212,7 +242,7 @@ export default function Appbar() {
               aria-controls={menuId}
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
-              color="inherit"
+              
             >
               <AccountCircle />
             </IconButton>
