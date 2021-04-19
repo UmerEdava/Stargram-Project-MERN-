@@ -3,6 +3,7 @@ import { userDetails, celebrityDetails } from '../models/users.js';
 import bcrypt from 'bcrypt';
 import base64ToImage from 'base64-to-image';
 
+
 const OTP={
     serviceID:"	VAa370d48c33fdc1a601adbb52dc40e8df",
     accountSID:"ACedbb4cb77b0bcc9c9a1076bf1e14f031",
@@ -12,6 +13,8 @@ const OTP={
 import twilio from 'twilio'
 import fs from 'fs'
 import jwt from 'jsonwebtoken'
+
+import mongoose from "mongoose";
 
 var client = new twilio(OTP.accountSID, OTP.authToken);
 
@@ -36,10 +39,10 @@ export const getLogin = async(req, res) => {
 
     try {
         let loginDetails = req.body
-        console.log('in back',loginDetails);
+        
         
         let user = await userDetails.find({ email: loginDetails.emailOrPhone })
-        console.log('in back',loginDetails.password);
+        
 
         if(user.length>0){
             console.log('db',user[0].username);
@@ -48,9 +51,9 @@ export const getLogin = async(req, res) => {
                     response.valid = true
                     console.log('in back valid',status);
 
-                    const id = user._id
+                    const id = user[0]._id
                     const token = jwt.sign({id}, "stargramSecret", {
-                        expiresIn:3000,
+                        expiresIn:300000000000,
                     })
                     console.log('456',user[0]);
                     res.json({auth: true, token: token, userId: user[0]._id, username: user[0].username, user:user[0]})
@@ -171,11 +174,16 @@ export const verifyOTP =  (req,res) => {
       const newUser = new userDetails(userDetail)
             
 
-            newUser.save().then((response) => {
-                console.log('added',response);
-                status.verified = true
-                res.json(status)
+      newUser.save().then((response) => {
+            console.log('added',response);
+            status.verified = true
+            const id = response._id
+            const token = jwt.sign({id}, "stargramSecret", {
+                expiresIn:300000000000,
             })
+            res.json({auth: true, token: token, userId: response._id, username: response.username})
+      })
+
     }).catch((data) => {
       console.log('backinval',data);
       status.invalid = true
@@ -313,11 +321,11 @@ export const profile = (req,res) => {
     // return(chatMessage.json({ success: true, chatMessage}))
 }
 
-export const getUserDetails = (req,res) => {
+export const getUserDetails = async (req,res) => {
     try {
-        console.log('detailsilethi',req.userId)
-        res.json({return : "452"})
-        // userDetails.findOne({ _id : ObjectId('req.params.id') }
+        let user = await userDetails.findOne({ _id : mongoose.Types.ObjectId(req.userId) })
+        console.log('user',user);
+        res.json(user)
     } catch (error) {
         
     }
@@ -325,6 +333,7 @@ export const getUserDetails = (req,res) => {
 
 export const changeProfilePic = (req,res) => {
     try {
+        console.log('here');
         let userId = req.body.userId
         // console.log('body',req.files)
         var base64Str = req.body.profilePic;
@@ -338,6 +347,26 @@ export const changeProfilePic = (req,res) => {
 
     } catch (error) {
         
+    }
+}
+
+export const changeUserDetails = async(req,res) => {
+    try {
+        console.log('back',req.body);
+        const userDoc = await userDetails.findOne({_id:mongoose.Types.ObjectId(req.userId)});
+        console.log('user doc',userDoc);
+
+        userDoc.username = req.body.userDetails.username
+        userDoc.email = req.body.userDetails.email
+        userDoc.socialMedia = req.body.userDetails.socialMedia
+        userDoc.bio = req.body.userDetails.bio
+        userDoc.gender = req.body.userDetails.gender
+        userDoc.dob = req.body.userDetails.dob
+
+        await userDoc.save();
+
+    } catch (error) {
+        console.log(error);
     }
 }
                                              

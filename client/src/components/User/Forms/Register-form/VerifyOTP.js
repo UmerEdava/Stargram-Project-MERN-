@@ -137,8 +137,12 @@ const useStyles = makeStyles((theme) => ({
         data: {VerifyOTP:otp,phone:phone,userDetails:userDetails},
       }).then((response)=>{
           console.log(response);
-          if(response.data.verified){
-              console.log('verified');
+          if(response.data.auth){
+              console.log('verified',response.data);
+              localStorage.setItem("token", response.data.token)
+              localStorage.setItem('userId', response.data.userId)
+              localStorage.setItem('username', response.data.username)
+
               props.nextStep()
           }else{
               console.log('invalid');

@@ -46,7 +46,7 @@ export default function Profile(){
             "x-access-token": localStorage.getItem("token")
           },
         }).then((response) => {
-          console.log(response);
+          console.log('res',response);
         })
       }
 

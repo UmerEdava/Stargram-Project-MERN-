@@ -51,6 +51,34 @@ function clickPicture(){
     document.getElementById('profilePicInput').click()
 }
 
+const uploadImage = (event) => {
+  console.log('changed',event.target.files[0]);
+  // setProfilePic({
+  //     ...profilePic,
+  //     "profilePic":event.target.files[0]    
+  // });
+
+  document.getElementById('dp').src = URL.createObjectURL(event.target.files[0])
+
+  let file = event.target.files[0];
+  let reader = new FileReader();
+
+  reader.onloadend = function() {
+    // console.log('RESULT: ', reader.result);
+    var base = reader.result
+    console.log('base::; - ',base);
+    let userId = localStorage.getItem('userId')
+
+    Axios.post("http://localhost:3001/changeProfilePic", {profilePic : base, userId : userId}, { 
+    // receive two    parameter endpoint url ,form data
+    }).then((response)=>{
+    console.log(response)
+    //  setImg(document.getElementById('profilePicture').src = "http://localhost:3001" + response.data)
+    
+  })
+  } 
+  reader.readAsDataURL(file);
+}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -69,11 +97,6 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-  },
-  img: {
-    
-    height: "10rem",
-   
   }
 }));
 
@@ -96,13 +119,13 @@ export default function ChangeProfilePicture(props) {
   const [profilePic, setProfilePic] = useState();
 
  
-  const uploadImage = (event) => {
-    console.log('changed',event.target.files[0]);
-      setProfilePic({
-      ...profilePic,
-      [event.target.name]: event.target.files[0],
-    });
-  };
+  // const uploadImage = (event) => {
+  //   console.log('changed',event.target.files[0]);
+  //     setProfilePic({
+  //     ...profilePic,
+  //     [event.target.name]: event.target.files[0],
+  //   });
+  // };
   
 
   function addProfilePicture(event){
@@ -134,6 +157,11 @@ export default function ChangeProfilePicture(props) {
         
 }
 
+function home(){
+
+  history.push('/')
+}
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -144,8 +172,8 @@ export default function ChangeProfilePicture(props) {
         
         {/* <Avatar alt="Remy Sharp" src={User} className={classes.img} /> */}
         
-        <Image src={User} className={classes.img} roundedCircle onClick={clickPicture}/>
-        <form className={classes.form} onSubmit={addProfilePicture} encType='multipart/form-data'>
+        <Image src={User} className={classes.img} id="dp" roundedCircle onClick={clickPicture}/>
+        <form className={classes.form} encType='multipart/form-data'>
             <input type="file" name="profilePic" id="profilePicInput" onChange={uploadImage}  hidden></input>
           
           <Grid item xs={12}>
@@ -162,7 +190,7 @@ export default function ChangeProfilePicture(props) {
             variant="contained"
             color="primary"
             // className={classes.submit}
-            //onClick={props.nextStep}
+            onClick={home}
           >
             Continue
           </Button>

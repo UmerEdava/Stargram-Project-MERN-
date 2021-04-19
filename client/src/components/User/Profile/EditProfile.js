@@ -12,6 +12,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Axios from 'axios';
 import './Profile.css'
+import Button from '@material-ui/core/Button';
+
 
 import {Image} from 'react-bootstrap';
 
@@ -27,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
       marginRight: "14vw",
       marginBottom: theme.spacing(10),
       width: theme.spacing(120),
-      height: theme.spacing(64),
+      height: theme.spacing(80),
     },
   },
   details: {
@@ -56,6 +58,9 @@ export default function EditProfile() {
   let userId = localStorage.getItem('userId')
   console.log('uid',userId)
 
+  const [name,setName] = useState();
+  const [email,setEmail] = useState();
+
   useEffect(() => {
     let username = localStorage.getItem('username')
     let token = localStorage.getItem('token')
@@ -73,6 +78,21 @@ export default function EditProfile() {
           },
         }).then((response) => {
         console.log(response);
+        if(response){
+          console.log('in if');
+          // document.getElementById('email').value = response.data.email
+          setEmail(response.data.email)
+          setName(response.data.username)
+          console.log('evidde',email,name);
+          
+          // document.getElementById('usernameField').value = response.data.username
+          document.getElementById("bio").defaultValue = response.data.bio;
+          document.getElementById("dob").defaultValue = response.data.dob;
+          document.getElementById("socialMedia").defaultValue = response.data.socialMedia;
+          document.getElementById("gender").defaultValue = response.data.gender;
+
+
+        }
     })
      
     
@@ -137,10 +157,10 @@ export default function EditProfile() {
         Axios.post("http://localhost:3001/changeProfilePic", {profilePic : base, userId : userId}, { 
         // receive two    parameter endpoint url ,form data
         }).then((response)=>{
-        console.log(response)
+        // console.log(response)
         //  setImg(document.getElementById('profilePicture').src = "http://localhost:3001" + response.data)
         
-      })
+        })
       }
       reader.readAsDataURL(file);
 
@@ -181,9 +201,67 @@ export default function EditProfile() {
 
   const [age, setAge] = React.useState('');
 
-  const handleChange = (event) => {
+  const genderChange = (event) => {
     setAge(event.target.value);
   };
+
+  const [userDetails, setUserDetails] = useState({
+    email: email,
+    username: name,
+    socialMedia: "",
+    bio: "",
+    gender: "",
+    dob: "",
+  });
+
+  const detailsHandler = (event) => {
+    setUserDetails({
+      ...userDetails,
+      [event.target.name]: event.target.value,
+    });
+    // let value = event.target.value
+    // let field = event.target.name
+
+    // console.log('nokkaam',value,field);
+
+    // document.getElementById(field).value = value
+  };
+
+  function editDetails(){
+    console.log('undalle',userDetails)
+    if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(userDetails.email)) {
+        console.log('correct')
+        document.getElementById('emailError').style.display = "none"
+
+        Axios.post('http://localhost:3001/changeUserDetails', {
+          userDetails
+        },{
+          headers: {
+              "x-access-token": localStorage.getItem("token")
+          }
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+
+      } else if (userDetails.username=="") {
+        console.log('incorrect');
+        document.getElementById('usernameError').style.display = "block"
+        document.getElementById('emailError').style.display = "none"
+
+      } else {
+        document.getElementById('usernameError').style.display = "none"
+
+        document.getElementById('emailError').style.display = "block"
+
+      }
+
+    
+  }
+
+
+
+  
 
   return (
       <>
@@ -202,21 +280,43 @@ export default function EditProfile() {
                         <input type="file" id="changeDp" name="profilePic" onChange={uploadImage} hidden></input>
                         <div style={{marginTop:'5vw'}}>
                         <Form>
-                        <Form.Group as={Row} controlId="formPlaintextEmail">
+                        {/* <Form.Group as={Row} controlId="formPlaintextEmail">
                             <Form.Label column sm="2">
                             Email : 
                             </Form.Label>
                             <Col sm="10">
-                            <Form.Control plaintext readOnly defaultValue="email@example.com" />
+                            <Form.Control plaintext readOnly id="email" defaultValue="email@example.com" />
+                            </Col>
+                        </Form.Group> */}
+
+                        <Form.Group as={Row} style={{width:"80%"}} controlId="formPlaintextPassword">
+                            <Form.Label column sm="5">
+                            Name :
+                            </Form.Label>
+                            <Col sm="7">
+                            <Form.Control type="text" name="username" defaultValue={name} id="usernameField" onChange={detailsHandler} placeholder="Name" />
+                            <p id="usernameError" style={{color:"red",marginBottom:'3px',display:'none'}}>Please enter your name</p>
                             </Col>
                         </Form.Group>
+
+                        <Form.Group as={Row} style={{width:"80%"}} controlId="formPlaintextPassword">
+                            <Form.Label column sm="5">
+                            Email :
+                            </Form.Label>
+                            <Col sm="7">
+                            <Form.Control type="text" name="email" defaultValue={email} id="email" onChange={detailsHandler} placeholder="Email" />
+                            <p id="emailError" style={{color:"red",marginBottom:'3px',display:'none'}}>Invalid email</p>
+                            </Col>
+                        </Form.Group>
+
+                        
 
                         <Form.Group as={Row} style={{width:"80%"}} controlId="formPlaintextPassword">
                             <Form.Label column sm="5">
                             Social media link :
                             </Form.Label>
                             <Col sm="7">
-                            <Form.Control type="text" placeholder="Social media link" />
+                            <Form.Control type="text" name="socialMedia" id="socialMedia" onChange={detailsHandler} placeholder="Social media link" />
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} style={{width:"80%"}} controlId="formPlaintextPassword">
@@ -224,7 +324,7 @@ export default function EditProfile() {
                             Bio :
                             </Form.Label>
                             <Col sm="7">
-                            <Form.Control type="text" placeholder="Bio" />
+                            <Form.Control type="text" id="bio" name="bio" onChange={detailsHandler} placeholder="Bio" />
                             </Col>
                         </Form.Group>
                         {/* <Form.Group as={Row} style={{width:"80%"}} controlId="formPlaintextPassword">
@@ -235,19 +335,20 @@ export default function EditProfile() {
                             <Form.Control type="text" placeholder="Gender" />
                             </Col>
                         </Form.Group> */}
-                        <Form.Group as={Row} style={{width:"80%"}} controlId="formPlaintextPassword">
+                        <Form.Group as={Row} style={{width:"80%"}} name="gender" controlId="formPlaintextPassword">
                             <Form.Label column sm="5">
                               Gender : 
                             </Form.Label>
                             <Col sm="7">
-                          <FormControl className={classes.formControl} style={{marginTop: "-12px"}}>
+                          <FormControl className={classes.formControl} id="gender"  style={{marginTop: "-12px"}}>
                           
                           <InputLabel id="demo-simple-select-label">Gender</InputLabel>
                           <Select
                             labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={age}
-                            onChange={handleChange}
+                            id="gender"
+                            value={userDetails.gender}
+                            name="gender"
+                            onChange={detailsHandler}
                           >
                             <MenuItem value={"Male"}>Male</MenuItem>
                             <MenuItem value={"Female"}>Female</MenuItem>
@@ -263,9 +364,19 @@ export default function EditProfile() {
                             Date of birth :
                             </Form.Label>
                             <Col sm="7">
-                            <Form.Control type="date" placeholder="Date of birth" />
+                            <Form.Control type="date" name="dob" id="dob" onChange={detailsHandler} placeholder="Date of birth" />
                             </Col>
                         </Form.Group>
+
+                        <Button
+                          style={{width:"50%",marginLeft:"14%"}}
+                          variant="contained"
+                          color="primary"
+                          className="text-right"
+                          onClick={editDetails}
+                        >
+                          SAVE CHANGES
+                        </Button>
                         </Form>
                         </div>
                     </div>

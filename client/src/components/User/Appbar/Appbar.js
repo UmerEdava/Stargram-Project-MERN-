@@ -102,8 +102,10 @@ export default function Appbar() {
   let history = useHistory()
 
   function logout(){
-    localStorage.removeItem('user')
+    localStorage.removeItem('userId')
     localStorage.removeItem('token')
+    localStorage.removeItem('username')
+
     history.push('/login')
   }
 

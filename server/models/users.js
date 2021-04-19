@@ -5,6 +5,10 @@ const userSchema = mongoose.Schema({
     password: String,
     email: String,
     phone: Number,
+    bio: String,
+    socialMedia: String,
+    gender: String,
+    dob: String
 })
 
 const celebritySchema = mongoose.Schema({
