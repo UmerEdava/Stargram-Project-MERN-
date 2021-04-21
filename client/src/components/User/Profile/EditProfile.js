@@ -91,19 +91,28 @@ export default function EditProfile() {
           document.getElementById("socialMedia").defaultValue = response.data.socialMedia;
           document.getElementById("gender").defaultValue = response.data.gender;
 
-
         }
     })
-     
     
-    if("http://localhost:3001/images/profile-pictures"+userId+'.jpg'){    
-      setImg("http://localhost:3001/images/profile-pictures/"+userId+'.jpg')
-    }else{
-      setImg(defaultDp)
-    }
+    let userPic = "http://localhost:3001/images/profile-pictures/"+userId+'.jpg'
+    console.log('userPic',userPic)
 
-    
 
+    function UrlExists(url) {
+      var http = new XMLHttpRequest();
+        http.open('HEAD', url, false);
+        http.send();
+        if( http.status!= 404 ){
+            console.log('found')
+            setImg(userPic)
+        } else {
+            console.log('not found');
+            // document.getElementById('profilePicture').src = defaultDp
+            setImg(defaultDp)
+        }
+      }
+
+      UrlExists(userPic)
 
 })
 

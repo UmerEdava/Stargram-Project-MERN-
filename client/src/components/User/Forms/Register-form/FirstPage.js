@@ -147,6 +147,7 @@ const useStyles = makeStyles((theme) => ({
                   }else if(response.data.existingUsername){
                     document.getElementById('cPasswordError').innerHTML = "Sorry, this username is already exists"
                   }else if(response.data.newUser){
+                      values.creditMessages = 0
                       props.nextStep()
                   }
                  
