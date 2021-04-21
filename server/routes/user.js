@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 
 
 import {home,getLogin,userSignup,checkExisting,sendOTP,addProfilePic,verifyOTP,googleSignup,googleLogin,profile,getUserDetails} from '../controllers/users.js'
-import {changeProfilePic,changeUserDetails} from '../controllers/users.js';
+import {changeProfilePic,changeUserDetails,buyMessages,paymentSuccess,addCredit} from '../controllers/users.js';
  
 const router = express.Router();
 
@@ -39,7 +39,9 @@ router.get('/profile',verifyJWT, profile)
 router.get('/getUserDetails',verifyJWT, getUserDetails)
 router.post('/changeProfilePic', changeProfilePic)
 router.post('/changeUserDetails',verifyJWT, changeUserDetails)
-
+router.post('/buy_messages', buyMessages)
+router.post('/payment_success', paymentSuccess)
+router.post('/add_credit',verifyJWT, addCredit)
 
 
 export default router;

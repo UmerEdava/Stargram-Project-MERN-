@@ -8,7 +8,8 @@ const userSchema = mongoose.Schema({
     bio: String,
     socialMedia: String,
     gender: String,
-    dob: String
+    dob: String,
+    creditMessages: Number
 })
 
 const celebritySchema = mongoose.Schema({
