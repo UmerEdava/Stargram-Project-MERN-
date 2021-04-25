@@ -31,9 +31,6 @@ function User() {
             <Route path="/edit_profile"> 
               <Appbar/><EditProfile/>
             </Route>
-            <Route path="/testPP">
-              <PP/>
-            </Route>
             <Route path="/profile">
               <Profile/>
             </Route>

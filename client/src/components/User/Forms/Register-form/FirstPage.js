@@ -319,13 +319,13 @@ const useStyles = makeStyles((theme) => ({
               id="email"
               name="email"
               fullWidth
-              required
+              required 
               type="email"
               label="Email"
               autoComplete="email"
                             
               //onChange={changeHandler}
-              onChange={handleChange('email')}                
+              onChange={handleChange('email')}
               defaultValue={values.email}
             />
           </Grid>

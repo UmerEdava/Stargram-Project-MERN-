@@ -165,6 +165,7 @@ export default function BuyMessage() {
           </FormControl>
           <div>
             <h3 style={{textAlign:"right", lineHeight: "100px", marginRight:"2.5rem"}}>	&#8377; 20</h3>
+            <p style={{textAlign:"right", marginRight:"2.5rem", marginTop: "-43px", color: "#948d8d"}}>1 message</p>
           </div>
         </Card>
         
@@ -176,6 +177,7 @@ export default function BuyMessage() {
 
           <div>
             <h3 style={{ marginTop:"2rem", textAlign:"right", marginRight:"2.5rem"}}>	&#8377;	60</h3>
+            <p style={{textAlign:"right", marginRight:"2.5rem", marginBottom: "-18px", marginTop: "-10px", color: "#948d8d"}}>5 messages</p>
           </div>
 
         </Card>
@@ -189,6 +191,7 @@ export default function BuyMessage() {
           <div>
             <h3 style={{lineHeight:"48px", textAlign:"right", textAlign: "right", marginTop: "30px",
               marginBottom: "-21px", marginRight: "2.5rem"}}>	&#8377; 120</h3>
+              <p style={{textAlign:"right", marginRight:"2.5rem", marginBottom: "-32px", marginTop: "11px", color: "#948d8d"}}>12 messages</p>
           </div>
           
         </Card>

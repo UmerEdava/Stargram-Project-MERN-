@@ -1,0 +1,65 @@
+.card{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    border: none;
+    height: 28rem;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+    display: grid;
+    place-items: center;
+}
+.img-wrp{
+    position: relative;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 0%;
+}
+.dp{
+    width: auto;
+    height: 100%;
+}
+.dpLabel{
+        border-radius: 2%;
+    display: inline-block;
+    position: relative;
+    padding: 6px;
+    cursor: pointer;
+    background: linear-gradient(
+270deg
+, #3fa1a9, #79f1a4);
+    margin-bottom: 25px;
+}
+.heading{
+    font-weight: bold;
+    color: #1c6332;
+}
+.dpButton{
+    position: relative;
+    color: #054231;
+    letter-spacing: 1px;
+    margin: 20px;
+    font-size: 18px;
+    padding: 10px;
+    text-align: center;
+    transition: 0.5s;
+    border-radius: 10px;
+    cursor: pointer;
+    border-radius: 25px;
+    border: none;
+    background: #64d488;
+}
+.save{
+    font-weight: 600;
+    /* left: -20px; */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    /* width: 20px; */
+    box-shadow: 20px 0px 40px 0px #63d3a6;
+}
+#logo{
+    height: 5rem;
+    margin-bottom: -16px;
+}
