@@ -316,11 +316,25 @@ export const googleLogin = async (req, res) => {
     const user = req.body
     console.log('back', user);
     let existingAccount = await userDetails.find({
-        email: user.email,
-        phone: user.phone
+        email: user.email
+         
     })
+    console.log('exis',existingAccount)
     if (existingAccount) {
-        res.json(existingAccount)
+        const id = existingAccount[0]._id
+        const token = jwt.sign({
+            id
+        }, "stargramSecret", {
+            expiresIn: 30000000000000,
+        })
+        console.log('google jwt success')
+        res.json({
+            auth: true,
+            token: token,
+            userId: existingAccount[0]._id,
+            username: existingAccount[0].username,
+            user: existingAccount[0]
+        })
     } else {
         const newUser = new userDetails(user)
 
@@ -557,4 +571,30 @@ export const addCredit = async (req, res) => {
     } catch (error) {
         console.log(error);
     }
+}
+
+export const sendCelebrityOTP = (req,res) => {
+    console.log('otp back', req.body);
+    client
+        .verify
+        .services(OTP.serviceID)
+        .verifications
+        .create({
+            to: `+91${req.body.phone}`,
+            channel: 'sms'
+        }).then((data) => {
+
+            if (data) {
+                response.sent = true
+                console.log(data);
+                res.json(response)
+            }
+
+        }).catch((error) => {
+            console.log(error);
+            if (error.status = 400) {
+                response.invalid = true
+                res.json(response)
+            }
+        })
 }

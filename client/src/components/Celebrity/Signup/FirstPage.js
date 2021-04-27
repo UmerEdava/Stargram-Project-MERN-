@@ -85,7 +85,12 @@ export default function FirstPage(props) {
     
     event.preventDefault();
     console.log('prooo',values)
-    props.nextStep()
+    var length = document.getElementById('password').value.length
+    if(length>=6){
+      props.nextStep()
+    }else{
+      document.getElementById('passError').innerHTML = "Password should be more than 6 characters"
+    }
 
     // axios({
     //     method: "post",
@@ -173,6 +178,7 @@ export default function FirstPage(props) {
                 variant="outlined"
                 required
                 fullWidth
+                maxLength="2"
                 name="password"
                 label="Password"
                 type="password"
@@ -181,10 +187,11 @@ export default function FirstPage(props) {
                 onChange={handleChange('password')}                
                 />
             </Grid>
+            <p id="passError" style={{marginLeft: "9px", color: "red"}}></p>
             <Grid item xs={12}>
               <FormControlLabel
                 control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I guarantee that I'm a celebrity"
+                label="I agree to the terms and conditions"
               />
             </Grid>
           </Grid>

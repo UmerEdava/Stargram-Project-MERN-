@@ -133,6 +133,10 @@ export default function Login() {
        data: values
      }).then((response)=>{
        if(response){
+         console.log('returned',response)
+         localStorage.setItem("token", response.data.token)
+         localStorage.setItem("userId", response.data.userId)
+         localStorage.setItem("username", response.data.username)
          history.push("/")
        }
      })

@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import FirstPage from './FirstPage'
 import SecondPage from './SecondPage'
+import DetailsPage from './DetailsPage'
+import VerifyOTP from './VerifyOTP'
 
 export class MultiPages extends Component {
     
@@ -37,8 +39,8 @@ export class MultiPages extends Component {
 
     render() {
         const { step } = this.state;
-        const { firstName, lastName, email, phone, password, celebrityField } = this.state;
-        const values = { firstName, lastName, email, phone, password, celebrityField }
+        const { firstName, lastName, email, phone, password, profession, description } = this.state;
+        const values = { firstName, lastName, email, phone, password, profession, description }
         
         switch(step) {
             case 1: 
@@ -58,24 +60,24 @@ export class MultiPages extends Component {
                           values = {values}
                         />
                     )
-                // case 3:
-                //     return(
-                //         <VerifyOTP
-                //         nextStep = {this.nextStep}
-                //         previousStep = {this.previousStep}
-                //         handleChange = {this.handleChange}
-                //         values = {values}
-                //       />
-                //     )
-                // case 4:
-                //     return(
-                //         <ChangeProfilePicture
-                //         nextStep = {this.nextStep}
-                //         previousStep = {this.previousStep}
-                //         handleChange = {this.handleChange}
-                //         values = {values}
-                //       />
-                //     )
+                case 3:
+                    return(
+                        <DetailsPage
+                        nextStep = {this.nextStep}
+                        previousStep = {this.previousStep}
+                        handleChange = {this.handleChange}
+                        values = {values}
+                      />
+                    )
+                case 4:
+                    return(
+                        <VerifyOTP
+                        nextStep = {this.nextStep}
+                        previousStep = {this.previousStep}
+                        handleChange = {this.handleChange}
+                        values = {values}
+                      />
+                    )
 
         }
          
