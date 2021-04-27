@@ -8,7 +8,7 @@ export default function DetailsPage(props) {
         let description = document.getElementById('description').value
 
         let otp = {phone:props.values.phone}
-
+ 
 
         if(profession!="" && description !=""){
 

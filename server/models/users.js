@@ -13,8 +13,13 @@ const userSchema = mongoose.Schema({
 })
 
 const celebritySchema = mongoose.Schema({
-    name: String,
+    firstName: String,
+    lastName: String,
+    email: String,
+    phone: Number,
     password: String,
+    profession: String,
+    description: String,
     followers: {
         type: String,
         default: 0

@@ -229,7 +229,7 @@ export const verifyOTP = (req, res) => {
                 })
             })
 
-        }).catch((data) => {
+        }).catch((data) => { 
             console.log('backinval', data);
             status.invalid = true
             res.json(status)
@@ -596,5 +596,49 @@ export const sendCelebrityOTP = (req,res) => {
                 response.invalid = true
                 res.json(response)
             }
+        })
+}
+
+export const verifyCelebrityOTP = (req,res) => {
+    console.log('otppp',req.body)
+    let celebrityDetail = req.body.data
+    client
+        .verify
+        .services(OTP.serviceID)
+        .verificationChecks
+        .create({
+            to: `+91${req.body.data.phone}`,
+            code: req.body.otp
+        }).then(async (data) => {
+            console.log(data);
+            response.verified = true
+
+            celebrityDetail.password = await bcrypt.hash(celebrityDetail.password, 10)
+            console.log('**', celebrityDetail.password);
+            const newCelebrity = new celebrityDetails(celebrityDetail)
+
+            newCelebrity.save().then((response) => {
+                console.log('added', response);
+                status.verified = true
+                const id = response._id
+                const token = jwt.sign({
+                    id
+                }, "stargramSecret", {
+                    expiresIn: 300000000000,
+                })
+                res.json({
+                    auth: true,
+                    token: token,
+                    starId: response._id,
+                    starFirstName: response.firstName,
+                    starLastName: response.lastName
+                })
+            })
+
+        }).catch((data) => { 
+            console.log('backinval', data);
+            let response = {}
+            response.invalid = true
+            res.json(response)
         })
 }

@@ -14,8 +14,17 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import axios from 'axios';
 import logo from '../../../images/Stargram icon.jpg'
+import { ToastProvider, useToasts } from 'react-toast-notifications';
+// import { Alert, AlertTitle } from '@material-ui/lab';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 
+ 
 const useStyles = makeStyles({    
     root: {
       minWidth: 275,
@@ -34,6 +43,20 @@ const useStyles = makeStyles({
   });
 
 export default function BuyMessage() {
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const classes = useStyles();
   const bull = <span className={classes.bullet}>•</span>;
@@ -122,12 +145,21 @@ export default function BuyMessage() {
                 }
               }).then((response)=>{
                 if(response){
-                  console.log(response)
+                  console.log(response);
+                  // addToast("credit message added successfully", {
+                  //   appearance: 'success',
+                  //   autoDismiss: true,
+                  // })
+                  // <Alert severity="success">
+                  //   <AlertTitle>Payment successfull</AlertTitle>
+                  //   Credit message added — <strong>check it out!</strong>
+                  // </Alert>
+                  handleClick()
                 }
               })
           },
           prefill: {
-              name: "Umer Sanil",
+              name: "Umer Sanil", 
               email: "umeredava@gmail.com",
               contact: "7356317610",
           },
@@ -141,8 +173,8 @@ export default function BuyMessage() {
 
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
-
   }
+
     
   return (
     <React.Fragment>
@@ -202,7 +234,11 @@ export default function BuyMessage() {
       Continue
     </Button>
 
-        
+    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Credit message added successfullly!
+        </Alert>
+      </Snackbar>
         
       </Container>
     </React.Fragment>

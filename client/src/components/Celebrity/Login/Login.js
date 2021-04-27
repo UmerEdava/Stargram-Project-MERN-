@@ -13,6 +13,7 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import Logo from '../../../images/Stargram icon.jpg';
 
 function Copyright() {
   return (
@@ -69,10 +70,10 @@ export default function Login() {
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
+          <img src={Logo} alt='Logo' height="40px;"></img>
           </Avatar>
           <Typography component="h1" variant="h5">
-            Log in
+            Log in as Celebrity
           </Typography>
           <form className={classes.form} noValidate>
             <TextField

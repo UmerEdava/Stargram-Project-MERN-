@@ -329,7 +329,7 @@ const useStyles = makeStyles((theme) => ({
               defaultValue={values.email}
             />
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
           <PhoneInput
               margin="normal"
               id="phone"
@@ -343,7 +343,7 @@ const useStyles = makeStyles((theme) => ({
               value={phone}
               onChange={setPhone}
               />
-          </Grid>
+          </Grid> */}
           
           <Grid item xs={12}>
             <TextField
