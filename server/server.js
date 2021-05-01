@@ -16,7 +16,6 @@ app.use(express.urlencoded({limit:"30mb",extended:true}))
 app.use(cors())  
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 app.use('/',userRouter)
 
 const CONNECTION_URL = 'mongodb+srv://umersanil:umersanil123@cluster0.zlxqa.mongodb.net/Stargram?retryWrites=true&w=majority'

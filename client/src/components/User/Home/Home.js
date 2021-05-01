@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { useHistory } from 'react-router';
 import cover from '../../../images/cover.PNG';
 import sampleStar from '../../../images/Karthik Surya.jpg';
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -60,9 +61,32 @@ function Home() {
     useEffect(() => {
         var user = localStorage.getItem('user')
         let token = localStorage.getItem('token')
-        console.log("effect...",user,token);
+        let starToken = localStorage.getItem('starToken')
 
-        if(!token){
+        if(starToken){
+          axios.post('http://localhost:3001/checkCelebrityVerification', {
+            
+          },{
+            headers:{
+              "x-access-token": localStorage.getItem("starToken")
+            }
+          })
+          .then(function (response) {
+            console.log(response);
+            if(response.data.notVerified){
+              console.log('on verification process');
+              history.push('/celebrity/onverification')
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        }
+        
+        
+        console.log("effect...",token,starToken);
+
+        if(!token && !starToken){
             history.push('/login')
         }
     })

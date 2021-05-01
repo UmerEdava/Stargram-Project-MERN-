@@ -121,7 +121,7 @@ const useStyles = makeStyles((theme) => ({
       
       let cPass = document.getElementById('Cpassword').value
       if (
-        values.username !== "" &&
+        values.displayName !== "" &&
         values.email !== "" &&
         values.phone !== "" &&
         values.password !== "" &&
@@ -144,8 +144,8 @@ const useStyles = makeStyles((theme) => ({
                     document.getElementById('cPasswordError').innerHTML = "Another account is using this email address"
                   }else if(response.data.existingPhone){
                     document.getElementById('cPasswordError').innerHTML = "Another account is using this phone number"
-                  }else if(response.data.existingUsername){
-                    document.getElementById('cPasswordError').innerHTML = "Sorry, this username is already exists"
+                  }else if(response.data.existingDisplayName){
+                    document.getElementById('cPasswordError').innerHTML = "Sorry, display name already exists"
                   }else if(response.data.newUser){
                       values.creditMessages = 0
                       props.nextStep()
@@ -241,7 +241,7 @@ const useStyles = makeStyles((theme) => ({
      console.log(response.profileObj.name,response.profileObj.email)
      console.log(response);
      console.log(values);
-     values.username = response.profileObj.name
+     values.displayName = response.profileObj.name
      values.email = response.profileObj.email
      console.log(values);
      Axios({
@@ -264,7 +264,7 @@ const useStyles = makeStyles((theme) => ({
 
   const responseFacebook = (response) => {
     console.log(response.name);
-    values.username = response.name
+    values.displayName = response.name
      console.log(values);
      Axios({
       method: "post",
@@ -300,17 +300,17 @@ const useStyles = makeStyles((theme) => ({
           <Grid item xs={12}>
             <TextField
               margin="normal"
-              id="username"
-              name="username"
+              id="displayName"
+              name="displayName"
               fullWidth
               required
               type="text"
-              label="Username"
+              label="displayName"
               
               autoFocus              
               //onChange={changeHandler}
-              onChange={handleChange('username')}                
-              defaultValue={values.username}
+              onChange={handleChange('displayName')}                
+              defaultValue={values.displayName}
             />
           </Grid>
           <Grid item xs={12}>

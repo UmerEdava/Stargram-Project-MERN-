@@ -4,9 +4,13 @@ import Cropper from 'react-easy-crop';
 import Logo from '../../../images/stargram logo cutted.png';
 import { Button, Modal } from 'react-bootstrap';
 import UploadIcon from '../../../images/Upload-icon.jpg';
+import axios from 'axios';
+import server from '../../../Server';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Demo = () => {
-  const [crop, setCrop] = useState({ x: 0, y: 0 })
+  const [crop, setCrop] = useState({ x: 0, y: 0 }) 
   const [zoom, setZoom] = useState(1)
 
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
@@ -62,27 +66,80 @@ export default function SecondPage(props) {
     document.body.style = 'background-color: #f1f1f1;'
     document.body.style = 'background-image:url(https://www.dreamzzfurniture.com/wp-content/uploads/2019/10/LegalCraftyFinch-small.gif); background-repeat:no-repeat;background-size:cover'
     // document.body.style = 'background-size:cover'
+    const [post, setPost] = useState()
+    const { values, handleImageChange } = props;
 
     function imgChange () {
-
-      document.getElementById('dpImage').src=UploadIcon
+      document.getElementById('dpImage').src=UploadIcon 
     }
 
     function imgNormal () {
-      document.getElementById('dpImage').src=img
+      document.getElementById('dpImage').src=img 
     }
 
     var [img,setImg] = useState("https://github.com/OlgaKoplik/CodePen/blob/master/profile.jpg?raw=true");
 
     function imageUpload (e)  {
-      console.log(e.target.files);
-      document.getElementById('modalButton').click()
+      
+      // console.log(e.target.files[0]);
+      // const data = new FormData();
+      // data.append('file', e.target.files[0]);
+      // console.log('data aane',data)
+      // axios.post(server + '/addPost', data)
+      // .then((res) => {
+      //   console.log('ress',res);
+      // });
+
+      // setPost(e.target.files[0])
+      // data.append('item', post)
+      
+      // console.log('dataaaa',data)
+      // axios.post(server + '/addPost', data).then((res) => {
+      //   if (res.data === 'success') {
+      //       toast("Data Posted Successfully")
+      //   }
+      //   else {
+      //       toast.error("Something Went Wrong !!!")
+      //   }
+      // })
+
+      // document.getElementById('modalButton').click()
       setImg(URL.createObjectURL(e.target.files[0]))
+
+      let file = e.target.files[0];
+      let reader = new FileReader();
+
+      reader.onloadend = function() {
+        // console.log('RESULT: ', reader.result);
+        var base = reader.result
+        console.log('base::; - ',base);
+        props.values.image = 'state image testing'
+
+
+      }
+      reader.readAsDataURL(file);
+
+      // props.values.image = e.target.files[0]
+
+      console.log('props',props.values)
+
+      // const data = new FormData();
+      // data.append('file', e.target.files[0]);
+
+      // console.log('formdata',data)
+
+      // axios.post('http://localhost:3001/addCelebrityPhoto', data)
+      // .then((res) => {
+      //   console.log('res',res)
+      // });
+
     }
 
     function next () {
+      console.log('valuese',props.values)
+
       props.nextStep()
-    } 
+    }
 
 
     return (
@@ -95,7 +152,7 @@ export default function SecondPage(props) {
                 <div className="img-wrp">
                   <img for="photo-upload" id="dpImage" className="dp" src="https://github.com/OlgaKoplik/CodePen/blob/master/profile.jpg?raw=true"/>
                 </div>
-                <input id="photoUpload" onChange={imageUpload} style={{display:"none"}} type="file"></input>
+                <input id="photoUpload" name="image" onChange={handleImageChange('image')} style={{display:"none"}} type="file"></input>
                 </label>
                 <div>
                 <button type="submit" className="save dpButton" onClick={next} >Continue </button>

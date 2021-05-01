@@ -9,8 +9,19 @@ import bcrypt from 'bcrypt';
 import base64ToImage from 'base64-to-image';
 import Razorpay from "razorpay";
 import crypto from 'crypto';
+import multer from 'multer'
 // require("dotenv").config();
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'public/images/profile-pictures')
+    },
+    filename: (req, file, cb) => {
+      cb(null, 'testing')
+    }
+  })
+
+const celebrityPhotoUpload = multer({ storage: storage }).single('file')
 
 const OTP = {
     serviceID: "	VAa370d48c33fdc1a601adbb52dc40e8df",
@@ -127,27 +138,36 @@ export const checkExisting = async (req, res) => {
         let existingEmail = await userDetails.find({
             email: values.email
         })
+        let celebrityExistingEmail = await celebrityDetails.find({
+            email: values.email
+        })
         let existingPhone = await userDetails.find({
             phone: values.phone
         })
+        let celebrityExistingPhone = await celebrityDetails.find({
+            phone: values.phone
+        })
         let existingUsername = await userDetails.find({
-            username: values.username
+            displayName: values.displayName
+        })
+        let celebrityExistingDisplayName = await celebrityDetails.find({
+            displayName: values.displayName
         })
 
-        if (existingEmail.length > 0) {
+        if (existingEmail.length > 0 && celebrityExistingEmail.length > 0) {
             console.log('mail');
             response.existingEmail = true
             console.log(response);
 
             res.json(response)
-        } else if (existingPhone.length > 0) {
+        } else if (existingPhone.length > 0 && celebrityExistingPhone.length > 0) {
             console.log('phone');
             response.existingPhone = true
 
             res.json(response)
-        } else if (existingUsername.length > 0) {
-            console.log('username');
-            response.existingUsername = true
+        } else if (existingUsername.length > 0 && celebrityExistingDisplayName.length > 0) {
+            console.log('displayName');
+            response.existingDisplayName = true
 
             res.json(response)
         } else {
@@ -225,7 +245,7 @@ export const verifyOTP = (req, res) => {
                     auth: true,
                     token: token,
                     userId: response._id,
-                    username: response.username
+                    username: response.displayName
                 })
             })
 
@@ -600,8 +620,13 @@ export const sendCelebrityOTP = (req,res) => {
 }
 
 export const verifyCelebrityOTP = (req,res) => {
-    console.log('otppp',req.body)
+    // console.log('file',req.files)
+    console.log('reqqq',req.body.displayName)
+    console.log('otppp',req.body.otp)
+    
     let celebrityDetail = req.body.data
+    celebrityDetail.verified = false
+    console.log('details',celebrityDetail)
     client
         .verify
         .services(OTP.serviceID)
@@ -619,20 +644,33 @@ export const verifyCelebrityOTP = (req,res) => {
 
             newCelebrity.save().then((response) => {
                 console.log('added', response);
-                status.verified = true
                 const id = response._id
+
+                celebrityPhotoUpload(req, res, (err) => {
+                    if (err) {
+                        console.log('file not uploaded')
+                    }else{
+                        console.log('UPloaDed Successfully')
+                    }
+                });
+
                 const token = jwt.sign({
                     id
                 }, "stargramSecret", {
                     expiresIn: 300000000000,
                 })
+
                 res.json({
                     auth: true,
                     token: token,
                     starId: response._id,
-                    starFirstName: response.firstName,
-                    starLastName: response.lastName
+                    starname: response.displayName
                 })
+
+                // res.json({
+                //     verified:true,
+                //     starId:id
+                // })
             })
 
         }).catch((data) => { 
@@ -642,3 +680,101 @@ export const verifyCelebrityOTP = (req,res) => {
             res.json(response)
         })
 }
+
+export const checkCelebrityExisting = async (req,res) => {
+    try {
+        console.log('exist celebrity',req.body);
+        let existingCelebrity =await celebrityDetails.findOne(
+            {
+              $or: [
+                     { email : req.body.email },
+                     { phone: req.body.phone },
+                     { displayName: req.body.displayName}
+                   ]
+            }
+        )
+
+        let existingUser =await userDetails.findOne(
+            {
+              $or: [
+                     { email : req.body.email },
+                     { phone: req.body.phone },
+                     { displayName: req.body.displayName}
+                   ]
+            }
+        )
+
+        if(existingUser && existingCelebrity){
+            console.log('exisss')
+            res.json({existing:true})
+        }else{
+            res.json({newUser:true})
+        }
+    } catch (error) {
+        
+    }
+}
+
+export const checkCelebrityVerification = async (req,res) => {
+    try {
+        console.log('verification',req.starId)
+        let verified = await celebrityDetails.findOne({
+            _id: mongoose.Types.ObjectId(req.starId)
+        }, {
+            verified: 1,
+            _id:0
+        })
+
+        if(verified){
+            console.log('verified',verified)
+            res.json({verified:true})
+        }else{
+            console.log('not verified', verified)
+            res.json({notVerified:true})
+        }
+    } catch (error) {
+        
+    }
+}
+
+export const addImage = (req,res) => {
+    try {
+        console.log('yes in here');
+        let starId = req.body.starId
+        celebrityPhotoUpload(req, res, (err) => {
+            if (err) {
+                console.log('error happened',err)
+            }else{
+                console.log('UPloadDED')
+                const token = jwt.sign({
+                    starId
+                }, "stargramSecret", {
+                    expiresIn: 300000000000,
+                })
+
+                res.json({
+                    auth: true,
+                    token: token,
+                    starId: response._id,
+                    starname: response.displayName
+                })
+            }
+          });
+    } catch (error) {
+        
+    }
+}
+
+// export const addPost = (req,res) => {
+//     try {
+//         console.log('yes in here');
+//         celebrityPhotoUpload(req, res, (err) => {
+//             if (err) {
+//               res.sendStatus(500);
+//             }
+//             res.send(req.file);
+//           });
+//     } catch (error) {
+        
+//     }
+// }

@@ -13,7 +13,7 @@ export class MultiPages extends Component {
         password: '',
         otp: '',
         starname: '',
-        image: '',
+        image: ''
     }
 
     //Continue to the next step
@@ -37,12 +37,16 @@ export class MultiPages extends Component {
         this.setState({[input]: e.target.value})
     }
 
+    handleImageChange = input => e => {
+        this.setState({[input]: e.target.files[0]})
+    }
+
     render() {
         const { step } = this.state;
-        const { firstName, lastName, email, phone, password, profession, description } = this.state;
-        const values = { firstName, lastName, email, phone, password, profession, description }
+        const { displayName, email, phone, password, profession, description, image } = this.state;
+        const values = { displayName, email, phone, password, profession, description, image }
         
-        switch(step) {
+        switch(step) { 
             case 1: 
                return(
                     <FirstPage
@@ -58,6 +62,7 @@ export class MultiPages extends Component {
                           previousStep = {this.previousStep}
                           handleChange = {this.handleChange}
                           values = {values}
+                          handleImageChange = {this.handleImageChange}
                         />
                     )
                 case 3:

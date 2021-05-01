@@ -18,6 +18,10 @@ import logo from '../../../images/stargram_logo.png'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { useHistory } from 'react-router';
 import appbar from './appbar.css';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -91,20 +95,26 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function Appbar() {
+  const classes = useStyles(); 
   useEffect(() => {
-    var user = localStorage.getItem('user')
-   
-    console.log("effect...",user);
+    let starname = localStorage.getItem('starname')
+    if(!starname) {
+      history.push('/login')
+    }
+    console.log("effect...");
     
   })
 
-  let user = localStorage.getItem('username')
+  const bull = <span className={classes.bullet}>•</span>;
+  
+  let user = localStorage.getItem('starname')
+
   let history = useHistory()
 
   function logout(){
-    localStorage.removeItem('userId')
-    localStorage.removeItem('token')
-    localStorage.removeItem('username')
+    localStorage.removeItem('starId')
+    localStorage.removeItem('starToken')
+    localStorage.removeItem('starname')
 
     history.push('/login')
   }
@@ -118,7 +128,7 @@ export default function Appbar() {
     history.push('/')
   }
 
-  const classes = useStyles();
+ 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -170,7 +180,7 @@ export default function Appbar() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit" >
+        <IconButton aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="secondary">
             <MailIcon />
           </Badge>
@@ -212,32 +222,11 @@ export default function Appbar() {
           <Typography className={classes.title} onClick={home} variant="h6" style={{ color: '#FDDC03' }} noWrap>
             Stargram
           </Typography>
-          <div className={classes.search} style={{ backgroundColor : '#E5E5E5' }}>
-            <div className={classes.searchIcon}>
-              <SearchIcon style={{ color: '#424242' }} />
-            </div>
-            <InputBase
-              style = {{ color : '#989898' }}
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
+          
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" onClick={()=>{history.push('/messages')}} >
-              <Badge badgeContent={4} color="secondary">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton aria-label="show 17 new notifications" >
-              <Badge badgeContent={17} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+            
+            
             <IconButton
               edge="end"
               aria-label="account of current user"
@@ -257,13 +246,34 @@ export default function Appbar() {
               onClick={handleMobileMenuOpen}
               color="inherit"
             >
-              <MoreIcon style={{color:'black'}}/>
+              <MoreIcon />
             </IconButton>
           </div>
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
+      
+      <div className="mt-5 text-center d-flex justify-content-center">
+        <Card className={classes.root} variant="outlined" style={{width:"25rem"}}>
+          <CardContent>
+            <Typography className={classes.title} color="textSecondary" gutterBottom>
+              Welcome to stargram
+            </Typography>
+            <Typography variant="h5" component="h2">
+              Under verification process
+            </Typography>
+            {/* <Typography className={classes.pos} color="textSecondary">
+              adjective
+            </Typography> */}
+            <Typography variant="body2" component="p">
+              You are very near to become a Star in stargram. Please co-operate with us.
+              
+            </Typography>
+          </CardContent>
+          
+        </Card>
+      </div>
       
     </div>
   );

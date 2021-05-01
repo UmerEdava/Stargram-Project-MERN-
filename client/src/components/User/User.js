@@ -11,6 +11,7 @@ import Profile from './Profile/Profile';
 import EditProfile from './Profile/EditProfile';
 import Home from './Home/Home'
 import BuyMessage from './Buy Messages/BuyMessage';
+import MessagePage from './Messages/MessagePage';
 
 function User() {
   return (
@@ -36,6 +37,9 @@ function User() {
             </Route>
             <Route path="/buy_message">
               <Appbar/><BuyMessage/>
+            </Route>
+            <Route path="/messages">
+              <Appbar/><MessagePage/>
             </Route>
         </Router>
     </div>

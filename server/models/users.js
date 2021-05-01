@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const userSchema = mongoose.Schema({
-    username: String,
+    displayName: String,
     password: String,
     email: String,
     phone: Number,
@@ -9,22 +9,38 @@ const userSchema = mongoose.Schema({
     socialMedia: String,
     gender: String,
     dob: String,
-    creditMessages: Number
+    creditMessages: Number,
+    followers: {
+        type: Number,
+        default: 0
+    },
+    messages: {
+        type: Number,
+        default: 0
+    }
 })
 
 const celebritySchema = mongoose.Schema({
-    firstName: String,
-    lastName: String,
+    displayName: String,
     email: String,
     phone: Number,
     password: String,
+    bio: String,
+    socialMedia: String,
+    gender: String,
+    dob: String,
     profession: String,
     description: String,
+    creditMessages: Number,
+    verified: Boolean,
     followers: {
-        type: String,
+        type: Number,
+        default: 0
+    },
+    messages: {
+        type: Number,
         default: 0
     }
-
 })
 
 const userDetails = mongoose.model('userDetails', userSchema)

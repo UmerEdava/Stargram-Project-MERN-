@@ -4,21 +4,34 @@ import jwt from 'jsonwebtoken'
 
 import {home,getLogin,userSignup,checkExisting,sendOTP,addProfilePic,verifyOTP,googleSignup,googleLogin,profile,getUserDetails} from '../controllers/users.js'
 import {changeProfilePic,changeUserDetails,buyMessages,paymentSuccess,addCredit,sendCelebrityOTP,verifyCelebrityOTP} from '../controllers/users.js';
+import {checkCelebrityExisting,checkCelebrityVerification,addImage} from '../controllers/users.js';
  
 const router = express.Router();
 
 const verifyJWT = (req, res, next) => {
     const token = req.headers["x-access-token"];
+    const starToken = req.headers["x-access-token"]
     // console.log('tooken',token);
-    if(!token){
+    if(!token && !starToken){
         res.send("Not authenticated")
-    } else {
+    } else if(token){
         jwt.verify(token, "stargramSecret", (err, decoded)=>{
             if(err){
                 console.log(err);
                 res.json({ auth: false, message: "Failed to authenticate"})
             } else {
                 req.userId = decoded.id
+                console.log('decoded')
+                next();
+            }
+        })
+    }else if(starToken){
+        jwt.verify(starToken, "stargramSecret", (err, decoded)=>{
+            if(err){
+                console.log(err);
+                res.json({ auth: false, message: "Failed to authenticate"})
+            } else {
+                req.starId = decoded.id
                 console.log('decoded')
                 next();
             }
@@ -44,5 +57,8 @@ router.post('/payment_success', paymentSuccess)
 router.post('/add_credit',verifyJWT, addCredit)
 router.post('/sendCelebrityOTP', sendCelebrityOTP)
 router.post('/verifyCelebrityOTP', verifyCelebrityOTP)
+router.post('/checkCelebrityExisting', checkCelebrityExisting)
+router.post('/checkCelebrityVerification',verifyJWT, checkCelebrityVerification)
+router.post('/addImage', addImage)
 
 export default router;

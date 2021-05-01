@@ -1,0 +1,12 @@
+.box{
+    height: 400px;
+    width: 600px;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.12);;
+}
+.box-parent{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

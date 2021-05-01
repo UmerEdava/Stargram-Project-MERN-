@@ -139,6 +139,9 @@ const useStyles = makeStyles((theme) => ({
           console.log(response);
           if(response.data.auth){
               console.log('verified',response.data);
+              localStorage.removeItem('starToken')
+              localStorage.removeItem('starId')
+              localStorage.removeItem('starname')
               localStorage.setItem("token", response.data.token)
               localStorage.setItem('userId', response.data.userId)
               localStorage.setItem('username', response.data.username)

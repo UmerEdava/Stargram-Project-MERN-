@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useHistory } from "react-router";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -67,6 +67,17 @@ export default function FirstPage(props) {
   const classes = useStyles();
   const history = useHistory();
 
+  useEffect(() => {
+    let token = localStorage.getItem('token')
+    let starToken = localStorage.getItem('starToken')
+    console.log("effect...",token);
+
+      if(token&&starToken){
+          history.push('/')
+      }
+
+  })
+
   // const [registrationDetails,setRegistrationDetails] = useState();
 
   // const changeHandler = (event) => {
@@ -87,9 +98,31 @@ export default function FirstPage(props) {
     console.log('prooo',values)
     var length = document.getElementById('password').value.length
     if(length>=6){
-      props.nextStep()
+      console.log('in if')
+      axios({
+        method: "post",
+        url: "http://localhost:3001/checkCelebrityExisting",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: {
+          displayName:values.displayName,
+          email:values.email,
+          phone:values.phone
+        },
+      }).then((response)=>{
+        console.log(response)
+        if(response.data.existing){
+          console.log(response,'existing');
+          document.getElementById('error').textContent = "An account already exists with this credentials"
+        }else{
+          console.log(response,'new star');
+          props.nextStep()
+        }
+      })
+
     }else{
-      document.getElementById('passError').innerHTML = "Password should be more than 6 characters"
+      document.getElementById('error').innerHTML = "Password should be more than 6 characters"
     }
 
     // axios({
@@ -107,7 +140,6 @@ export default function FirstPage(props) {
   
   };
   
-
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -123,29 +155,17 @@ export default function FirstPage(props) {
         </Typography>
         <form id='registerForm' className={classes.form} onSubmit={handleSubmit}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
-                autoComplete="fname"
-                name="firstName"
+                autoComplete="dname"
+                name="displayName"
                 variant="outlined"
                 required
                 fullWidth
-                id="firstName"
-                label="First Name"
+                id="displayName"
+                label="Display name"
                 autoFocus
-                onChange={handleChange('firstName')}                
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-                onChange={handleChange('lastName')}                
+                onChange={handleChange('displayName')}                
                 />
             </Grid>
             <Grid item xs={12}>
@@ -187,7 +207,7 @@ export default function FirstPage(props) {
                 onChange={handleChange('password')}                
                 />
             </Grid>
-            <p id="passError" style={{marginLeft: "9px", color: "red"}}></p>
+            <p id="error" style={{marginLeft: "9px", color: "red"}}></p>
             <Grid item xs={12}>
               <FormControlLabel
                 control={<Checkbox value="allowExtraEmails" color="primary" />}
@@ -204,17 +224,11 @@ export default function FirstPage(props) {
           >
             Continue
           </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link variant="body2" onClick={()=>{history.push('/celebrity/login')}}>
-                Already have an account? Sign in
-              </Link>
-            </Grid> 
-          </Grid>
+          
         </form>
       </div>
       <Box mt={5}>
-        <Copyright/>
+        <Copyright/>f
       </Box>
     </Container>
     </Grid>

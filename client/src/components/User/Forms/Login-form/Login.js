@@ -95,10 +95,8 @@ export default function Login() {
         if(!response.data.auth){
           setLoginStatus(false)
           if(response.data.wrong){
-            console.log('thettu');
             document.getElementById('loginError').innerHTML = "Invalid username or password"
           }else if(response.data.notUser){
-            console.log('kallan');
             document.getElementById('loginError').innerHTML = "User not valid"
           }
           
@@ -147,15 +145,15 @@ export default function Login() {
    }
 
    useEffect(() => {
-    var user = localStorage.getItem('user')
     let token = localStorage.getItem('token')
-    console.log("effect...",user,token);
+    let starToken = localStorage.getItem('starToken')
+    console.log("effect...",token);
 
-      if(token){
+      if(token||starToken){
           history.push('/')
-      }
-    })
+      } 
 
+    })
 
   return (
     <Container component="main" maxWidth="xs">

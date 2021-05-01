@@ -181,6 +181,7 @@ export default function SendOtp(props) {
       ...otpMethod,
        method: method
     });
+    
   };
 
   console.log(setOtpMethod);

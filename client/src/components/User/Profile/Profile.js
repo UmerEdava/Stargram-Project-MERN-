@@ -52,7 +52,8 @@ export default function Profile(){
             }
           }).then(function (response) {
             // handle success
-            if(response.data.username){
+            console.log('wit',response)
+            if(response.data.displayName){
                 console.log(response);
                 document.getElementById('creditMessages').innerHTML = response.data.creditMessages+" Credits"
             }

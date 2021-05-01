@@ -53,6 +53,7 @@ function clickPicture(){
 
 const uploadImage = (event) => {
   console.log('changed',event.target.files[0]);
+
   // setProfilePic({
   //     ...profilePic,
   //     "profilePic":event.target.files[0]    
@@ -75,8 +76,8 @@ const uploadImage = (event) => {
     console.log(response)
     //  setImg(document.getElementById('profilePicture').src = "http://localhost:3001" + response.data)
     
-  })
-  } 
+    })
+  }
   reader.readAsDataURL(file);
 }
 
