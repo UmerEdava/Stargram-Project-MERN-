@@ -169,7 +169,7 @@ export default function Appbar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
+      <MenuItem onClick={()=>{history.push('/messages')}}>
         <IconButton aria-label="show 4 new mails" color="inherit" >
           <Badge badgeContent={4} color="secondary">
             <MailIcon />

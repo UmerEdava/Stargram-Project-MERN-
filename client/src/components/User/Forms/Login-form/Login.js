@@ -112,7 +112,6 @@ export default function Login() {
     }
 
     let values = {}
-
     
 
     const responseSuccessGoogle = (response) => {

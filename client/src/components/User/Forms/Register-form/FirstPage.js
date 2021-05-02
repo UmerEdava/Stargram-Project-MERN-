@@ -56,6 +56,7 @@ function Copyright() {
 
 function SendOtp() {
   const classes = useStyles();
+ 
 
   return (
     <Card className={classes.root}>
@@ -114,7 +115,7 @@ const useStyles = makeStyles((theme) => ({
  export default function FirstPage(props) {
   const classes = useStyles();
   const [phone,setPhone] = useState()
-
+  const imgUrl = 'https://cdns.iconmonstr.com/wp-content/assets/preview/2012/240/iconmonstr-github-1.png'
   
   function checkAndNext(e){
     e.preventDefault()
@@ -416,8 +417,11 @@ const useStyles = makeStyles((theme) => ({
             </Grid>
           </Grid>
         </form>
+
+        <h5 id="orLabel">or continue with</h5>
+
         <div className="row">
-          <div className="col-sm-4">
+          <div className="col-sm-6">
           <GoogleLogin
             clientId="810147001315-mq6dijpgu99sfuu9ibb4tced7rhqe84g.apps.googleusercontent.com"
             buttonText="Google"
@@ -426,22 +430,25 @@ const useStyles = makeStyles((theme) => ({
             cookiePolicy={'single_host_origin'}
           />
           </div>
-          <div className="col-sm-4">
+          <div className="col-sm-6">
           <FacebookLogin
-    appId="448548032895347"
-    autoLoad={false}
-    callback={responseFacebook}
-    style={{width: "11.6rem",
-      height: "2rem",
-      fontSize: "11px",
-      paddingTop: "8px"
-      }} />
+            appId="448548032895347"
+            autoLoad={false}
+            callback={responseFacebook}
+            icon="fa-facebook"
+            textButton=" Facebook"
+            cssClass="my-facebook-button-class"
+          />
 
           </div>
           <div className="col-sm-4">
-          <GitHubLogin clientId="38e3ed84887a175bf699"
-    onSuccess={onSuccess}
-    onFailure={onFailure}/>
+          {/* <GitHubLogin clientId="38e3ed84887a175bf699"
+            onSuccess={onSuccess}
+            onFailure={onFailure}
+            className="github-button"     
+            buttonText="github"
+                
+          /> */}
           </div>
         </div>
         

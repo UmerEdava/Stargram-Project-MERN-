@@ -3,3 +3,23 @@ input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none; 
   margin: 0; 
 }
+
+#orLabel{
+  margin: 24px;
+  font-size: 18px;
+  color: gray;
+}
+.my-facebook-button-class{
+  /* border-radius: 50%;
+  
+  font-size: 18px;
+  height: 36px;*/
+  border: none;
+  color: white;
+  background-color: #5c5cce;
+  font-size: 12px;
+  padding: 11px 10px 11px 10px;
+}
+.github-button{
+  border-radius: 50%;
+}
