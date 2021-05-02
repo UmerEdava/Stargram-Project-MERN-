@@ -102,10 +102,11 @@ export default function Login() {
           
         }else{
           setLoginStatus(true)
+          console.log('wr',response.data)
           localStorage.setItem("token", response.data.token)
           localStorage.setItem('userId', response.data.userId)
           // localStorage.setItem('username', response.data)
-          localStorage.setItem('username', response.data.username)
+          localStorage.setItem('displayName', response.data.user.displayName)
           history.push("/");
         }
       })

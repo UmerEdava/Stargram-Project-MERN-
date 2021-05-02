@@ -98,7 +98,7 @@ export default function Appbar() {
     
   })
 
-  let user = localStorage.getItem('username')
+  let user = localStorage.getItem('displayName')
   let history = useHistory()
 
   function logout(){

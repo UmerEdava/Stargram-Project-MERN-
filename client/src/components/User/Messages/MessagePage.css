@@ -13,6 +13,9 @@
 .message-category-button{
     width: 100%
 }
+.btn{
+    border-radius: 0%;
+}
 .active {
     border-bottom: 3px solid#65a1f7;
     color: #65a1f7
@@ -20,6 +23,10 @@
 .btn:focus {
     outline: none;
     box-shadow: none;
+}
+.btn:hover {
+    background-color:#f7f7f7c2;
+    color: #65a1f7
 }
 .inputPicture{
     height: 10rem;

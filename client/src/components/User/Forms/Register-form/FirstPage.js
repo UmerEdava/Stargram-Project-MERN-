@@ -421,7 +421,7 @@ const useStyles = makeStyles((theme) => ({
         <h5 id="orLabel">or continue with</h5>
 
         <div className="row">
-          <div className="col-sm-6">
+          <div className="col-6">
           <GoogleLogin
             clientId="810147001315-mq6dijpgu99sfuu9ibb4tced7rhqe84g.apps.googleusercontent.com"
             buttonText="Google"
@@ -430,7 +430,7 @@ const useStyles = makeStyles((theme) => ({
             cookiePolicy={'single_host_origin'}
           />
           </div>
-          <div className="col-sm-6">
+          <div className="col-6">
           <FacebookLogin
             appId="448548032895347"
             autoLoad={false}
