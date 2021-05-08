@@ -14,7 +14,7 @@ import axios from 'axios';
 export default function Profile(){
 
     useEffect(() => {
-        let username = localStorage.getItem('username')
+        let username = localStorage.getItem('displayName')
         let token = localStorage.getItem('token')
         // console.log("effect...",user);
         document.getElementById('username').innerHTML = username
@@ -57,8 +57,7 @@ export default function Profile(){
                 console.log(response);
                 document.getElementById('creditMessages').innerHTML = response.data.creditMessages+" Credits"
             }
-        })
-         
+        })   
     })
 
     // Axios.get('/user?ID=12345')

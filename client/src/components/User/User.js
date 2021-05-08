@@ -12,6 +12,8 @@ import EditProfile from './Profile/EditProfile';
 import Home from './Home/Home'
 import BuyMessage from './Buy Messages/BuyMessage';
 import MessagePage from './Messages/MessagePage';
+import Notifications from './Notifications/Notifiations'
+import OtherPersonProfile from './Profile/OtherPersonProfile';
 
 function User() {
   return (
@@ -40,6 +42,12 @@ function User() {
             </Route>
             <Route path="/messages">
               <Appbar/><MessagePage/>
+            </Route>
+            <Route path="/notifications">
+              <Appbar/><Notifications/>
+            </Route>
+            <Route path="/secondProfile">
+              <Appbar/><OtherPersonProfile/>
             </Route>
         </Router>
     </div>

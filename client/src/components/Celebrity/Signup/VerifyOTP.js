@@ -13,20 +13,20 @@ export default function VerifyOTP(props) {
         console.log('otp',otp,props.values)
         // let data = {data:props.values,otp:otp}
 
-        const data = new FormData();
+        // const data = new FormData();
 
-        data.append('file', props.values.image);
+        // data.append('file', props.values.image);
 
-        data.append('displayName', props.values.displayName)
-        data.append('email', props.values.email)
-        data.append('phone', props.values.phone)
-        data.append('password', props.values.password)
-        data.append('profession', props.values.profession)
-        data.append('description', props.values.description)
+        // data.append('displayName', props.values.displayName)
+        // data.append('email', props.values.email)
+        // data.append('phone', props.values.phone)
+        // data.append('password', props.values.password)
+        // data.append('profession', props.values.profession)
+        // data.append('description', props.values.description)
 
-        let dataWithOtp = {data:data,otp:otp}
+        // let dataWithOtp = {data:data,otp:otp}
 
-        console.log('data aane',data)
+        // console.log('data aane',data)
 
         axios({
             method: "post",
@@ -34,57 +34,67 @@ export default function VerifyOTP(props) {
             headers: {
               "Content-Type": "application/json",
             },
-            data: dataWithOtp,
-          }).then((response)=>{
-              console.log(response);
-              console.log('state image',props.values.image)
+            data:{
+              data:props.values,
+              otp:otp
+            },
+            }).then((response)=>{
+              console.log('details added',response); 
 
-            //   if(response.data.verified){
-            //         const data = new FormData();
-            //         data.append('file', props.values.image);
-            //         data.append('starId', response.data.starId)
-            //         console.log('data aane',data)
-            //         axios.post('http://localhost:3001/addImage', data)
-            //         .then((res) => {
-            //             console.log('ress',res);
-            //             if(response.data.auth){
-
-            //                 console.log('verified',response)
-            //                 localStorage.removeItem('token')
-            //                 localStorage.removeItem('userId')
-            //                 localStorage.removeItem('username')
-            //                 localStorage.setItem('starToken', response.data.token)
-            //                 localStorage.setItem('starId', response.data.starId)
-            //                 localStorage.setItem('starname', response.data.starname)
-                            
-            //                 history.push('/')
-
-            //             }
-            //         });
-            //   }else{
-            //       console.log('not verified')
-            //       document.getElementById('otpError').innerHTML = "Invalid OTP"
-            //   }
+              localStorage.setItem('starToken', response.data.token)
+              localStorage.setItem('starId', response.data.starId)
+              localStorage.setItem('starname', response.data.starname)     
 
               if(response.data.auth){
+                    const data = new FormData();
+                    data.append('file', props.values.image);
+                    // data.append('starname',response.data.starname)
 
-                  console.log('verified',response)
-                  localStorage.removeItem('token')
-                  localStorage.removeItem('userId')
-                  localStorage.removeItem('username')
-                  localStorage.setItem('starToken', response.data.token)
-                  localStorage.setItem('starId', response.data.starId)
-                  localStorage.setItem('starname', response.data.starname)
-                  
-                  history.push('/')
+                    // data.append('starId', response.data.starId)
+                    // console.log('data aane',data)
+                    axios.post('http://localhost:3001/addImage', data)
+                    .then((res) => {
+                        console.log('ress',res);
+                        if(res.data.added){
 
-              }else if(response.data.invalid){
-                  console.log('inv',response)
+                            console.log('uploaded',res)
+                            // localStorage.removeItem('token')
+                            // localStorage.removeItem('userId')
+                            // localStorage.removeItem('username')
+                            // localStorage.setItem('starToken', response.data.token)
+                            // localStorage.setItem('starId', response.data.starId)
+                            // localStorage.setItem('starname', response.data.starname)
+                            console.log('Image uploaded')
+                            history.push('/')
+
+                        }else{
+                          console.log('Image did not uploaded')
+                        }
+                    })
+              }else{
+                  console.log('not verified')
                   document.getElementById('otpError').innerHTML = "Invalid OTP"
               }
-          })
-        
-    }
+
+              // if(response.data.auth){
+
+              //     console.log('verified',response)
+              //     localStorage.removeItem('token')
+              //     localStorage.removeItem('userId')
+              //     localStorage.removeItem('username')
+              //     localStorage.setItem('starToken', response.data.token)
+              //     localStorage.setItem('starId', response.data.starId)
+              //     localStorage.setItem('starname', response.data.starname)
+                  
+              //     history.push('/')
+
+              // }else if(response.data.invalid){
+              //     console.log('inv',response)
+              //     document.getElementById('otpError').innerHTML = "Invalid OTP"
+              // }
+        })
+      }
+      
 
     return (
         <div>
@@ -105,3 +115,4 @@ export default function VerifyOTP(props) {
         </div>
     )
 }
+    

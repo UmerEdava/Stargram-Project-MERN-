@@ -106,18 +106,20 @@ export default function SecondPage(props) {
       // document.getElementById('modalButton').click()
       setImg(URL.createObjectURL(e.target.files[0]))
 
-      let file = e.target.files[0];
-      let reader = new FileReader();
+      handleImageChange('image',e.target.files[0])
 
-      reader.onloadend = function() {
-        // console.log('RESULT: ', reader.result);
-        var base = reader.result
-        console.log('base::; - ',base);
-        props.values.image = 'state image testing'
+      // let file = e.target.files[0];
+      // let reader = new FileReader();
+
+      // reader.onloadend = function() {
+      //   // console.log('RESULT: ', reader.result);
+      //   var base = reader.result
+      //   console.log('base::; - ',base);
+      //   props.values.image = 'state image testing'
 
 
-      }
-      reader.readAsDataURL(file);
+      // }
+      // reader.readAsDataURL(file);
 
       // props.values.image = e.target.files[0]
 
@@ -150,9 +152,9 @@ export default function SecondPage(props) {
                 <h3  className="card-title heading text-center mt-0">Add Profile Picture</h3>
                 <label className="dpLabel" id="dpLabel" onMouseOver={imgChange} onMouseOut={imgNormal}>
                 <div className="img-wrp">
-                  <img for="photo-upload" id="dpImage" className="dp" src="https://github.com/OlgaKoplik/CodePen/blob/master/profile.jpg?raw=true"/>
+                  <img for="photo-upload" id="dpImage" className="dp" src={img}/>
                 </div>
-                <input id="photoUpload" name="image" onChange={handleImageChange('image')} style={{display:"none"}} type="file"></input>
+                <input id="photoUpload" name="image" onChange={imageUpload} style={{display:"none"}} type="file"></input>
                 </label>
                 <div>
                 <button type="submit" className="save dpButton" onClick={next} >Continue </button>

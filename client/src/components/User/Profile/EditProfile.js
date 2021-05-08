@@ -82,7 +82,7 @@ export default function EditProfile() {
           console.log('in if');
           // document.getElementById('email').value = response.data.email
           setEmail(response.data.email)
-          setName(response.data.username)
+          setName(response.data.displayName)
           console.log('evidde',email,name);
           
           // document.getElementById('usernameField').value = response.data.username

@@ -177,7 +177,7 @@ export default function Appbar() {
         </IconButton>
         <p>Messages</p>
       </MenuItem>
-      <MenuItem>
+      <MenuItem onClick={()=>{history.push('/notifications')}}>
         <IconButton aria-label="show 11 new notifications" color="inherit">
           <Badge badgeContent={11} color="secondary">
             <NotificationsIcon />
@@ -233,7 +233,7 @@ export default function Appbar() {
                 <MailIcon />
               </Badge>
             </IconButton>
-            <IconButton aria-label="show 17 new notifications" >
+            <IconButton aria-label="show 17 new notifications" onClick={()=>{history.push('/notifications')}}>
               <Badge badgeContent={17} color="secondary">
                 <NotificationsIcon />
               </Badge>

@@ -23,10 +23,17 @@ const storage = multer.diskStorage({
 
 const celebrityPhotoUpload = multer({ storage: storage }).single('file')
 
+// const OTP = {
+//     serviceID: "	VAa370d48c33fdc1a601adbb52dc40e8df",
+//     accountSID: "ACedbb4cb77b0bcc9c9a1076bf1e14f031",
+//     authToken: "9b466a0b29a22f5dfba3b74008ff8550"
+// }
+
+
 const OTP = {
-    serviceID: "	VAa370d48c33fdc1a601adbb52dc40e8df",
+    serviceID: "VAa370d48c33fdc1a601adbb52dc40e8df",
     accountSID: "ACedbb4cb77b0bcc9c9a1076bf1e14f031",
-    authToken: "9b466a0b29a22f5dfba3b74008ff8550"
+    authToken: "4d9c32661d3e515d1f512e9238e48444"
 }
 
 import twilio from 'twilio'
@@ -594,7 +601,7 @@ export const addCredit = async (req, res) => {
 }
 
 export const sendCelebrityOTP = (req,res) => {
-    console.log('otp back', req.body);
+    console.log('otp', req.body.phone);
     client
         .verify
         .services(OTP.serviceID)
@@ -621,7 +628,7 @@ export const sendCelebrityOTP = (req,res) => {
 
 export const verifyCelebrityOTP = (req,res) => {
     // console.log('file',req.files)
-    console.log('reqqq',req.body.displayName)
+    console.log('reqqq',req.body)
     console.log('otppp',req.body.otp)
     
     let celebrityDetail = req.body.data
@@ -646,13 +653,13 @@ export const verifyCelebrityOTP = (req,res) => {
                 console.log('added', response);
                 const id = response._id
 
-                celebrityPhotoUpload(req, res, (err) => {
-                    if (err) {
-                        console.log('file not uploaded')
-                    }else{
-                        console.log('UPloaDed Successfully')
-                    }
-                });
+                // celebrityPhotoUpload(req, res, (err) => {
+                //     if (err) {
+                //         console.log('file not uploaded')
+                //     }else{
+                //         console.log('UPloaDed Successfully')
+                //     }
+                // });
 
                 const token = jwt.sign({
                     id
@@ -683,7 +690,7 @@ export const verifyCelebrityOTP = (req,res) => {
 
 export const checkCelebrityExisting = async (req,res) => {
     try {
-        console.log('exist celebrity',req.body);
+        console.log('checking in back celebrity',req.body);
         let existingCelebrity =await celebrityDetails.findOne(
             {
               $or: [
@@ -740,29 +747,43 @@ export const checkCelebrityVerification = async (req,res) => {
 export const addImage = (req,res) => {
     try {
         console.log('yes in here');
-        let starId = req.body.starId
-        celebrityPhotoUpload(req, res, (err) => {
-            if (err) {
-                console.log('error happened',err)
-            }else{
-                console.log('UPloadDED')
-                const token = jwt.sign({
-                    starId
-                }, "stargramSecret", {
-                    expiresIn: 300000000000,
-                })
+        // let starId = req.body.starId
+        // celebrityPhotoUpload(req, res, (err) => {
+        //     if (err) {
+        //         console.log('error happened',err)
+        //     }else{
+        //         console.log('UPloadDED')
+        //         const token = jwt.sign({
+        //             starId
+        //         }, "stargramSecret", {
+        //             expiresIn: 300000000000,
+        //         })
 
-                res.json({
-                    auth: true,
-                    token: token,
-                    starId: response._id,
-                    starname: response.displayName
-                })
-            }
-          });
+        //         res.json({
+        //             auth: true,
+        //             token: token,
+        //             starId: response._id,
+        //             starname: response.displayName
+        //         })
+        //     }
+        //   });
+
+        if(req.files){
+            console.log('file und')
+            let file = req.files.file
+            file.mv('./public/images/profile-pictures'+"custom-name"+'.jpg')
+        }else{
+            console.log("file illa")
+        }
     } catch (error) {
         
     }
+}
+
+export const getAllVerifiedCelebrities = async(req,res) => {
+    let verifiedCelebrities =await celebrityDetails.find({verified:true})
+    console.log('verified stars', verifiedCelebrities)
+    res.json({verifiedCelebrities:verifiedCelebrities})
 }
 
 // export const addPost = (req,res) => {

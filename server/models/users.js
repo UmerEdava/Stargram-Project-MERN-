@@ -31,7 +31,10 @@ const celebritySchema = mongoose.Schema({
     dob: String,
     profession: String,
     description: String,
-    creditMessages: Number,
+    creditMessages: {
+        type: Number,
+        default: 1
+    },
     verified: Boolean,
     followers: {
         type: Number,
