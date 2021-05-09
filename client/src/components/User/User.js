@@ -14,6 +14,7 @@ import BuyMessage from './Buy Messages/BuyMessage';
 import MessagePage from './Messages/MessagePage';
 import Notifications from './Notifications/Notifiations'
 import OtherPersonProfile from './Profile/OtherPersonProfile';
+import Chatbox from './Messages/Chat/Chatbox'
 
 function User() {
   return (
@@ -48,6 +49,9 @@ function User() {
             </Route>
             <Route path="/secondProfile">
               <Appbar/><OtherPersonProfile/>
+            </Route>
+            <Route path="/chatbox">
+              <Appbar/><Chatbox/>
             </Route>
         </Router>
     </div>

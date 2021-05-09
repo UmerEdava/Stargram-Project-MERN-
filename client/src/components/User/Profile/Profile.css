@@ -25,3 +25,15 @@
     width: 9rem;
     height: 9rem;
 }
+
+.newspaper {
+  column-count: 2;
+  column-gap: 80px;
+}
+#profileBox{
+    border: 1px solid #bfb8b8;
+    margin-left: 9vw;
+    margin-right: 9vw;
+    margin-top: 14vh;
+    margin-bottom: 6vh;
+}

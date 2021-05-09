@@ -1,0 +1,31 @@
+#chatbox{
+    margin-left: 24vw;
+    margin-top: 8vh;
+    margin-right: 24vw;
+    margin-bottom: 8vh;
+    background-color: white;
+    padding-top: 0.5rem;
+    padding-right: 0rem;
+}
+#profilePicture{
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    display: 'inline';
+}
+#chatHead{
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+#chatBody{
+    height: 60vh;
+    background-image: url('../../../../images/chat-background.png');
+}
+#chatFooter{
+    height: 3rem;
+    background-color: white;
+}
+#cameraButton{
+    border-radius: 50%;
+    background-color: #3a86fe;
+}
