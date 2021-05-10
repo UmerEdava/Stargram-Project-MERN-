@@ -3,18 +3,60 @@ import {useHistory} from 'react-router-dom'
 import photo from '../../../images/stargram-user.jpg';
 import { Icon, InlineIcon } from '@iconify/react';
 import sharpVerified from '@iconify/icons-ic/sharp-verified';
+import IconButton from '@material-ui/core/IconButton';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import MuiMenuItem from "@material-ui/core/MenuItem";
+import { withStyles } from "@material-ui/core/styles";
 
 export default function OtherPersonProfile(props) {
     //  const { id } =
     // (props.location && props.location.state) || {};
     // console.log('ii',props.location.state)
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+      };
+    
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
+
+    const MenuItem = withStyles({
+        root: {
+          justifyContent: "flex-start"
+        }
+      })(MuiMenuItem);
+
     const history = useHistory()
     return (
         <div>
             <div id='profileBox' className='text-center'>
+            <IconButton
+                    aria-label="more"
+                    aria-controls="long-menu"
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                    style={{float:'right'}}
+                >
+                    <MoreVertIcon style={{color:'black'}}/>
+            </IconButton>
+            <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+            >
+                <MenuItem onClick={handleClose}>Copy Profile Link</MenuItem>
+                <MenuItem onClick={handleClose}>Share this profile</MenuItem>
+            </Menu>
             <div className='row container-fluid' style={{marginTop:'5em',marginLeft:'0'}}>
+                
                 <div className='col-md-6'>               
-                    <img src={photo} className='img-circle' style={{borderRadius:'50%',height:'10em'}}></img>       
+                    <img src={photo} className='img-circle' style={{borderRadius:'50%',height:'8em'}}></img>       
                 </div>      
                 <div className='col-md-6' style={{marginBottom:'3em'}}>
                     <h3 style={{marginTop:'1em', display:'inline'}}>Username </h3><Icon icon={sharpVerified} style={{color: '#3a86fe',display:'inline',verticalAlign:'inherit'}}  />

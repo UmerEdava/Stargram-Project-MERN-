@@ -56,8 +56,11 @@
   },
   "devDependencies": {
     "@iconify/icons-el": "^1.1.0",
+    "@iconify/icons-fluent": "^1.1.13",
     "@iconify/icons-ic": "^1.1.3",
+    "@iconify/icons-openmoji": "^1.1.13",
     "@iconify/icons-simple-line-icons": "^1.1.0",
+    "@iconify/icons-system-uicons": "^1.1.1",
     "@iconify/react": "^1.1.4"
   }
 }
