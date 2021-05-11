@@ -137,21 +137,23 @@ function Home() {
                      className={classes.media}
                      image={server+'/images/profile-pictures/Celebrities/'+ data._id + '.jpg'}
                      title="Contemplative Reptile"
-                   />
-                   
+                   />                        
                    
                     </CardActionArea>
                     </Card> */}
-                    <Link to={{ 
+                    {/* <Link to={{
                       pathname: "/secondProfile", 
                       state: data._id
-                    }}>
+                    }}> */}
 
-                      <img src={server+'/images/profile-pictures/Celebrities/'+ data._id + '.jpg'} style={{height: '49vh',
+                    <img onClick={()=>history.push(`/secondProfile/${data._id}`)}
+                      src={server+'/images/profile-pictures/Celebrities/'+ data._id + '.jpg'} style={{height: '49vh',
                       width: '18vw',
-                      borderRadius: '2%'}}></img>
+                      borderRadius: '2%',
+                      cursor:'pointer'}}>
+                    </img>
       
-                    </Link> 
+                    {/* </Link>  */}
  
                      <h5 style={{marginTop: '8px',marginBottom: '2px'}}>{data.displayName}</h5>
                      <p style={{color: '#a7a0a0'}}>{data.bio.substr(0,29)}...</p>

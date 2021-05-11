@@ -1,4 +1,5 @@
 import React from 'react'
+import {useParams} from 'react-router-dom'
 import './Chatbox.css'
 import chatbg from '../../../../images/chatbg.jpg';
 import { Icon, InlineIcon } from '@iconify/react';
@@ -13,6 +14,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import server from '../../../../Server'
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -33,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
 export default function Chatbox() {
     document.body.style = 'background-color: #f1f1f1;'
 
+    const {displayName,starId} = useParams()
+    console.log('param id',starId)
+
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [fullWidth, setFullWidth] = React.useState(true);
@@ -51,8 +56,8 @@ export default function Chatbox() {
         <div>
             <div id="chatbox">
                 <div id='chatHead'>
-                    <img id='chatDp' src='https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80' alt='profile-picture'></img>
-                    <h6 style={{display:'inline',marginLeft:'1rem'}}>Display name </h6><Icon icon={sharpVerified} style={{color: '#3a86fe',display:'middle',verticalAlign:'inherit'}}  />
+                    <img id='chatDp' src={server+'/images/profile-pictures/Celebrities/'+starId+'.jpg'} alt='profile-picture'></img>
+                    <h6 style={{display:'inline',marginLeft:'1rem'}}>{displayName} </h6><Icon icon={sharpVerified} style={{color: '#3a86fe',verticalAlign:'middle'}}  />
                 </div>
                 <div id='chatBody'>
 

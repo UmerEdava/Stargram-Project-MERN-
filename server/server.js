@@ -13,7 +13,7 @@ const app = express();
 const __dirname = path.resolve(path.dirname('')); 
 app.use(express.json({limit:"30mb",extended:true}))
 app.use(express.urlencoded({limit:"30mb",extended:true}))
-app.use(cors())  
+app.use(cors())                                        
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/',userRouter)

@@ -786,6 +786,14 @@ export const getAllVerifiedCelebrities = async(req,res) => {
     res.json({verifiedCelebrities:verifiedCelebrities})
 }
 
+export const getCelebrityDetails = async (req,res) => {
+    let starId = req.query.starId
+    console.log('starId',starId)
+    let starDetails = await celebrityDetails.findOne({_id:mongoose.Types.ObjectId(starId)})
+    console.log('details',starDetails)
+    res.json(starDetails)
+}
+
 // export const addPost = (req,res) => {
 //     try {
 //         console.log('yes in here');

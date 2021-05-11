@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 
 import {home,getLogin,userSignup,checkExisting,sendOTP,addProfilePic,verifyOTP,googleSignup,googleLogin,profile,getUserDetails} from '../controllers/users.js'
 import {changeProfilePic,changeUserDetails,buyMessages,paymentSuccess,addCredit,sendCelebrityOTP,verifyCelebrityOTP} from '../controllers/users.js';
-import {checkCelebrityExisting,checkCelebrityVerification,addImage,getAllVerifiedCelebrities} from '../controllers/users.js';
+import {checkCelebrityExisting,checkCelebrityVerification,addImage,getAllVerifiedCelebrities,getCelebrityDetails} from '../controllers/users.js';
  
 const router = express.Router();
 
@@ -61,5 +61,6 @@ router.post('/checkCelebrityExisting', checkCelebrityExisting)
 router.post('/checkCelebrityVerification',verifyJWT, checkCelebrityVerification)
 router.post('/addImage', addImage)
 router.get('/getAllVerifiedCelebrities', getAllVerifiedCelebrities)
+router.get('/getCelebrityDetails', getCelebrityDetails)
 
 export default router; 

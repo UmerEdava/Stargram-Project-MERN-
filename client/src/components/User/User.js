@@ -1,5 +1,5 @@
 // import './App.css';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 
 import Appbar from './Appbar/Appbar';
 import Register from './Forms/Register-form/Register';
@@ -18,8 +18,8 @@ import Chatbox from './Messages/Chat/Chatbox'
 
 function User() {
   return (
-    <div style={{ background: "" }} id="main">
-        <Router>
+    <div id="main">
+        <Switch>
             <Route path="/" exact>
               <Home/> 
             </Route>
@@ -47,13 +47,13 @@ function User() {
             <Route path="/notifications">
               <Appbar/><Notifications/>
             </Route>
-            <Route path="/secondProfile">
+            <Route path="/secondProfile/:starId">
               <Appbar/><OtherPersonProfile/>
             </Route>
-            <Route path="/chatbox">
+            <Route path="/chatbox/:displayName/:starId">
               <Appbar/><Chatbox/>
             </Route>
-        </Router>
+        </Switch>
     </div>
   );
 }
