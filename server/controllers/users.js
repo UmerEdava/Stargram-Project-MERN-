@@ -346,22 +346,45 @@ export const googleLogin = async (req, res) => {
         email: user.email
          
     })
-    console.log('exis',existingAccount)
-    if (existingAccount) {
-        const id = existingAccount[0]._id
-        const token = jwt.sign({
-            id
-        }, "stargramSecret", {
-            expiresIn: 30000000000000,
-        })
-        console.log('google jwt success')
-        res.json({
-            auth: true,
-            token: token,
-            userId: existingAccount[0]._id,
-            username: existingAccount[0].username,
-            user: existingAccount[0]
-        })
+    let existingStarAccount = await celebrityDetails.find({
+        email: user.email         
+    })
+    console.log('exis',existingAccount,existingStarAccount)
+    if (existingAccount&&existingStarAccount) {
+        console.log('in if')
+        if(existingAccount.length>0){
+            var id = existingAccount[0]._id 
+            const token = jwt.sign({
+                id
+            }, "stargramSecret", {
+                expiresIn: 30000000000000,
+            })
+            console.log('google jwt success')
+            res.json({
+                auth: true,
+                token: token,
+                userId: existingAccount[0]._id,
+                username: existingAccount[0].username,
+                user: existingAccount[0]
+            })
+        }
+        else{
+            var id = existingStarAccount[0]._id
+            const token = jwt.sign({
+                id
+            }, "stargramSecret", {
+                expiresIn: 30000000000000,
+            })
+            console.log('google jwt success')
+            res.json({
+                auth: true,
+                token: token,
+                userId: existingStarAccount[0]._id,
+                username: existingStarAccount[0].username,
+                user: existingStarAccount[0]
+            })
+        } 
+        
     } else {
         const newUser = new userDetails(user)
 

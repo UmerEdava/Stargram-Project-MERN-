@@ -27,6 +27,7 @@
     "react-scripts": "4.0.3",
     "react-toast-notifications": "^2.4.4",
     "react-toastify": "^7.0.4",
+    "socket.io-client": "^4.1.0",
     "use-state-with-callback": "^2.0.3",
     "web-vitals": "^1.1.1"
   },

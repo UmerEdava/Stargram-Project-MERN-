@@ -1,5 +1,5 @@
-import React from 'react'
-import {useParams} from 'react-router-dom'
+import React,{useEffect,useState} from 'react'
+import {useParams,useHistory} from 'react-router-dom'
 import './Chatbox.css'
 import chatbg from '../../../../images/chatbg.jpg';
 import { Icon, InlineIcon } from '@iconify/react';
@@ -15,6 +15,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import server from '../../../../Server'
+import socketIOClient from "socket.io-client";
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -42,6 +43,8 @@ export default function Chatbox() {
     const [open, setOpen] = React.useState(false);
     const [fullWidth, setFullWidth] = React.useState(true);
     const [maxWidth, setMaxWidth] = React.useState('sm');
+    
+    const history = useHistory()
   
     const handleClickOpen = () => {
       setOpen(true);
@@ -50,6 +53,27 @@ export default function Chatbox() {
     const handleClose = () => {
       setOpen(false);
     };
+
+
+    const [chat,setChat] = useState([])
+    const [response,setResponse] = useState()
+
+    useEffect(()=>{
+      const socket = socketIOClient.connect(server)
+
+      let token = localStorage.getItem('token')
+      let starToken = localStorage.getItem('starToken')
+
+      if(!token&&!starToken){
+        console.log('ondey..');
+        history.push('/login')
+      }
+
+      socket.on('message',(data)=>{
+        console.log('reply',data);
+        // setResponse(data)
+      })
+    },[])
   
     return (
         
