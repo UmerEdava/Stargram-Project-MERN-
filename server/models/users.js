@@ -9,7 +9,13 @@ const userSchema = mongoose.Schema({
     socialMedia: String,
     gender: String,
     dob: String,
-    creditMessages: Number,
+    creditMessages: {
+        type: Number,
+        default: 0
+    },
+    referralCode : String,
+    referredBy : String,
+    referralCount : Number,
     followers: {
         type: Number,
         default: 0

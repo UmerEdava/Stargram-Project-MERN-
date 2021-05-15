@@ -10,6 +10,7 @@ import base64ToImage from 'base64-to-image';
 import Razorpay from "razorpay";
 import crypto from 'crypto';
 import multer from 'multer'
+import voucher_codes from 'voucher-code-generator'
 // require("dotenv").config();
 
 const storage = multer.diskStorage({
@@ -161,7 +162,25 @@ export const checkExisting = async (req, res) => {
             displayName: values.displayName
         })
 
-        if (existingEmail.length > 0 && celebrityExistingEmail.length > 0) {
+        let inputReferral = values.referralCode
+        var referred = 'normal'
+        var referredBy
+        console.log('input Referral',inputReferral)
+
+        if(inputReferral){
+            referredBy = await userDetails.findOne({referralCode: inputReferral})
+            if(referralCode){
+                referred = 'correct'
+            }else{
+                referred = 'wrong'
+            }
+            console.log('referral',referralCode)
+        }
+        
+        if(referred == 'wrong'){
+            res.json({referralWrong: true})
+        }
+        else if (existingEmail.length > 0 && celebrityExistingEmail.length > 0) {
             console.log('mail');
             response.existingEmail = true
             console.log(response);
@@ -179,6 +198,12 @@ export const checkExisting = async (req, res) => {
             res.json(response)
         } else {
             console.log('not existing');
+
+            if(referred == 'normal'){
+                response.referredBy = 'none'                
+            }else if(referred == 'correct'){
+                response.referredBy = referredBy[0].displayName
+            }
 
             response.newUser = true
             res.json(response)
@@ -236,6 +261,21 @@ export const verifyOTP = (req, res) => {
 
             userDetail.password = await bcrypt.hash(userDetail.password, 10)
             console.log('**', userDetail.password);
+            
+            if(userDetail.referredBy != 'none'){
+                userDetails.updateOne({displayName:userDetail.referredBy},{$inc:{referralCount:1}})
+            }
+
+            let newCode = voucher_codes.generate({
+                length: 6,
+                count: 1
+            });
+            console.log('new code ** : ',newCode)
+
+            userDetail.referralCode = newCode
+
+            userDetail.creditMessages = 1
+
             const newUser = new userDetails(userDetail)
 
 
@@ -252,7 +292,8 @@ export const verifyOTP = (req, res) => {
                     auth: true,
                     token: token,
                     userId: response._id,
-                    username: response.displayName
+                    username: response.displayName,
+                    referredUser: true
                 })
             })
 

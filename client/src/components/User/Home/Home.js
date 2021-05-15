@@ -102,6 +102,15 @@ function Home() {
             history.push('/login')
         }
 
+        let referredUser = localStorage.getItem('referredUser')
+
+        if(referredUser){
+
+          
+
+          localStorage.removeItem('referredUser')
+
+        }
 
         axios.get(server+'/getAllVerifiedCelebrities').then((response)=>{
           console.log('verifiers',response.data)

@@ -40,8 +40,8 @@ export class MultiRegistration extends Component {
 
     render() {
         const { step } = this.state;
-        const { email, phone, password, displayName, otp, creditMessages } = this.state;
-        const values = { email, phone, password, displayName, otp, creditMessages:1 }
+        const { email, phone, password, displayName, otp, creditMessages, referralCode, referredBy, referralCount } = this.state;
+        const values = { email, phone, password, displayName, otp, creditMessages, referralCode, referredBy, referralCount }
         
         switch(step) {
             case 1: 

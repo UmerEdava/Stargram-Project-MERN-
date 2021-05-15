@@ -147,8 +147,17 @@ const useStyles = makeStyles((theme) => ({
                     document.getElementById('cPasswordError').innerHTML = "Another account is using this phone number"
                   }else if(response.data.existingDisplayName){
                     document.getElementById('cPasswordError').innerHTML = "Sorry, display name already exists"
+                  }else if(response.data.referralWrong){
+                    document.getElementById('cPasswordError').innerHTML = "Sorry, entered referral code is incorrect"
                   }else if(response.data.newUser){
-                      values.creditMessages = 0
+                    
+                      if(response.data.referredBy == 'normal'){
+                        values.referredBy = 'none'
+                      }else{
+                        values.referredBy = response.data.referredBy
+                      }
+
+                      // values.creditMessages = 0
                       props.nextStep()
                   }
                  
@@ -387,6 +396,7 @@ const useStyles = makeStyles((theme) => ({
             />
             
           </Grid>
+          <input id='referralCode' onChange={handleChange('referralCode')} type='text' placeholder='Referral Code'></input>
           <p id="cPasswordError" style={{ color: 'rgb(255 0 0)' }}></p>
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" id="signupForm" />}

@@ -145,6 +145,10 @@ const useStyles = makeStyles((theme) => ({
               localStorage.setItem("token", response.data.token)
               localStorage.setItem('userId', response.data.userId)
               localStorage.setItem('username', response.data.username)
+              
+              if(response.data.referredUser){
+                localStorage.setItem('referredUser', true)
+              }
 
               props.nextStep()
           }else{
