@@ -263,7 +263,14 @@ export const verifyOTP = (req, res) => {
             console.log('**', userDetail.password);
             
             if(userDetail.referredBy != 'none'){
-                userDetails.updateOne({displayName:userDetail.referredBy},{$inc:{referralCount:1}})
+                // userDetails.updateOne({displayName:userDetail.referredBy},{$inc:{referralCount:1}})
+
+                let referredByUser = userDetails.findOne({displayName:userDetail.referredBy})
+                console.log('referredByUser',referredByUser);
+
+                client.messages
+                    .create({body: 'Hi there! your friend had created an account in STARGRAM with your referral code. Here is your promo code to claim a free credit message.', from: '+15017122661', to: '+15558675310'})
+                    .then(message => console.log(message.sid));
             }
 
             let newCode = voucher_codes.generate({

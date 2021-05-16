@@ -16,6 +16,11 @@ import sampleStar from '../../../images/Karthik Surya.jpg';
 import axios from "axios";
 import server from '../../../Server'
 import {ListItem,ListItemText} from '@material-ui/core'
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import freeCreditIcon from '../../../images/free-credit-icon.jpg'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -60,6 +65,28 @@ const useStyles = makeStyles((theme) => ({
   //   // })
   //   history.push('/secondProfile',id)
   //   }
+
+  function SimpleDialog(props) {
+    const classes = useStyles();
+    const { onClose, open } = props;
+  
+    const handleClose = () => {
+      onClose();
+    };
+  
+    return (
+      <Dialog onClose={handleClose} className='text-center' aria-labelledby="simple-dialog-title" open={open}>
+        {/* <DialogTitle id="simple-dialog-title">Congratulations</DialogTitle> */}
+        <DialogContent>
+          <DialogContentText className='text-center' id="alert-dialog-description">
+            <img src={freeCreditIcon} height='85px'></img>
+            
+          </DialogContentText>
+          <p>Congratulations, you got 1 free message credit</p>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
 function Home() {
     const classes = useStyles();
@@ -106,7 +133,7 @@ function Home() {
 
         if(referredUser){
 
-          
+          setOpen(true);          
 
           localStorage.removeItem('referredUser')
 
@@ -124,7 +151,11 @@ function Home() {
 
         // var width = document.getElementById('card').offsetWidth
         
-    
+        const [open, setOpen] = React.useState(false);
+      
+        const handleClose = () => {
+          setOpen(false);
+        };
 
     return (
 
@@ -170,8 +201,13 @@ function Home() {
                   </div>
                   )}
                 </div>
-                
+                {/* <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+                  Open simple dialog
+                </Button> */}
                 </div>
+
+                <SimpleDialog open={open} onClose={handleClose} />
+
            </div>
         </div>
     )
