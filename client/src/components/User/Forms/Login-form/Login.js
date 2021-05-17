@@ -74,7 +74,7 @@ export default function Login() {
   const loginSubmit = (event) => {
     event.preventDefault();
     
-      console.log("form submitting...");
+      console.log("form submitting...",login);
       Axios({
         method: "post",
         url: "http://localhost:3001/login",

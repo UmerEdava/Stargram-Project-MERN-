@@ -72,44 +72,81 @@ export const getLogin = async (req, res) => {
 
     try {
         let loginDetails = req.body
+        console.log('back',loginDetails);
 
 
         let user = await userDetails.find({
             email: loginDetails.emailOrPhone
         })
 
+        let star = await celebrityDetails.find({
+            email: loginDetails.emailOrPhone
+        })
+        console.log('star or user',user,star)
 
-        if (user.length > 0) {
-            console.log('db', user[0].username);
-            bcrypt.compare(loginDetails.password, user[0].password).then((status) => {
-                if (status) {
-                    response.valid = true
-                    console.log('in back valid', status);
+        if (user.length > 0 || star.length > 0) {
+            // console.log('db', user[0].username);
+            console.log('**in in **',star)            
 
-                    const id = user[0]._id
-                    const token = jwt.sign({
-                        id
-                    }, "stargramSecret", {
-                        expiresIn: 300000000000,
-                    })
-                    console.log('456', user[0]);
-                    res.json({
-                        auth: true,
-                        token: token,
-                        userId: user[0]._id,
-                        username: user[0].username,
-                        user: user[0]
-                    })
-                } else {
-                    console.log('in back wrong', status);
-
-                    res.json({
-                        auth: false,
-                        message: "invalid credentials",
-                        wrong: true
-                    })
-                }
-            })
+                    if(user.length > 0){
+                        bcrypt.compare(loginDetails.password, user[0].password).then((status) => {
+                            if (status) {
+                                response.valid = true
+                                console.log('in back valid', status);
+                                const id = user[0]._id
+                                const token = jwt.sign({
+                                    id
+                                }, "stargramSecret", {
+                                    expiresIn: 300000000000,
+                                })
+                                console.log('456', user[0]);
+                                res.json({
+                                    auth: true,
+                                    token: token,
+                                    userId: user[0]._id,
+                                    username: user[0].displayName,
+                                    user: user[0]
+                                })
+                            } else {
+                                console.log('in back wrong', status);
+            
+                                res.json({
+                                    auth: false,
+                                    message: "invalid credentials",
+                                    wrong: true
+                                })
+                            }
+                        })
+                    }else if(star.length > 0){
+                        bcrypt.compare(loginDetails.password, star[0].password).then((status) => {
+                            if (status) {
+                                response.valid = true
+                                console.log('in back valid', status);
+                                const id = star[0]._id
+                                const token = jwt.sign({
+                                    id
+                                }, "stargramSecret", {
+                                    expiresIn: 300000000000,
+                                })
+                                console.log('456', star[0]);
+                                res.json({
+                                    auth: true,
+                                    token: token,
+                                    userId: star[0]._id,
+                                    username: star[0].displayName,
+                                    user: star[0]
+                                })
+                            } else {
+                                console.log('in back wrong', status);
+            
+                                res.json({
+                                    auth: false,
+                                    message: "invalid credentials",
+                                    wrong: true
+                                })
+                            }
+                        })    
+                    }    
         } else {
             response.notUser = true
             console.log('in back not user');
@@ -124,6 +161,7 @@ export const getLogin = async (req, res) => {
     }
 
 }
+
 
 export const home = async (req, res) => {
     try {
