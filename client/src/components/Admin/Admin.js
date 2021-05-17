@@ -12,7 +12,7 @@ export default function Admin() {
               <Dashboard/>
             </Route>
             <Route path="/admin/all_users">
-              <All_Users/>
+              <All_Users/> 
             </Route>
             <Route path="/admin/login">
               <Login/> 
