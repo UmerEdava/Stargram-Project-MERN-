@@ -133,12 +133,12 @@ function Home() {
 
         if(referredUser){
 
-          setOpen(true);          
+          setOpen(true);
 
           localStorage.removeItem('referredUser')
 
         }
-
+ 
         axios.get(server+'/getAllVerifiedCelebrities').then((response)=>{
           console.log('verifiers',response.data)
           setStarDetails(response.data.verifiedCelebrities)

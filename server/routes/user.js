@@ -5,7 +5,8 @@ import jwt from 'jsonwebtoken'
 import {home,getLogin,userSignup,checkExisting,sendOTP,addProfilePic,verifyOTP,googleSignup,googleLogin,profile,getUserDetails} from '../controllers/users.js'
 import {changeProfilePic,changeUserDetails,buyMessages,paymentSuccess,addCredit,sendCelebrityOTP,verifyCelebrityOTP} from '../controllers/users.js';
 import {checkCelebrityExisting,checkCelebrityVerification,addImage,getAllVerifiedCelebrities,getCelebrityDetails} from '../controllers/users.js';
- 
+// import {} from '../controllers/user.js'
+
 const router = express.Router();
 
 const verifyJWT = (req, res, next) => {

@@ -2,7 +2,11 @@ import * as React from "react";
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { Title } from 'react-admin';
+import CardActions from '@material-ui/core/CardActions';
+
 export default function Dashboard(){
+    document.body.style.backgroundColor = '#eef1f6';
+    
 
     return(
     <>
@@ -10,7 +14,7 @@ export default function Dashboard(){
         <div className="nano">
             <div className="nano-content">
                 <ul>
-                    <li className="label">Main</li>
+                    <li className="label" >Main</li>
 
                     <li className="active"><a><i className="ti-home"></i> Dashboard</a></li>
                     
@@ -276,6 +280,93 @@ export default function Dashboard(){
             </ul>
         </div>
     </div>
+
+    {/* Content */}
+    <div className='content-wrap'>
+        <div className='main'>
+            <div className='container-fluid'>
+                <div className="row">
+                    <div className="col-lg-8 p-r-0 title-margin-right">
+                        <div className="page-header">
+                            <div className="page-title">
+                                <h1>Dashboard</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-lg-4 p-l-0 title-margin-left">
+                        <div className="page-header">
+                            <div className="page-title">
+                                <ol className="breadcrumb text-right">
+                                    <li><a href="#">Dashboard</a></li>
+                                    <li className="active">Home</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className='main-content'>
+                    <div className='row' style={{marginTop:'7.5px'}}>
+                        <div className='col-md-3' style={{paddingLeft:'7.5px',paddingRight:'7.5px'}}>
+                        <Card width='28px' style={{boxShadow:'none',borderRadius:'0'}}>
+                            <CardContent>
+                            
+                                    <div class="media-left meida media-middle">
+                                        <span><i class="ti-bag f-s-22 color-primary border-primary round-widget"></i></span>
+                                    </div>
+                                    <div class="media-body media-text-right">
+                                        <h4 style={{fontSize:'18px'}}>$1278</h4>
+                                        <h6 style={{fontSize:'12px'}}>Earning</h6>
+                                    </div>                                
+                            
+                            </CardContent>
+                        </Card>
+                        </div>
+                        <div className='col-md-3' style={{paddingLeft:'7.5px',paddingRight:'7.5px'}}>
+                        <Card width='28px' style={{boxShadow:'none',borderRadius:'0'}}>
+                            <CardContent className='text-right'>
+                            <div class="media-left meida media-middle">
+                                        <span><i class="ti-bag f-s-22 color-primary border-primary round-widget"></i></span>
+                                    </div>
+                                    <div class="media-body media-text-right">
+                                        <h4 style={{fontSize:'18px'}}>$1278</h4>
+                                        <h6 style={{fontSize:'12px'}}>Earning</h6>
+                                    </div> 
+                            </CardContent>
+                        </Card>
+                        </div>
+                        <div className='col-md-3' style={{paddingLeft:'7.5px',paddingRight:'7.5px'}}>
+                        <Card width='28px' style={{boxShadow:'none',borderRadius:'0'}}>
+                            <CardContent className='text-right'>
+                                    <div class="media-left meida media-middle">
+                                        <span><i class="ti-bag f-s-22 color-primary border-primary round-widget"></i></span>
+                                    </div>
+                                    <div class="media-body media-text-right">
+                                        <h4 style={{fontSize:'18px'}}>$1278</h4>
+                                        <h6 style={{fontSize:'12px'}}>Earning</h6>
+                                    </div> 
+                            </CardContent>
+                        </Card>
+                        </div>
+                        <div className='col-md-3' style={{paddingLeft:'7.5px',paddingRight:'7.5px'}}>
+                        <Card width='28px' style={{boxShadow:'none',borderRadius:'0'}}>
+                            <CardContent className='text-right'>
+                                    <div class="media-left meida media-middle">
+                                        <span><i class="ti-bag f-s-22 color-primary border-primary round-widget"></i></span>
+                                    </div>
+                                    <div class="media-body media-text-right">
+                                        <h4 style={{fontSize:'18px'}}>$1278</h4>
+                                        <h6 style={{fontSize:'12px'}}>Earning</h6>
+                                    </div> 
+                            </CardContent>
+                        </Card>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
    
     </>
     )

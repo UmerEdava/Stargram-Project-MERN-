@@ -267,9 +267,9 @@ export const verifyOTP = (req, res) => {
 
                 let referredByUser = userDetails.findOne({displayName:userDetail.referredBy})
                 console.log('referredByUser',referredByUser);
-
+//change referredUser to referredUser[0]
                 client.messages
-                    .create({body: 'Hi there! your friend had created an account in STARGRAM with your referral code. Here is your promo code to claim a free credit message.', from: '+15017122661', to: '+15558675310'})
+                    .create({body: 'Hi there! your friend had created an account in STARGRAM with your referral code. Here is your promo code to claim a free credit message.', from: '+15017122661', to: `+91${referredByUser.phone}`})
                     .then(message => console.log(message.sid));
             }
 
