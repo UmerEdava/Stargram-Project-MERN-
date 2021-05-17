@@ -15,7 +15,7 @@ export default function Admin() {
               <All_Users/>
             </Route>
             <Route path="/admin/login">
-              <Login/>
+              <Login/> 
             </Route>
         </Router>
         </div>
