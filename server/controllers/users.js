@@ -409,18 +409,43 @@ export const userSignup = async (req, res) => {
 export const googleSignup = async (req, res) => {
     const user = req.body
     console.log('in back', user);
-    let existingAccount = await userDetails.find({
+    let existingAccount = await userDetails.findOne({
         email: user.email
     })
-    if (existingAccount) {
+
+    let existingStarAccount = await celebrityDetails.findOne({
+        email: user.email
+    })
+
+    console.log('exis',existingAccount,existingStarAccount)
+    if (existingAccount || existingStarAccount) {
+        console.log('existing user')
 
         res.json(existingAccount)
     } else {
+        console.log('new user')
         const newUser = new userDetails(user)
 
         newUser.save().then((response) => {
             console.log('in back', response);
-            res.json(response)
+
+            console.log('in back created');
+            const id = response._id
+            const token = jwt.sign({
+                id
+            }, "stargramSecret", {
+                expiresIn: 300000000000,
+            })
+
+            console.log('name',response.displayName)
+            
+            res.json({
+                auth: true,
+                token: token,
+                userId: id,
+                displayName: response.displayName
+            })
+
         })
     }
 }
@@ -532,8 +557,18 @@ export const getUserDetails = async (req, res) => {
         let user = await userDetails.findOne({
             _id: mongoose.Types.ObjectId(req.userId)
         })
-        console.log('user', user);
-        res.json(user)
+
+        let star = await celebrityDetails.findOne({
+            _id: mongoose.Types.ObjectId(req.userId)
+        })
+
+        console.log('user', user,star);
+        if(user){
+            res.json(user)
+        }else if(star){
+            res.json(star)
+        }
+        
     } catch (error) {
 
     }
@@ -901,6 +936,50 @@ export const getCelebrityDetails = async (req,res) => {
     let starDetails = await celebrityDetails.findOne({_id:mongoose.Types.ObjectId(starId)})
     console.log('details',starDetails)
     res.json(starDetails)
+}
+
+export const follow = async(req,res) => {
+    let secondId = req.body.secondId
+    console.log('Id',req.userId,secondId)
+    // _id: mongoose.Types.ObjectId(req.userId)
+    let star =await celebrityDetails.findOne({_id: mongoose.Types.ObjectId(secondId)})
+    let user =await userDetails.findOne({_id: mongoose.Types.ObjectId(secondId)})
+
+    console.log('star or user',star,user)
+
+    if(star){
+        await celebrityDetails.updateOne({_id: mongoose.Types.ObjectId(secondId)},{$push:{followers:req.userId}}).then((data)=>{
+            console.log('return',data)
+        })
+        res.json({changed:true})
+    }else if(user){
+        await userDetails.updateOne({_id: mongoose.Types.ObjectId(secondId)},{$push:{followers:req.userId}}).then((data)=>{
+            console.log('returnn',data)
+        })
+        res.json({changed:true})
+    }
+}
+
+export const unFollow = async(req,res) => {
+    let secondId = req.body.secondId
+    console.log('Id',req.userId,secondId)  
+    // _id: mongoose.Types.ObjectId(req.userId)
+    let star =await celebrityDetails.findOne({_id: mongoose.Types.ObjectId(secondId)})
+    let user =await userDetails.findOne({_id: mongoose.Types.ObjectId(secondId)})
+
+    console.log('star or user',star,user)
+
+    if(star){
+        await celebrityDetails.updateOne({_id: mongoose.Types.ObjectId(secondId)},{$pull:{followers:req.userId}}).then((data)=>{
+            console.log('return',data)
+        })
+        res.json({changed:true})
+    }else if(user){
+        await userDetails.updateOne({_id: mongoose.Types.ObjectId(secondId)},{$pull:{followers:req.userId}}).then((data)=>{
+            console.log('returnn',data)
+        })
+        res.json({changed:true})
+    }
 }
 
 // export const addPost = (req,res) => {

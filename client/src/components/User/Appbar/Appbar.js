@@ -104,7 +104,7 @@ export default function Appbar() {
   function logout(){
     localStorage.removeItem('userId')
     localStorage.removeItem('token')
-    localStorage.removeItem('username')
+    localStorage.removeItem('displayName')
 
     history.push('/login')
   }
@@ -209,7 +209,7 @@ export default function Appbar() {
 
             
           
-          <Typography className={classes.title} onClick={home} variant="h6" style={{ color: '#FDDC03' }} noWrap>
+          <Typography className={classes.title} id='navHeading' onClick={home} variant="h6" style={{ color: '#FDDC03' }} noWrap>
             Stargram
           </Typography>
           <div className={classes.search} style={{ backgroundColor : '#E5E5E5' }}>

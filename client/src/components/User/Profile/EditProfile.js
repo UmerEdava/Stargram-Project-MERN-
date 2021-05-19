@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   details: {
-    marginTop: "15vh",
+    marginTop: "7vh",
     marginLeft: "12vw"
   },
   formControl: {
@@ -62,7 +62,7 @@ export default function EditProfile() {
   const [email,setEmail] = useState();
 
   useEffect(() => {
-    let username = localStorage.getItem('username')
+    let username = localStorage.getItem('displayName')
     let token = localStorage.getItem('token')
     let userId = localStorage.getItem('userId')
 
@@ -70,14 +70,14 @@ export default function EditProfile() {
       history.push('/login')
     }
 
-    document.getElementById('username').innerHTML = username
+    document.getElementById('username').innerHTML = username 
 
     Axios.get('http://localhost:3001/getUserDetails', {
         headers: {
             "x-access-token": localStorage.getItem("token")
           },
         }).then((response) => {
-        console.log(response);
+        console.log('response',response);
         if(response){
           console.log('in if');
           // document.getElementById('email').value = response.data.email
@@ -278,7 +278,7 @@ export default function EditProfile() {
       <Paper variant="outlined" >
           <div className="row">
               <div className="col-md-3">
-              <h4>Edit Profile</h4>
+              <h4 className='sideOptions'>Edit Profile</h4>
 
               </div>
               <div className="col-md-9">
@@ -287,7 +287,7 @@ export default function EditProfile() {
                         <h4 id="username" style={{marginLeft: "15vw",marginTop: "2vw"}}></h4> 
                         <p style={{marginLeft: "15vw",color: "#007bff", cursor: "pointer"}} onClick={changeDp}>Edit profile photo</p>
                         <input type="file" id="changeDp" name="profilePic" onChange={uploadImage} hidden></input>
-                        <div style={{marginTop:'5vw'}}>
+                        <div style={{marginTop:'3vw'}}>
                         <Form>
                         {/* <Form.Group as={Row} controlId="formPlaintextEmail">
                             <Form.Label column sm="2">

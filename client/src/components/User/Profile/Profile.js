@@ -166,6 +166,7 @@ export default function Profile(){
             <hr style={{borderTop: '1px solid #dbdbdb',marginTop:'14rem'}}/>
         </Row>
         <hr/>
+        <p id='favHeading'>Favourites</p>
 
         <Dialog
             fullScreen={fullScreen}

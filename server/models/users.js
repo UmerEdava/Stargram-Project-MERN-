@@ -16,10 +16,7 @@ const userSchema = mongoose.Schema({
     referralCode : String,
     referredBy : String,
     referralCount : Number,
-    followers: {
-        type: Number,
-        default: 0
-    },
+    followers: [String],
     messages: {
         type: Number,
         default: 0
@@ -42,10 +39,7 @@ const celebritySchema = mongoose.Schema({
         default: 1
     },
     verified: Boolean,
-    followers: {
-        type: Number,
-        default: 0
-    },
+    followers: [String],
     messages: {
         type: Number,
         default: 0

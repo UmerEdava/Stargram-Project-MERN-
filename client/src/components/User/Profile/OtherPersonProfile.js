@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect,useState } from 'react'
 import {useHistory,useParams} from 'react-router-dom'
 import photo from '../../../images/stargram-user.jpg';
 import { Icon, InlineIcon } from '@iconify/react';
@@ -18,22 +18,41 @@ export default function OtherPersonProfile(props) {
     console.log('params',starId)
     var displayName 
 
+    const [following,setFollowing] = useState(false)
+
     useEffect(()=>{
+
         axios.get(server+`/getCelebrityDetails/?starId=${starId}`)
             .then(function (response) {
                 // handle success
                 console.log(response);
+                var followersList = response.data.followers
+                console.log('axios',followersList)
                 displayName = response.data.displayName
                 document.getElementById('displayName').textContent = response.data.displayName+' '
                 document.getElementById('messages').textContent = response.data.messages+' Messages'
-                document.getElementById('followers').textContent = response.data.followers+' Followers'
+                document.getElementById('followers').textContent = response.data.followers.length+' Followers'
                 document.getElementById('bio').textContent = response.data.bio
                 document.getElementById('dp').src = `${server}/images/profile-pictures/Celebrities/${response.data._id}.jpg`
+            
+                let currentUser = localStorage.getItem('userId')
+                let isFollowing = followersList.find(e => e == currentUser)
+                console.log('find return',followersList,currentUser,following)
+                if(isFollowing){
+                    setFollowing(true)                      
+                }else{
+                    setFollowing(false)     
+                }
+            
             })
+
+        
     })
+
     //  const { id } =
     // (props.location && props.location.state) || {};
     // console.log('ii',props.location.state)
+
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleClick = (event) => {
@@ -51,6 +70,42 @@ export default function OtherPersonProfile(props) {
       })(MuiMenuItem);
 
     const history = useHistory()
+
+    function followButton () {
+
+        if(following){
+            axios.post(server+'/unFollow', {
+                secondId : starId
+            },{
+                headers: {
+                    'x-access-token': localStorage.getItem('token')
+                }
+            }).then((data)=>{
+                    console.log('thne') 
+
+                    setFollowing(false) 
+             
+            })
+        }else{
+            axios.post(server+'/follow', {
+                secondId : starId
+            },{
+                headers: {
+                    'x-access-token': localStorage.getItem('token')
+                }
+            }).then((data)=>{
+                    console.log('then',data)
+                    setFollowing(true)
+                
+            })
+        }
+
+    }
+
+    function unfollowButton () {
+
+    }
+
     return (
         <div>
             <div id='profileBox' className='text-center'>
@@ -76,7 +131,7 @@ export default function OtherPersonProfile(props) {
             <div className='row container-fluid' style={{marginTop:'5em',marginLeft:'0'}}>
                 
                 <div className='col-md-6'>               
-                    <img id='dp' className='img-circle' style={{borderRadius:'50%',height:'8em'}}></img>       
+                    <img id='dp' className='img-circle' style={{borderRadius:'50%',height:'8em',width:'8em'}}></img>       
                 </div>      
                 <div className='col-md-6' style={{marginBottom:'3em'}}>
                     <h3 id='displayName' style={{marginTop:'1em', display:'inline'}}> </h3><Icon icon={sharpVerified} style={{color: '#3a86fe',display:'inline',verticalAlign:'inherit'}}  />
@@ -89,7 +144,19 @@ export default function OtherPersonProfile(props) {
                     <p id='bio' style={{marginTop:"1rem",marginBottom:'2em',fontSize:'16px'}} className="bio">Hi guys!! please support me on stargram</p>
                 </div>
 
-                    <button className='btn btn-primary mr-4' style={{backgroundColor: 'white',color: '#3a86fe'}}>Follow</button>
+                    {/* {
+                        following ? <button id='unfollowButton' className='btn btn-primary mr-4' style={{backgroundColor: 'white',color: 'rgb(119 119 119)',borderColor:'rgb(119 119 119)'}} onClick={unfollowButton}>Following</button> : <button id='followButton' className='btn btn-primary mr-4' style={following ? {backgroundColor: 'white',color: 'rgb(119 119 119)',borderColor:'rgb(119 119 119)'} : {backgroundColor: 'white',color: '#3a86fe'}} onClick={followButton}>Follow</button>
+                    } */}
+
+                    <button id='followButton' className='btn btn-primary mr-4' style={following ? {backgroundColor: 'white',color: 'rgb(119 119 119)',borderColor:'rgb(119 119 119)'} : {backgroundColor: 'white',color: '#3a86fe'}} onClick={followButton}>{following ? 'Following' : 'Follow'}</button>
+
+                    {/* {if(setFollowing){
+                       <button id='followButton' className='btn btn-primary mr-4' style={{backgroundColor: 'white',color: '#3a86fe'}} onClick={followButton}>Follow</button>
+
+                    }else{
+                        <button id='unfollowButton' className='btn btn-primary mr-4' style={{backgroundColor: 'white',color: 'rgb(119 119 119)',borderColor:'rgb(119 119 119)'}} onClick={unfollowButton}>Following</button>
+                    }} */}
+
                     <button className='btn btn-primary' style={{backgroundColor:'#3a86fe'}} onClick={()=>{history.push(`/chatbox/${displayName}/${starId}`)}}>Message</button>
                 </div>
                 <h4 style={{marginLeft:'4vw'}}>Favourite Messages</h4>

@@ -144,7 +144,7 @@ const useStyles = makeStyles((theme) => ({
               localStorage.removeItem('starname')
               localStorage.setItem("token", response.data.token)
               localStorage.setItem('userId', response.data.userId)
-              localStorage.setItem('username', response.data.username)
+              localStorage.setItem('displayName', response.data.username)
               
               if(response.data.referredUser){
                 localStorage.setItem('referredUser', true)

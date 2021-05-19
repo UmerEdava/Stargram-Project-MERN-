@@ -260,9 +260,13 @@ const useStyles = makeStyles((theme) => ({
       headers: {
         "Content-Type": "application/json",
       },
-      data: values
+      data: values 
     }).then((response)=>{
+      console.log('res',response)
       if(response){
+        localStorage.setItem("token", response.data.token)
+        localStorage.setItem('userId', response.data.userId)
+        localStorage.setItem('displayName', response.data.displayName)
         history.push("/")
       }
     })
@@ -284,10 +288,14 @@ const useStyles = makeStyles((theme) => ({
       },
       data: values
     }).then((response)=>{
+      console.log('response',response)
       if(response){
+        localStorage.setItem("token", response.data.token)
+        localStorage.setItem('userId', response.data.userId)
+        localStorage.setItem('displayName', response.data.displayName)
         history.push("/")
       }
-    })
+    }) 
   }
 
   const onSuccess = response => console.log("ddd",response);
@@ -296,7 +304,7 @@ const useStyles = makeStyles((theme) => ({
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <div className={classes.paper}>
+      <div className={`${classes.paper} text-center`}>
         <Avatar className={classes.avatar}>
           <img src={Logo} alt='Logo' height="40px;"></img>
         </Avatar>
@@ -398,10 +406,10 @@ const useStyles = makeStyles((theme) => ({
           </Grid>
           <input id='referralCode' onChange={handleChange('referralCode')} type='text' placeholder='Referral Code'></input>
           <p id="cPasswordError" style={{ color: 'rgb(255 0 0)' }}></p>
-          <FormControlLabel
+          {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" id="signupForm" />}
             label="Remember me"
-          />
+          /> */}
           
           <Button
             type="submit"
@@ -416,7 +424,7 @@ const useStyles = makeStyles((theme) => ({
           { showOtp ? <SendOtp /> : null }
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Link href="#" variant="body2" style={{float:'left'}}>
                 Forgot password?
               </Link>
             </Grid>
