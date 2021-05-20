@@ -70,7 +70,7 @@ export default function EditProfile() {
       history.push('/login')
     }
 
-    document.getElementById('username').innerHTML = username 
+    document.getElementById('eusername').innerHTML = username 
 
     Axios.get('http://localhost:3001/getUserDetails', {
         headers: {
@@ -131,7 +131,7 @@ export default function EditProfile() {
         "profilePic":event.target.files[0]    
     });
 
-    document.getElementById('profilePicture').src = URL.createObjectURL(event.target.files[0])
+    document.getElementById('eprofilePicture').src = URL.createObjectURL(event.target.files[0])
 
     // const changeHandler = (event) => {
     //   setRegisterUser({
@@ -283,9 +283,9 @@ export default function EditProfile() {
               </div>
               <div className="col-md-9">
                     <div id="details" className={classes.details}>
-                        <img src={img} id="profilePicture"  className="rounded-circle" style={{float:"left"}}></img>  
-                        <h4 id="username" style={{marginLeft: "15vw",marginTop: "2vw"}}></h4> 
-                        <p style={{marginLeft: "15vw",color: "#007bff", cursor: "pointer"}} onClick={changeDp}>Edit profile photo</p>
+                        <img src={img} id="eprofilePicture"  className="rounded-circle" style={{float:"left"}}></img>  
+                        <h4 id="eusername" style={{marginLeft: "13.3vw",marginTop: "2vw"}}></h4> 
+                        <p style={{marginLeft: "13.3vw",color: "#007bff", cursor: "pointer"}} onClick={changeDp}>Edit profile photo</p>
                         <input type="file" id="changeDp" name="profilePic" onChange={uploadImage} hidden></input>
                         <div style={{marginTop:'3vw'}}>
                         <Form>

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect,useState} from 'react';
 import {useHistory} from 'react-router'
 import Appbar from '../Appbar/Appbar';
 import {Row, Col} from 'react-bootstrap'; 
@@ -28,6 +28,7 @@ import baselineEdit from '@iconify/icons-ic/baseline-edit';
 import outlineCreditCard from '@iconify/icons-ic/outline-credit-card';
 import Referral from '../../../images/referral.png'
 import chatHelp20Regular from '@iconify/icons-fluent/chat-help-20-regular';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -49,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Profile(){
     const classes = useStyles();
+    const [referralCode,setReferral] = useState()
 
     useEffect(() => {
         let username = localStorage.getItem('displayName') 
@@ -93,6 +95,7 @@ export default function Profile(){
             if(response.data.displayName){
                 console.log(response);
                 document.getElementById('creditMessages').innerHTML = response.data.creditMessages+" Credits"
+                setReferral(response.data.referralCode)
             }
         })   
     })
@@ -136,6 +139,37 @@ export default function Profile(){
             setOpen(false);
         };
 
+        const [referralOpen, setReferralOpen] = React.useState(false);
+
+        const handleReferralClickOpen = () => {
+            setOpen(false);
+            setReferralOpen(true);
+        };
+
+        const handleReferralClose = () => {
+            setReferralOpen(false);
+        };
+
+        function copyToClipboard () {
+            navigator.clipboard.writeText(document.getElementById('referralCodeInput').value)
+            handleTooltipOpen()
+        }
+
+        const [tooltipOpen, setTooltipOpen] = React.useState(false);
+
+        const handleTooltipClose = () => {
+            setTooltipOpen(false);
+        };
+
+        const handleTooltipOpen = () => {
+            setTooltipOpen(true);
+        };
+
+        // function outFunc() {
+        //     var tooltip = document.getElementById("myTooltip");
+        //     tooltip.innerHTML = "";
+        // }
+
     return(
         <>
         <Appbar/>
@@ -145,7 +179,7 @@ export default function Profile(){
                 <img src={defaultDp} id="profilePicture" className="rounded-circlem"></img>            
             </Col>
             <Col id='detailsDiv' className="mt-3" md={7} >
-                <h4 id="username"></h4><Icon onClick={handleClickOpen} icon={settingsIcon} id='settingsIcon'/>
+                <h4 id="username" style={{display:'inline'}}></h4><Icon onClick={handleClickOpen} icon={settingsIcon} id='settingsIcon'/>
 
                 <div style={{marginTop: "2rem"}}>
                     {/* <h6 style={{float:"left"}}>1 Credits</h6>
@@ -168,6 +202,7 @@ export default function Profile(){
         <hr/>
         <p id='favHeading'>Favourites</p>
 
+        {/* options start*/}
         <Dialog
             fullScreen={fullScreen}
             open={open}
@@ -185,7 +220,7 @@ export default function Profile(){
                 <ListItem button>
                 <Icon icon={outlineCreditCard} className={classes.icons} /><ListItemText primary="Payments" className={classes.options} />
                 </ListItem>
-                <ListItem button>
+                <ListItem button onClick={handleReferralClickOpen}>
                 <img src={Referral} style={{height: '24px',marginRight: '12px'}}></img><ListItemText primary="Referral" className={classes.options} />
                 </ListItem>
                 <ListItem button>
@@ -197,6 +232,44 @@ export default function Profile(){
             <DialogActions>
             </DialogActions>
         </Dialog>
+        {/* options end */}
+
+        {/* referral card starts */}
+        <Dialog
+            maxWidth='xs'
+            fullScreen={fullScreen}
+            open={referralOpen}
+            onClose={handleReferralClose}
+            aria-labelledby="responsive-dialog-title"
+            // style={{width:'369px',textAlign:'center'}}
+        >
+            <DialogTitle id="responsive-referral-dialog-title"><Icon onClick={handleReferralClose} style={{fontSize:'32px',verticalAlign: 'bottom',cursor:'pointer'}} icon={returnBackButton} />{" Referral"}</DialogTitle>
+            <DialogContent>
+            <DialogContentText>
+                <h6 id='referralLabel'>Invite friends to stargram</h6>
+                <p id='referralContent'>You'll earn free message credit when they sign up on stargram.</p>
+                <input type='text' id='referralCodeInput' defaultValue={referralCode} readOnly />
+                
+                {/* <span className="tooltiptext" id="myTooltip">Referral code copied to clipboard</span>  */}
+                <Tooltip PopperProps={{
+                  disablePortal: true,
+                }}
+                // onClose={handleTooltipClose}
+                onOpen={handleTooltipOpen}
+                disableFocusListener
+                disableHoverListener
+                disableTouchListener
+                title="Add"
+                >
+                    <button className='btn btn-primary' id='copyButton' onClick={copyToClipboard}>COPY</button>
+                </Tooltip>
+            </DialogContentText>                
+            </DialogContent>
+            <DialogActions> 
+            </DialogActions>
+        </Dialog>
+
+        {/* referral card end */}
 
         </div>
             

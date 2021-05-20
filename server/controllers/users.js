@@ -302,7 +302,7 @@ export const verifyOTP = (req, res) => {
             
             if(userDetail.referredBy != 'none'){
                 // userDetails.updateOne({displayName:userDetail.referredBy},{$inc:{referralCount:1}})
-
+                userDetail.creditMessages = 1
                 let referredByUser = userDetails.findOne({displayName:userDetail.referredBy})
                 console.log('referredByUser',referredByUser);
 //change referredUser to referredUser[0]
@@ -319,7 +319,6 @@ export const verifyOTP = (req, res) => {
 
             userDetail.referralCode = newCode
 
-            userDetail.creditMessages = 1
 
             const newUser = new userDetails(userDetail)
 
@@ -333,13 +332,24 @@ export const verifyOTP = (req, res) => {
                 }, "stargramSecret", {
                     expiresIn: 300000000000,
                 })
-                res.json({
-                    auth: true,
-                    token: token,
-                    userId: response._id,
-                    username: response.displayName,
-                    referredUser: true
-                })
+                if(userDetail.referredBy != 'none'){
+                    res.json({
+                        auth: true,
+                        token: token,
+                        userId: response._id,
+                        username: response.displayName,
+                        referredUser: true
+                    })
+                }else{
+                    res.json({
+                        auth: true,
+                        token: token,
+                        userId: response._id,
+                        username: response.displayName,
+                        referredUser: false
+                    })
+                }
+                
             })
 
         }).catch((data) => { 
@@ -424,6 +434,15 @@ export const googleSignup = async (req, res) => {
         res.json(existingAccount)
     } else {
         console.log('new user')
+
+        let newCode = voucher_codes.generate({
+            length: 6,
+            count: 1
+        });
+        console.log('new code ** : ',newCode)
+
+        user.referralCode = newCode[0]
+
         const newUser = new userDetails(user)
 
         newUser.save().then((response) => {

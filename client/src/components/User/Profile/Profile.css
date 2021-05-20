@@ -7,7 +7,7 @@
 }
 
 .belongings {
-    font-size: 18px;
+    font-size: 17px;
 }
 
 .rounded-circle {
@@ -43,11 +43,11 @@
     color: black;
     /* display: inline; */
     font-size: 30px;
-    margin-left: 13rem;
+    margin-left: 9.4rem;
     vertical-align: inherit;
     cursor: pointer;
 }
-#username{
+#eusername{
     /* display:inline */
 }
 #buyButton{
@@ -83,6 +83,47 @@
     line-height: 25px;
     padding: 16px 16px 16px 30px;
 }
+#profilePicture{
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+#referralLabel{
+    font-size: 1rem;
+    color: black;
+    font-weight: 600;
+}
+#referralContent{
+    font-weight: 500;
+}
+#userReferralCode{
+
+}
+#referralCodeInput{
+    margin-right: 10px;
+    text-align: center;
+    width: 69%;
+    height: 2.5rem;
+    margin-top: 1px;
+    border: 1px solid #ccc6c6;
+    border-radius: 4px;
+    color: #a0a0a0;
+    cursor: auto;
+    outline: 0;
+
+}
+/* #referralCodeInput{
+    outline: 0;
+} */
+#copyButton{
+    height: 2.5rem;
+    font-size: 14px;
+    width: 27%;
+    color: gainsboro;
+}
+#copyButton:focus{
+    outline:0;
+    box-shadow: none;
+}
+
 @media only screen and (max-width: 1200px){
     /*Tablets [601px -> 1200px]*/
     #detailsDiv {

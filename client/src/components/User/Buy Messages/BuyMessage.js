@@ -18,6 +18,7 @@ import { ToastProvider, useToasts } from 'react-toast-notifications';
 // import { Alert, AlertTitle } from '@material-ui/lab';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import './BuyMessage.css'
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -183,7 +184,7 @@ export default function BuyMessage() {
         <h5 className="text-left" >Buy Message Credit</h5>
         <RadioGroup aria-label="messagePack" name="messagePack" value={messagePack} onChange={handleChange}>
 
-        <Card className={classes.root}>
+        <Card className={classes.root} id='messagePackCard1'>
           {/* <CardContent> */}
             
             {/* <Typography variant="h5" component="h2">
@@ -201,7 +202,7 @@ export default function BuyMessage() {
           </div>
         </Card>
         
-        <Card className={classes.root,"mt-3"} style={{minWidth:"275px"}}>
+        <Card className={classes.root,"mt-3"} style={{minWidth:"275px"}} id='messagePackCard2'>
           
           <FormControl style={{float:"left", marginTop:"1rem"}} component="fieldset">
             <FormControlLabel className="ml-4 mt-3 mb-3" value="Recommended" control={<Radio />} label="Recommended" />
@@ -214,7 +215,7 @@ export default function BuyMessage() {
 
         </Card>
 
-        <Card className={classes.root,"mt-3"} style={{minWidth:"275px"}}>
+        <Card className={classes.root,"mt-3"} style={{minWidth:"275px"}} id='messagePackCard3'>
           
           <FormControl style={{float:"left", marginTop:"1rem"}} component="fieldset">
             <FormControlLabel className="ml-4 mt-3" value="SuperSaver" control={<Radio />} label="Super saver" />
