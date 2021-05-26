@@ -265,12 +265,7 @@ export default function EditProfile() {
 
       }
 
-    
   }
-
-
-
-  
 
   return (
       <>
@@ -279,6 +274,7 @@ export default function EditProfile() {
           <div className="row">
               <div className="col-md-3">
               <h4 className='sideOptions'>Edit Profile</h4>
+              <h4 className='sideOptions'>Change Password</h4>
 
               </div>
               <div className="col-md-9">
