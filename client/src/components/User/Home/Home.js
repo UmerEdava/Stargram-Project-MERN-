@@ -21,6 +21,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import freeCreditIcon from '../../../images/free-credit-icon.jpg'
+import './Home.css'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -140,9 +141,20 @@ function Home() {
         }
  
         axios.get(server+'/getAllVerifiedCelebrities').then((response)=>{
-          console.log('verifiers',response.data)
-          setStarDetails(response.data.verifiedCelebrities)
-        
+          console.log('re',response.data)
+          let stars = response.data.verifiedCelebrities
+          console.log('verifiers',stars)
+
+          let currentUser = localStorage.getItem('userId')
+          let obj = stars.find(o => o._id === currentUser);
+          console.log('obj',obj)
+
+          if(obj){
+            let index = stars.findIndex(x => x._id === currentUser);
+            stars.splice(index, 1);
+          }
+
+          setStarDetails(stars) 
         })
 
     }, [])
@@ -162,14 +174,71 @@ function Home() {
         <div>
 
             <Appbar/>   
-            <div  style={{paddingTop: "6vh",paddingRight: "5vw",paddingLeft: "5vw"}}>
+            <div  style={{paddingTop: "6rem",paddingRight: "5vw",paddingLeft: "5vw"}}>
                 <img src={cover} alt="cover" style={{width:"100%"}}></img>
                 <div style={{marginTop: "6vh"}}>
                 <h4># Trending on Stargram</h4>
+                <div className='trStars'>
+                {starDetails.map((data,index) => 
+                  <div className='trCard'>
+                    <img onClick={()=>history.push(`/secondProfile/${data._id}`)}
+                        src={server+'/images/profile-pictures/Celebrities/'+ data._id + '.jpg'} style={{height: '49vh',
+                        width: '18vw',
+                        borderRadius: '2%',
+                        cursor:'pointer'}}>
+                    </img>
+      
+                    {/* </Link>  */}
+ 
+                     <h5 style={{marginTop: '8px',marginBottom: '2px'}}>{data.displayName}</h5>
+                     <p style={{color: '#a7a0a0'}}>{data.bio.substr(0,29)}...</p>
+                  </div>
+                )}
+                </div>
+
+                <h4 className='homeSectionHead'>New & Noteworthy</h4>
+                <div className='trStars'>
+                {starDetails.map((data,index) => 
+                  <div className='trCard'>
+                    <img onClick={()=>history.push(`/secondProfile/${data._id}`)}
+                        src={server+'/images/profile-pictures/Celebrities/'+ data._id + '.jpg'} style={{height: '49vh',
+                        width: '18vw',
+                        borderRadius: '2%',
+                        cursor:'pointer'}}>
+                    </img>
+      
+                    {/* </Link>  */}
+ 
+                     <h5 style={{marginTop: '8px',marginBottom: '2px'}}>{data.displayName}</h5>
+                     <p style={{color: '#a7a0a0'}}>{data.bio.substr(0,29)}...</p>
+                  </div>
+                )}
+                </div>
+
+                <h4 className='homeSectionHead'>Slots Filling Fast</h4>
+                <div className='trStars'>
+                {starDetails.map((data,index) => 
+                  <div className='trCard'>
+                    <img onClick={()=>history.push(`/secondProfile/${data._id}`)}
+                        src={server+'/images/profile-pictures/Celebrities/'+ data._id + '.jpg'} style={{height: '49vh',
+                        width: '18vw',
+                        borderRadius: '2%',
+                        cursor:'pointer'}}>
+                    </img>
+      
+                    {/* </Link>  */}
+ 
+                     <h5 style={{marginTop: '8px',marginBottom: '2px'}}>{data.displayName}</h5>
+                     <p style={{color: '#a7a0a0'}}>{data.bio.substr(0,29)}...</p>
+                  </div>
+                )}
+                </div>
+                
+                <h4 className='homeSectionHead'>Discover</h4>
                 <div className="row">
                 
                 {starDetails.map((data,index) => 
-                
+                 
                   <div className='col-3' id="card">
                    {/* <Card className={classes.root} key={index}>
                    <CardActionArea>

@@ -95,6 +95,7 @@ export default function Profile(){
             if(response.data.displayName){
                 console.log(response);
                 document.getElementById('creditMessages').innerHTML = response.data.creditMessages+" Credits"
+                document.getElementById('followersCount').textContent = response.data.followers.length
                 setReferral(response.data.referralCode)
             }
         })   
@@ -173,7 +174,7 @@ export default function Profile(){
     return(
         <>
         <Appbar/>
-        <div className="body container">
+        <div className="body container" style={{paddingTop:'4rem'}}>
         <Row className='pt-5 container-fluid' style={{marginRight: "0",marginLeft: "0"}}>
             <Col className="text-center" md={5}>
                 <img src={defaultDp} id="profilePicture" className="rounded-circlem"></img>            
@@ -187,7 +188,7 @@ export default function Profile(){
                     <h6 >0 Followers</h6> */}
                     <span style={{marginRight:"2rem"}} id="creditMessages" className="belongings"></span>
                     <span style={{marginRight:"2rem"}} className="belongings">0 Messages</span>
-                    <span className="belongings">0 Followers</span>
+                    <span className="belongings"><span id='followersCount'></span> Followers</span>
                     <p style={{marginTop:"2rem"}} className="bio">Hi guys!! please support me on stargram</p>
                 </div>
                 {/* <Button variant="outline-secondary" size="lg" onClick={editProfile}>Edit Profile</Button>{' '}

@@ -269,7 +269,7 @@ export default function EditProfile() {
 
   return (
       <>
-    <div className={classes.root}>
+    <div className={classes.root} style={{paddingTop:'2rem'}}>
       <Paper variant="outlined" >
           <div className="row">
               <div className="col-md-3">

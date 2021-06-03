@@ -1,0 +1,15 @@
+.trStars{
+    overflow-x: scroll;
+    overflow-y: hidden;
+    display: flex;
+}
+.trStars::-webkit-scrollbar{
+    display: none;
+}
+.trCard{
+    margin-right: 3rem;
+
+}
+.homeSectionHead{
+    margin-top: 2rem;
+}

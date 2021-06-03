@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect,useState} from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -18,6 +18,11 @@ import logo from '../../../images/stargram_logo.png'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { useHistory } from 'react-router';
 import appbar from './appbar.css';
+import server from '../../../Server'
+import axios from 'axios'
+import defaultDp from '../../../images/stargram-user.jpg';
+import sharpVerified from '@iconify/icons-ic/sharp-verified';
+import { Icon, InlineIcon } from '@iconify/react';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -97,6 +102,8 @@ export default function Appbar() {
     console.log("effect...",user);
     
   })
+
+  
 
   let user = localStorage.getItem('displayName')
   let history = useHistory()
@@ -199,8 +206,79 @@ export default function Appbar() {
     </Menu>
   );
 
+  window.addEventListener('mouseup',function(event){
+    var pol = document.getElementById('searchDropdown');
+    if(event.target != pol && event.target.parentNode != pol){
+        pol.style.display = 'none';
+    }
+  });  
+  const [searchResult,setSearchResult] = useState([])
+  function searchFunction(e){
+    if(e.target.value != ""){
+      console.log(e.target.value)
+      axios.post(server+'/search',{
+        keyword:e.target.value
+      }).then((response)=>{
+        console.log(response.data)
+        let starSearch = response.data.starSearchResult;
+        let userSearch = response.data.userSearchResult;
+        let combined = starSearch.concat(userSearch);
+        console.log('combined',combined)
+        if(combined){
+          document.getElementById('searchDropdown').style.display = 'block'
+          if(combined.length > 0){
+            document.getElementById('noResult').style.display = 'none'
+            
+            console.log('verifiers',combined)
+
+            let currentUser = localStorage.getItem('userId')
+            let obj = combined.find(o => o._id === currentUser);
+            console.log('obj',obj)
+
+            if(obj){
+              let index = combined.findIndex(x => x._id === currentUser);
+              combined.splice(index, 1);
+            }
+
+            setSearchResult(combined)
+            console.log('state',searchResult)
+          }else{
+            document.getElementById('noResult').style.display = 'block'
+            setSearchResult([])
+          }
+        }else{
+          document.getElementById('searchDropdown').style.display = 'none'
+        }
+
+      })
+    }else{
+      document.getElementById('searchDropdown').style.display = 'none'
+    }
+  }
+
+  // function UrlExists(url) {
+  //   var http = new XMLHttpRequest();
+  //   http.open('HEAD', url, false);
+  //   http.send();
+  //   return http.status!=404;
+  // }
+
+  function UrlExists(url) {
+    var http = new XMLHttpRequest();
+    http.open('HEAD', url, false);
+    http.send();
+    if( http.status!= 404 ){
+        console.log('found')
+        return true
+    } else {
+        console.log('not found');
+        return false
+    }
+  }
+
   return (
-    <div className={classes.grow}>
+    <>
+    <div className={classes.grow} style={{position: 'fixed',width: '100%',zIndex: 1}}>
       <AppBar position="static" style={{ background: '#FFFFFF' }}>
         <Toolbar>
           
@@ -224,8 +302,14 @@ export default function Appbar() {
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
+              // onChange={searchFunction}
+              onKeyUp={searchFunction}
             />
+            
           </div>
+
+          
+
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="show 4 new mails" onClick={()=>{history.push('/messages')}} >
@@ -266,5 +350,29 @@ export default function Appbar() {
       {renderMenu}
       
     </div>
+
+    <div className='searchDropdownBox' id='searchDropdown'>
+      <div className='dropdownArrow'></div>
+      <div className='searchResultBox'>
+        <p className='noResult' id='noResult'>No result found</p>    
+
+        {searchResult.map((data,index) => 
+        <div className='searchListContainer' onClick={()=>history.push(`/secondProfile/${data._id}`)}>
+          <div className='searchImageContainer'>
+            
+              <img className='searchImage' src={data.verified ? server+'/images/profile-pictures/Celebrities/'+ data._id + '.jpg' :
+              UrlExists(server+'/images/profile-pictures/'+ data._id + '.jpg') ? server+'/images/profile-pictures/'+ data._id + '.jpg' : defaultDp}></img>
+           
+          </div>
+          <div className='searchNameContainer'>
+            <h5 style={{display:'inline-block'}}>{data.displayName}</h5>
+            <Icon icon={sharpVerified} id='verfiedIcon' style={{color: '#3a86fe',verticalAlign:'text-top',marginLeft:'5px',display:data.verified ? 'inline-block' : 'none'}}  />
+          </div>
+        </div>
+        )}
+        
+      </div> 
+    </div>
+    </>
   );
 }

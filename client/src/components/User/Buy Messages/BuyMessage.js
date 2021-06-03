@@ -180,7 +180,7 @@ export default function BuyMessage() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Container maxWidth="sm" className="text-center" style={{marginTop:"6rem"}}>
+      <Container maxWidth="sm" className="text-center" style={{paddingTop:"7rem"}}>
         <h5 className="text-left" >Buy Message Credit</h5>
         <RadioGroup aria-label="messagePack" name="messagePack" value={messagePack} onChange={handleChange}>
 

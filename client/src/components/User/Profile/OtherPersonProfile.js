@@ -11,6 +11,7 @@ import MuiMenuItem from "@material-ui/core/MenuItem";
 import { withStyles } from "@material-ui/core/styles";
 import axios from 'axios';
 import server from '../../../Server'
+import defaultDp from '../../../images/stargram-user.jpg'
 
 export default function OtherPersonProfile(props) {
     console.log('props',props)
@@ -21,11 +22,12 @@ export default function OtherPersonProfile(props) {
     const [following,setFollowing] = useState(false)
 
     useEffect(()=>{
+        console.log('useeffect')
 
         axios.get(server+`/getCelebrityDetails/?starId=${starId}`)
             .then(function (response) {
                 // handle success
-                console.log(response);
+                console.log('getotherdetails',response);
                 var followersList = response.data.followers
                 console.log('axios',followersList)
                 displayName = response.data.displayName
@@ -33,7 +35,49 @@ export default function OtherPersonProfile(props) {
                 document.getElementById('messages').textContent = response.data.messages+' Messages'
                 document.getElementById('followers').textContent = response.data.followers.length+' Followers'
                 document.getElementById('bio').textContent = response.data.bio
-                document.getElementById('dp').src = `${server}/images/profile-pictures/Celebrities/${response.data._id}.jpg`
+
+                // let starUrl = `${server}/images/profile-pictures/Celebrities/${response.data._id}.jpg`
+
+                // let starUrlExists = UrlExists(starUrl)
+
+                // function UrlExists(url) {
+                //     var http = new XMLHttpRequest();
+                //     http.open('HEAD', url, false);
+                //     http.send();
+                //     if( http.status!= 404 ){
+                //         console.log('found')
+                //         return true
+                //     } else {
+                //         console.log('not found');
+                //     }
+                // }
+
+                if(response.data.verified){
+                    document.getElementById('dp').src = `${server}/images/profile-pictures/Celebrities/${response.data._id}.jpg`
+                    document.getElementById('oVerifiedIcon').style.display = 'inline'
+                }else{
+                    let userPic = server+'/images/profile-pictures/'+starId+'.jpg'
+                    document.getElementById('oVerifiedIcon').style.display = 'none'
+                    let dpExists = UrlExists(userPic)
+                    if(dpExists){
+                        document.getElementById('dp').src = server+'/images/profile-pictures/'+starId+'.jpg'
+                    }else{
+                        document.getElementById('dp').src = defaultDp
+                    }
+                }
+
+                function UrlExists(url) {
+                    var http = new XMLHttpRequest();
+                    http.open('HEAD', url, false);
+                    http.send();
+                    if( http.status!= 404 ){
+                        console.log('found')
+                        // let userPic = server+'/images/profile-pictures/'+starId+'.jpg'
+                        // document.getElementById('chatDp').src = userPic
+                        return true
+                    } 
+                    return false
+                }
             
                 let currentUser = localStorage.getItem('userId')
                 let isFollowing = followersList.find(e => e == currentUser)
@@ -107,7 +151,7 @@ export default function OtherPersonProfile(props) {
     }
 
     return (
-        <div>
+        <div style={{paddingTop:'2rem'}}>
             <div id='profileBox' className='text-center'>
             <IconButton
                     aria-label="more"
@@ -134,7 +178,8 @@ export default function OtherPersonProfile(props) {
                     <img id='dp' className='img-circle' style={{borderRadius:'50%',height:'8em',width:'8em'}}></img>       
                 </div>      
                 <div className='col-md-6' style={{marginBottom:'3em'}}>
-                    <h3 id='displayName' style={{marginTop:'1em', display:'inline'}}> </h3><Icon icon={sharpVerified} style={{color: '#3a86fe',display:'inline',verticalAlign:'inherit'}}  />
+                    <h3 id='displayName' style={{marginTop:'1em', display:'inline'}}> </h3>
+                    <Icon icon={sharpVerified} id='oVerifiedIcon' style={{color: '#3a86fe',display:'none',verticalAlign:'inherit'}}  />
                     <div style={{marginTop: "3rem"}}>
                     {/* <h6 style={{float:"left"}}>1 Credits</h6>
                     <h6 >0 Messages</h6>

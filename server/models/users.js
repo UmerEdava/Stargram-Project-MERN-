@@ -20,6 +20,14 @@ const userSchema = mongoose.Schema({
     messages: {
         type: Number,
         default: 0
+    },
+    messageSent: {
+        type: Boolean,
+        default: false
+    },
+    messageReceived: {
+        type: Boolean,
+        default: false
     }
 })
 
@@ -43,6 +51,14 @@ const celebritySchema = mongoose.Schema({
     messages: {
         type: Number,
         default: 0
+    },
+    messageSent: {
+        type: Boolean,
+        default: false
+    },
+    messageReceived: {
+        type: Boolean,
+        default: false
     }
 })
 

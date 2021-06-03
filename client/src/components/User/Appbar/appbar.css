@@ -10,3 +10,87 @@
 * {
     font-family: 'Sen', sans-serif;
  }
+.searchResultBox{
+    background-color: #fff;
+    z-index: 2;
+    transform: translate(-50%, 16%);
+    width: 21rem;
+    padding: 1rem;
+    /* height: 18rem; */
+    height: 362px;
+    position: fixed;
+    top: 1%;
+    left: 51%;
+    border-radius: 6px;
+    box-shadow: 0 0 5px 1px rgb(0 0 0 / 10%);
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.searchResultBox::-webkit-scrollbar{
+    display: none;
+}
+.dropdownArrow{
+    height: 14px;
+    background-color: #fff;
+    width: 14px;
+    position: fixed;
+    transform: rotate( 
+45deg
+ );
+    left: 51%;
+    z-index: 1;
+    bottom: 0;
+    top: 3.5rem;
+    box-shadow: 0 0 5px 1px rgb(0 0 0 / 10%);
+}
+.searchDropdownBox{
+    display: none;
+}
+.noResult{
+    width: 10rem;
+    margin-left: 6rem;
+    margin-top: 2rem;
+    color: #a09d9d;
+    display: none;
+}
+.searchImageContainer{
+    display: inline-block;
+    margin: 3px;
+    margin-right: 21px;
+}
+.searchImage{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.searchNameContainer{
+    display: inline-block;
+}
+.searchName{
+    font-size: 18px;
+}
+.searchListContainer{
+    margin-bottom: 1rem;
+    cursor: pointer;
+}
+@media only screen and (max-width: 465px){
+    .searchResultBox{
+        background-color: #fff;
+        z-index: 2;
+        transform: translate(-50%, 6.2%);
+        width: 100%;
+        padding: 1rem;
+        height: 100%;
+        position: fixed;
+        top: 1%;
+        left: 50%;
+        border-radius: 0;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        box-shadow: 5px 10px;
+        border-top: 1px solid gray;
+    }    
+    .dropdownArrow{
+        display: none;
+    }
+}

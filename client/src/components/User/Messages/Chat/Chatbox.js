@@ -19,7 +19,13 @@ import socketIOClient from "socket.io-client";
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import StopIcon from '@material-ui/icons/Stop';
 import SendIcon from '@material-ui/icons/Send';
-import VideoThumbnail from 'react-video-thumbnail'; // use npm published version
+import VideoThumbnail from 'react-video-thumbnail';
+import defaultDp from '../../../../images/stargram-user.jpg'; 
+import axios from 'axios';
+import Alert from '@material-ui/lab/Alert';
+import IconButton from '@material-ui/core/IconButton';
+import Collapse from '@material-ui/core/Collapse';
+import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -47,6 +53,7 @@ export default function Chatbox() {
     const [open, setOpen] = React.useState(false);
     const [fullWidth, setFullWidth] = React.useState(true);
     const [maxWidth, setMaxWidth] = React.useState('sm');
+    const [alertOpen, setAlertOpen] = useState(false);
     
     const history = useHistory()
   
@@ -59,57 +66,152 @@ export default function Chatbox() {
     };
 
 
-    const [chat,setChat] = useState([])
+    const [chat,setChat] = useState()
     const [response,setResponse] = useState()
+    const userId = localStorage.getItem('userId')
 
-    const socket = socketIOClient.connect(server)
+
+    let outerSocket;
 
     useEffect(()=>{
 
       let token = localStorage.getItem('token')
       let starToken = localStorage.getItem('starToken')
 
+      const socket = socketIOClient.connect(server)
+
+      outerSocket = socket
+
+      function UrlExists(url) {
+          var http = new XMLHttpRequest();
+          http.open('HEAD', url, false);
+          http.send();
+          if( http.status!= 404 ){
+              console.log('found')
+              let userPic = server+'/images/profile-pictures/'+starId+'.jpg'
+              document.getElementById('chatDp').src = userPic
+          } else {
+              console.log('not found');
+              document.getElementById('chatDp').src = defaultDp
+          }
+      }
+
+      axios.post(server+'/checkVerified',{
+        starId:starId
+      }).then((response)=>{
+        console.log(response.data)
+        if(response.data.isStar){
+          document.getElementById('chatDp').src = server+'/images/profile-pictures/Celebrities/'+starId+'.jpg'
+          console.log('in if isStar') 
+          document.getElementById('cVerfiedIcon').style.display = 'inline-block'
+        }else{
+          let userPic = server+'/images/profile-pictures/'+starId+'.jpg'
+          UrlExists(userPic)
+          document.getElementById('cVerfiedIcon').style.display = 'none'
+        }
+      })
+
+      document.getElementById('chatDp').src = 
+
       // if(!token&&!starToken){
       //   console.log('ondey..');
       //   history.push('/login')
       // }
 
-      socket.on('message',(data)=>{
-        console.log('reply');
-        let chatBody = document.getElementById('chatBody')
+      // socket.on(`from:${userId},to:${starId}`||`from:${starId},to:${userId}`,(data)=>{
+      //   console.log('reply');
+      //   let chatBody = document.getElementById('chatBody')
 
-        // let chatVideo = document.getElementsByClassName('chatVideo')
-        // chatVideo.style.display = 'block'
-        // chatVideo.src = data 
+      //   // let chatVideo = document.getElementsByClassName('chatVideo')
+      //   // chatVideo.style.display = 'block'
+      //   // chatVideo.src = data 
 
-        let video = document.createElement("video");
-        let outer = document.createElement("div")
+      //   let video = document.createElement("video");
+      //   let outer = document.createElement("div")
         
-        video.classList.add('chatVideo');
-        outer.classList.add('outer');
-        video.src = data
-        video.onclick = function(event) {
-          video.requestFullscreen();
-          video.play();
-        }
+      //   video.classList.add('chatVideo');
+      //   outer.classList.add('outer');
+      //   video.src = data
+      //   video.onclick = function(event) {
+      //     video.requestFullscreen();
+      //     video.play();
+      //   }
         
-        video.addEventListener(
-          'fullscreenchange',
-          function(event) {
-            if (!document.fullscreenElement) {
-              video.pause();
-            }
-          },
-          false
-        );
+      //   video.addEventListener(
+      //     'fullscreenchange',
+      //     function(event) {
+      //       if (!document.fullscreenElement) {
+      //         video.pause();
+      //       }
+      //     },
+      //     false
+      //   );
 
-        outer.appendChild(video)
-        chatBody.append(outer)
+      //   outer.appendChild(video)
+      //   chatBody.append(outer)
 
-      })
+      // })
 
+      // user: username2, anotherUser: username1
+      socket.emit('join', `${userId}--with--${starId}`);
+      
+     
       
     },[])
+
+    useEffect(() => {
+      // receive message
+    outerSocket.on('onMessage', message => {
+        
+      console.log('reply');
+      
+      let chatBody = document.getElementById('chatBody')
+
+      // let chatVideo = document.getElementsByClassName('chatVideo')
+      // chatVideo.style.display = 'block'
+      // chatVideo.src = data 
+
+      let video = document.createElement("video");
+      let outer = document.createElement("div");
+      let bubble = document.createElement("div");
+      let dateText = document.createElement("p");
+      
+      video.classList.add('chatVideo');
+      outer.classList.add('outer');
+      dateText.classList.add('dateText');
+      bubble.classList.add('bubble');
+
+      video.src = message.msg
+      dateText.textContent = message.date
+      video.onclick = function(event) {
+        video.requestFullscreen();
+        video.play();
+      }
+      
+      video.addEventListener(
+        'fullscreenchange',
+        function(event) {
+          if (!document.fullscreenElement) {
+            video.pause();
+          }
+        },
+        false
+      );
+
+      outer.appendChild(video)
+      // chatBody.append(outer)
+      // chatBody.appendChild(dateText) 
+      bubble.appendChild(outer)
+      bubble.appendChild(dateText)
+      chatBody.append(bubble)
+
+      var elem = document.getElementById('chatBody'); 
+      elem.scrollTop = elem.scrollHeight;
+    });
+    
+    }, [])
+    
+         
 
     var recorder = document.getElementById('recorder'); 
     function normalRecordTest (e) {
@@ -217,16 +319,31 @@ export default function Chatbox() {
 
     function openCamera () {
       console.log('function called')
-      document.getElementById('myVideo').style.display = 'block'
-      navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-        // video.srcObject = stream;
-        console.log('aahh',stream)
-        document.getElementById('cameraButton').style.display = 'none'
-        document.getElementById('record').style.display = 'inline-block'
-        document.getElementById('myVideo').srcObject = stream
-        document.getElementById('record').disabled = false;
-        window.stream = stream;
-      });
+
+      axios.get('http://localhost:3001/checkMessageSent',{
+            headers: {
+                "x-access-token": localStorage.getItem("token")
+            }
+      }).then(function (response) {
+        // handle success
+        console.log('wit',response.data)
+        if(!response.data.isMessageSent){
+          document.getElementById('myVideo').style.display = 'block'
+          navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+            // video.srcObject = stream;
+            console.log('aahh',stream)
+            document.getElementById('cameraButton').style.display = 'none'
+            document.getElementById('record').style.display = 'inline-block'
+            document.getElementById('myVideo').srcObject = stream
+            document.getElementById('record').disabled = false;
+            window.stream = stream;
+          });
+        }else{
+          setAlertOpen(true)
+        }
+      })  
+
+      
     }
 
     function recordnew () {
@@ -298,25 +415,34 @@ export default function Chatbox() {
       recordedVideo.play();
     }
 
-    function sendVideo () {
-      console.log('bblob or:',recordedBlobs)
-      const bufferOrBlob = new Blob(recordedBlobs, {type: 'video/webm'});
+    useEffect(() => {
+      document.getElementById('sendButton').addEventListener('click',()=>{
 
-
-      var reader = new FileReader();
-      reader.readAsDataURL(bufferOrBlob); 
+          console.log('bblob or:',recordedBlobs)
+          const bufferOrBlob = new Blob(recordedBlobs, {type: 'video/webm'});
+    
+    
+          var reader = new FileReader();
+          reader.readAsDataURL(bufferOrBlob); 
+          
+          reader.onloadend = function() {
+              var base64data = reader.result;                
+              console.log('converted to base64');
+              // socket.emit('message',({from:userId,to:starId,message:base64data})) 
+    
+              // send message
+              let message = {sender:userId,receiver:starId,msg:base64data}
+              outerSocket.emit(`emitMessage`, message); 
+          }
+    
+          document.getElementById('resultVideo').style.display = 'none'
+          document.getElementById('sendButton').style.display = 'none'
+          document.getElementById('cameraButton').style.display = 'inline-block'
+      })
       
-      reader.onloadend = function() {
-          var base64data = reader.result;                
-          console.log('converted to base64');
-          socket.emit('message',(base64data)) 
-      }
+    }, []) 
 
-      document.getElementById('resultVideo').style.display = 'none'
-      document.getElementById('sendButton').style.display = 'none'
-      document.getElementById('cameraButton').style.display = 'inline-block'
-           
-    }
+    
 
     //  function screenshotButton () {
     //   const canvas = document.createElement("canvas");
@@ -328,18 +454,20 @@ export default function Chatbox() {
     //   // Other browsers will fall back to image/png
     //   img.src = canvas.toDataURL("image/webp");
     // }; 
+    
 
     return (
         
-        <div>
-            <div id="chatbox">
+        <div style={{paddingTop: '3.53rem'}}>        
+            <div id="chatbox">  
                 <div id='chatHead'>
-                    <img id='chatDp' src={server+'/images/profile-pictures/Celebrities/'+starId+'.jpg'} alt='profile-picture'></img>
-                    <h6 style={{display:'inline',marginLeft:'1rem'}}>{displayName} </h6><Icon icon={sharpVerified} style={{color: '#3a86fe',verticalAlign:'middle'}}  />
+                    <img onClick={()=>history.push(`/secondProfile/${starId}`)} id='chatDp' alt='profile-picture'></img>
+                    <h6 onClick={()=>history.push(`/secondProfile/${starId}`)} style={{display:'inline',marginLeft:'1rem',cursor:'pointer'}}>{displayName} </h6>
+                    <Icon onClick={()=>history.push(`/secondProfile/${starId}`)} icon={sharpVerified} id='cVerfiedIcon' style={{color: '#3a86fe',verticalAlign:'middle',display:'none'}}  />
                 </div>
                 <div id='chatBody'>
-                <video autoplay='true' id='myVideo' style={{width:'100%',height:'100%',display:'none'}}></video>
-                <video id="resultVideo" onClick={playButton} style={{width:'100%',height:'100%',display:'none'}} controls='true' ></video>
+                <video autoplay='true' id='myVideo' style={{width:'100%',height:'100%',display:'none',objectFit:'fill'}}></video>
+                <video id="resultVideo" onClick={playButton} style={{width:'100%',height:'100%',display:'none',objectFit:'fill'}} controls='true' ></video>
                 
                 {/* <div id='outer'>
                   <video id='chatVideo' style={{display:'none',position:'relative'}}></video>
@@ -366,11 +494,12 @@ export default function Chatbox() {
                     <button className='btn' onClick={openCamera} className='commonButton' id='cameraButton' style={{paddingBottom:'4px'}}><Icon icon={baselineCameraAlt} style={{color: 'white'}} /></button>
                     <button className='btn' onClick={recordnew} className='startAndStopBtn' id='record' style={{paddingBottom:'4px',display:'none'}}><FiberManualRecordIcon style={{color:'#ff3939'}}/></button>
                     <button className='btn' onClick={recordnew} className='startAndStopBtn' id='stopButton' style={{paddingBottom:'4px',display:'none'}}><StopIcon style={{color:'white'}}/></button>
-                    <button className='btn' onClick={sendVideo} className='commonButton' id='sendButton' style={{paddingBottom:'4px',display:'none'}}><SendIcon style={{color:'white'}}/></button>
+                    <button className='btn' className='commonButton' id='sendButton' style={{paddingBottom:'4px',display:'none'}}><SendIcon style={{color:'white'}}/></button>
 
                    
                     <Icon icon={info20Regular} style={{color: '#929292',fontSize: '23px',cursor:'pointer'}} onClick={handleClickOpen}/>
                 </div>
+                
                 <button id="booleanButton" hidden >Record</button>
                 {/* <button id='play' onClick={playButton}>play</button> */}
                 
@@ -398,6 +527,25 @@ export default function Chatbox() {
                 <p id='log'></p> */}
 
             </div>
+
+            <Collapse in={alertOpen}>
+            <Alert
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setOpen(false);
+                  }}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+            >
+              Close me!
+            </Alert>
+          </Collapse>
 
             <Dialog
                 fullWidth={fullWidth}

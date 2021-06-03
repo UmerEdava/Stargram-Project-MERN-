@@ -3,6 +3,7 @@ import User from './components/User/User';
 import Admin from './components/Admin/Admin';
 import ChangeProfilePicture from './components/User/Forms/Register-form/changeProfilePic';
 import Celebrity from './components/Celebrity/Celebrity';
+import NotFound from './components/NotFound/NotFound';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/admin"><Admin/></Route>
         <Route path="/test"><ChangeProfilePicture/></Route>
         <Route path="/celebrity"><Celebrity/></Route>
+        {/* <Route component={NotFound} /> */}
       </Router>  
     </div>
   )

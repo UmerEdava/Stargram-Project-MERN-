@@ -45,6 +45,7 @@ import mongoose from "mongoose";
 import {
     resolve
 } from 'path';
+import router from '../routes/user.js';
 
 var client = new twilio(OTP.accountSID, OTP.authToken);
 
@@ -950,11 +951,17 @@ export const getAllVerifiedCelebrities = async(req,res) => {
 }
 
 export const getCelebrityDetails = async (req,res) => {
-    let starId = req.query.starId
-    console.log('starId',starId)
-    let starDetails = await celebrityDetails.findOne({_id:mongoose.Types.ObjectId(starId)})
-    console.log('details',starDetails)
-    res.json(starDetails)
+    let userOrStarId = req.query.starId
+    console.log('starId',userOrStarId)
+    let starDetails = await celebrityDetails.findOne({_id:mongoose.Types.ObjectId(userOrStarId)})
+    console.log('star',starDetails)
+    if(starDetails){
+        res.json(starDetails)
+    }else{
+        let userDetail = await userDetails.findOne({_id:mongoose.Types.ObjectId(userOrStarId)})
+        console.log('details',userDetail)
+        res.json(userDetail)
+    }
 }
 
 export const follow = async(req,res) => {
@@ -998,6 +1005,46 @@ export const unFollow = async(req,res) => {
             console.log('returnn',data)
         })
         res.json({changed:true})
+    }
+}
+
+export const search = async (req,res) => {
+    req.body.keyword.toLowerCase()
+    let keyword = req.body.keyword
+    console.log(keyword)
+
+    let starSearchResult = await celebrityDetails.find( { displayName: {$regex: `^${keyword}`, $options:"i"} },{_id:1,displayName:1,verified:1} )
+    let userSearchResult = await userDetails.find( { displayName: {$regex: `^${keyword}`, $options:"i"} },{_id:1,displayName:1} )
+
+    console.log('searchResult',starSearchResult,userSearchResult) 
+
+    res.json({
+        starSearchResult:starSearchResult,
+        userSearchResult:userSearchResult
+    })
+}
+
+export const checkVerified = async(req,res) => {
+    let starId = req.body.starId
+    let verified = await celebrityDetails.findOne({$and:[{_id:mongoose.Types.ObjectId(starId)},{verified:true}]})
+    console.log('ver',verified)
+    if(verified){
+        res.json({isStar:true})
+    }else{
+        res.json({isStar:false})
+    }
+    
+}
+
+export const checkMessageSent = async (req,res) => {
+    let userId = req.userId
+    let isStarSent = await celebrityDetails.findOne({$and:[{_id:mongoose.Types.ObjectId(userId)},{messageSent:true}]})
+    let isUserSent = await celebrityDetails.findOne({$and:[{_id:mongoose.Types.ObjectId(userId)},{messageSent:true}]})
+
+    if(isStarSent || isUserSent){
+        res.json({isMessageSent:true})
+    }else{
+        res.json({isMessageSent:false})
     }
 }
 
