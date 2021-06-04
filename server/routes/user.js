@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 
 import {home,getLogin,userSignup,checkExisting,sendOTP,addProfilePic,verifyOTP,googleSignup,googleLogin,profile,getUserDetails} from '../controllers/users.js'
 import {changeProfilePic,changeUserDetails,buyMessages,paymentSuccess,addCredit,sendCelebrityOTP,verifyCelebrityOTP} from '../controllers/users.js';
-import {checkCelebrityExisting,checkMessageSent,checkCelebrityVerification,addImage,checkVerified,getAllVerifiedCelebrities,getCelebrityDetails,follow,unFollow,search} from '../controllers/users.js';
+import {checkCelebrityExisting,checkMessageSent,forgotPasswordNumber,makeMessageSent,checkCelebrityVerification,addImage,checkVerified,getAllVerifiedCelebrities,getCelebrityDetails,follow,unFollow,search} from '../controllers/users.js';
 
 const router = express.Router();
 
@@ -68,6 +68,8 @@ router.post('/follow', verifyJWT, follow)
 router.post('/unFollow', verifyJWT, unFollow)
 router.post('/search', search)
 router.post('/checkVerified', checkVerified)
-router.post('/checkMessageSent', verifyJWT, checkMessageSent)
+router.get('/checkMessageSent', verifyJWT, checkMessageSent)
+router.get('/makeMessageSent', verifyJWT, makeMessageSent)
+router.post('/forgotPasswordNumber', verifyJWT, forgotPasswordNumber)
  
 export default router; 

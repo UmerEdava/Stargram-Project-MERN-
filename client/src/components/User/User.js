@@ -15,6 +15,7 @@ import MessagePage from './Messages/MessagePage';
 import Notifications from './Notifications/Notifiations'
 import OtherPersonProfile from './Profile/OtherPersonProfile';
 import Chatbox from './Messages/Chat/Chatbox'
+import ForgotPassword from './Forms/Forgot-Password/ForgotPassword'
 
 function User() {
   return (
@@ -28,6 +29,9 @@ function User() {
             </Route>
             <Route path="/login">
                 <Login/>
+            </Route>
+            <Route path="/forgotPassword">
+                <ForgotPassword/>
             </Route>
             {/* <Route path="/testregister">
                <Register/>

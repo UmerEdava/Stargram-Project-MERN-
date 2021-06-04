@@ -423,13 +423,9 @@ const useStyles = makeStyles((theme) => ({
           </Button>
           { showOtp ? <SendOtp /> : null }
           <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2" style={{float:'left'}}>
-                Forgot password?
-              </Link>
-            </Grid>
+            
             <Grid item>
-              <Link href="/login" variant="body2">
+              <Link style={{cursor:'pointer'}} onClick={()=>history.push("/login")} variant="body2">
                 {"Already a user? Log in"}
               </Link>
             </Grid>

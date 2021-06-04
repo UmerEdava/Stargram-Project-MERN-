@@ -327,7 +327,7 @@ export default function Chatbox() {
       }).then(function (response) {
         // handle success
         console.log('wit',response.data)
-        if(!response.data.isMessageSent){
+        if(response.data.isMessageSent == false){
           document.getElementById('myVideo').style.display = 'block'
           navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
             // video.srcObject = stream;
@@ -432,8 +432,18 @@ export default function Chatbox() {
     
               // send message
               let message = {sender:userId,receiver:starId,msg:base64data}
-              outerSocket.emit(`emitMessage`, message); 
+              outerSocket.emit(`emitMessage`, message)
+              
+                axios.get(server+'/makeMessageSent', {
+                  headers: {
+                      "x-access-token": localStorage.getItem("token")
+                    }
+                }).then((response)=>{
+                  console.log('re',response.data)
+                })
+              
           }
+          
     
           document.getElementById('resultVideo').style.display = 'none'
           document.getElementById('sendButton').style.display = 'none'

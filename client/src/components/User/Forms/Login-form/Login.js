@@ -165,13 +165,7 @@ export default function Login() {
         <Typography component="h1" variant="h5">
           Log in
         </Typography>
-        <GoogleLogin
-          clientId="810147001315-mq6dijpgu99sfuu9ibb4tced7rhqe84g.apps.googleusercontent.com"
-          buttonText="Log in with Google"
-          onSuccess={responseSuccessGoogle}
-          onFailure={responseErrorGoogle} 
-          cookiePolicy={'single_host_origin'}
-        />
+        
         <form className={classes.form} onSubmit={loginSubmit}>
         
           <Grid item xs={12}>
@@ -215,18 +209,27 @@ export default function Login() {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Link style={{cursor:'pointer'}} onClick={()=>history.push("/forgotPassword")} variant="body2">
                 Forgot password?
               </Link>
             </Grid>
             <Grid item>
-              <Link href="/register" variant="body2">
+              <Link style={{cursor:'pointer'}} onClick={()=>history.push("/register")} variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
           </Grid>
         </form>
+        <p style={{marginTop:'1rem'}}>or continue with</p>
+        <GoogleLogin
+          clientId="810147001315-mq6dijpgu99sfuu9ibb4tced7rhqe84g.apps.googleusercontent.com"
+          buttonText="Log in with Google"
+          onSuccess={responseSuccessGoogle}
+          onFailure={responseErrorGoogle} 
+          cookiePolicy={'single_host_origin'}
+        />
       </div>
+      
       <Box mt={8}>
         <Copyright />
       </Box>

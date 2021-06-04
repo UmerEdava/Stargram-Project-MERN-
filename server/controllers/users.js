@@ -1037,6 +1037,7 @@ export const checkVerified = async(req,res) => {
 }
 
 export const checkMessageSent = async (req,res) => {
+    console.log('in checking...!')
     let userId = req.userId
     let isStarSent = await celebrityDetails.findOne({$and:[{_id:mongoose.Types.ObjectId(userId)},{messageSent:true}]})
     let isUserSent = await celebrityDetails.findOne({$and:[{_id:mongoose.Types.ObjectId(userId)},{messageSent:true}]})
@@ -1045,6 +1046,62 @@ export const checkMessageSent = async (req,res) => {
         res.json({isMessageSent:true})
     }else{
         res.json({isMessageSent:false})
+    }
+}
+
+export const makeMessageSent = async (req,res) => {
+    console.log('in changing')
+    let userId = req.userId
+    let isUser = await userDetails.findOne({_id:mongoose.Types.ObjectId(userId)})
+    let isCelebrity = await celebrityDetails.findOne({_id:mongoose.Types.ObjectId(userId)})
+    if(isUser){
+        userDetails.updateOne({_id:mongoose.Types.ObjectId(userId)},{$set:{messageSent:true}}).then((data)=>{
+            console.log(data)
+            res.json({updated:true})
+        })
+        
+    }else if(isCelebrity){
+        userDetails.updateOne({_id:mongoose.Types.ObjectId(userId)},{$set:{messageSent:true}}).then((data)=>{
+            console.log(data)
+            res.json({updated:true})
+        })
+    }
+}
+
+export const forgotPasswordNumber = async (req,res) => {
+    let otpNumber = req.body.otpNumber
+    
+    let user = await userDetails.findOne({phone:otpNumber})
+    let star = await celebrityDetails.findOne({phone:otpNumber})
+
+    if(user || star){
+
+        console.log('valid user')
+
+        client
+        .verify
+        .services(OTP.serviceID)
+        .verifications
+        .create({
+            to: `+91${otpNumber}`,
+            channel: 'sms'
+        }).then((data) => {
+
+            if (data) {
+                response.sent = true
+                console.log(data);
+                res.json({isValidUserAndOtpSent:true})
+            }
+
+        }).catch((error) => {
+            console.log(error);
+            if (error.status = 400) {
+                response.invalid = true
+                res.json({otpError:true})
+            }
+        })        
+    }else{
+        res.json({inValidUser:true})
     }
 }
 
