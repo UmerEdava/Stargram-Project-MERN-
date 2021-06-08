@@ -28,6 +28,18 @@ const userSchema = mongoose.Schema({
     messageReceived: {
         type: Boolean,
         default: false
+    },
+    sentMessagesCount: {
+        type: Number,
+        default: 0
+    },
+    receivedMessagesCount: {
+        type: Number,
+        default: 0
+    },
+    wallet: {
+        type: Number,
+        default: 0
     }
 })
 
@@ -44,7 +56,7 @@ const celebritySchema = mongoose.Schema({
     description: String,
     creditMessages: {
         type: Number,
-        default: 1
+        default: 0
     },
     verified: Boolean,
     followers: [String],
@@ -59,13 +71,33 @@ const celebritySchema = mongoose.Schema({
     messageReceived: {
         type: Boolean,
         default: false
+    },
+    sentMessagesCount: {
+        type: Number,
+        default: 0
+    },
+    receivedMessagesCount: {
+        type: Number,
+        default: 0
+    },
+    wallet: {
+        type: Number,
+        default: 0
     }
+})
+
+const chatSchema = mongoose.Schema({
+    sender: String,
+    receiver: String,
+    date: String
 })
 
 const userDetails = mongoose.model('userDetails', userSchema)
 const celebrityDetails = mongoose.model('celebrityDetails', celebritySchema)
+const chatDetails = mongoose.model('chatDetails', chatSchema)
 
 export {
     userDetails,
-    celebrityDetails
+    celebrityDetails,
+    chatDetails
 };

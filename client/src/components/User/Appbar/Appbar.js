@@ -206,12 +206,7 @@ export default function Appbar() {
     </Menu>
   );
 
-  window.addEventListener('mouseup',function(event){
-    var pol = document.getElementById('searchDropdown');
-    if(event.target != pol && event.target.parentNode != pol){
-        pol.style.display = 'none';
-    }
-  });  
+    
   const [searchResult,setSearchResult] = useState([])
   function searchFunction(e){
     if(e.target.value != ""){
@@ -226,6 +221,12 @@ export default function Appbar() {
         console.log('combined',combined)
         if(combined){
           document.getElementById('searchDropdown').style.display = 'block'
+          document.addEventListener('mouseup',function(event){
+            var pol = document.getElementById('searchDropdown');
+            if(event.target != pol && event.target.parentNode != pol){
+                pol.style.display = 'none';
+            }
+          });
           if(combined.length > 0){
             document.getElementById('noResult').style.display = 'none'
             

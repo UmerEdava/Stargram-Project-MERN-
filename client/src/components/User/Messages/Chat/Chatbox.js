@@ -26,6 +26,8 @@ import Alert from '@material-ui/lab/Alert';
 import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -210,6 +212,79 @@ export default function Chatbox() {
     });
     
     }, [])
+
+    useEffect(() => {
+      axios.post(server+'/getOldChat',{
+        thisUser:userId,
+        otherUser:starId
+      }).then((response)=>{
+        console.log('oldChat',response.data)
+        
+        if(response.data.oldChat){
+          let chatBody = document.getElementById('chatBody')
+
+          // let chatVideo = document.getElementsByClassName('chatVideo')
+          // chatVideo.style.display = 'block'
+          // chatVideo.src = data 
+
+          let oldChat = response.data.oldChat
+
+          oldChat.map((message,index)=>{
+            let video = document.createElement("video");
+            let outer = document.createElement("div");
+            let bubble = document.createElement("div");
+            let shareContainer = document.createElement("div")
+            let downloadContainer = document.createElement("div")
+            let dateText = document.createElement("p");
+            
+            video.classList.add('chatVideo');
+            if(message.sender == starId){
+              outer.classList.add('outerLeft')
+              dateText.classList.add('dateTextLeft');
+
+              shareContainer.classList.add('shareContainer')
+              downloadContainer.classList.add('downloadContainer')
+
+            }else if(message.sender == userId){
+              outer.classList.add('outer');
+              dateText.classList.add('dateText');
+            }
+            
+            bubble.classList.add('bubble');
+  
+            video.src = `${server}/chatVideos/${message._id}.mp4`
+            dateText.textContent = message.date
+            video.onclick = function(event) {
+              video.requestFullscreen();
+              video.play();
+            }
+            
+            video.addEventListener(
+              'fullscreenchange',
+              function(event) {
+                if (!document.fullscreenElement) {
+                  video.pause();
+                }
+              },
+              false
+            );
+  
+            outer.appendChild(video)
+            // chatBody.append(outer)
+            // chatBody.appendChild(dateText) 
+            bubble.appendChild(outer)
+            bubble.appendChild(shareContainer)
+            bubble.appendChild(downloadContainer)
+            bubble.appendChild(dateText)
+            chatBody.append(bubble)
+  
+            var elem = document.getElementById('chatBody'); 
+            elem.scrollTop = elem.scrollHeight;
+          })     
+        }
+
+      })     
+    }, [])
     
          
 
@@ -320,25 +395,47 @@ export default function Chatbox() {
     function openCamera () {
       console.log('function called')
 
-      axios.get('http://localhost:3001/checkMessageSent',{
+      axios.get('http://localhost:3001/getUserDetailsAndIdentification',{
             headers: {
                 "x-access-token": localStorage.getItem("token")
             }
       }).then(function (response) {
         // handle success
         console.log('wit',response.data)
-        if(response.data.isMessageSent == false){
-          document.getElementById('myVideo').style.display = 'block'
-          navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-            // video.srcObject = stream;
-            console.log('aahh',stream)
-            document.getElementById('cameraButton').style.display = 'none'
-            document.getElementById('record').style.display = 'inline-block'
-            document.getElementById('myVideo').srcObject = stream
-            document.getElementById('record').disabled = false;
-            window.stream = stream;
-          });
-        }else{
+        let userDetails = response.data.details
+        if(userDetails.messageReceived == true || userDetails.messageSent == false){
+
+          if(response.data.isUser){
+            if(userDetails.creditMessages != 0){
+              document.getElementById('myVideo').style.display = 'block'
+              navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+                // video.srcObject = stream;
+                console.log('aahh',stream)
+                document.getElementById('cameraButton').style.display = 'none'
+                document.getElementById('record').style.display = 'inline-block'
+                document.getElementById('myVideo').srcObject = stream
+                document.getElementById('record').disabled = false;
+                window.stream = stream;
+              });
+            }else{
+              //no credit error
+              document.getElementById('noCreditWarning').style.display = 'block'
+
+            }
+          }else if(response.data.isStar){
+            document.getElementById('myVideo').style.display = 'block'
+              navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+                // video.srcObject = stream;
+                console.log('aahh',stream)
+                document.getElementById('cameraButton').style.display = 'none'
+                document.getElementById('record').style.display = 'inline-block'
+                document.getElementById('myVideo').srcObject = stream
+                document.getElementById('record').disabled = false;
+                window.stream = stream;
+            });
+          }
+          
+        }else if(userDetails.messageSent == true){
           setAlertOpen(true)
         }
       })  
@@ -433,17 +530,29 @@ export default function Chatbox() {
               // send message
               let message = {sender:userId,receiver:starId,msg:base64data}
               outerSocket.emit(`emitMessage`, message)
-              
-                axios.get(server+'/makeMessageSent', {
-                  headers: {
-                      "x-access-token": localStorage.getItem("token")
-                    }
-                }).then((response)=>{
-                  console.log('re',response.data)
-                })
-              
           }
+
+          // axios({
+          //   method: 'post',
+          //   url: `${server}/makeMessageSentAndReceived`,
+          //   data: {
+          //     sender: userId,
+          //     receiver: starId
+          //   },
+          //   headers: {"x-access-token": localStorage.getItem("token")}
+          // }).then((response)=>{
+          //   console.log('res',response)
+          // })
           
+          // axios.post(server+'/makeMessageSentAndReceived',{
+
+          // }, {
+          //   headers: {
+          //       "x-access-token": localStorage.getItem("token")
+          //     }
+          // }).then((response)=>{
+          //   console.log('re',response.data)
+          // })
     
           document.getElementById('resultVideo').style.display = 'none'
           document.getElementById('sendButton').style.display = 'none'
@@ -476,8 +585,8 @@ export default function Chatbox() {
                     <Icon onClick={()=>history.push(`/secondProfile/${starId}`)} icon={sharpVerified} id='cVerfiedIcon' style={{color: '#3a86fe',verticalAlign:'middle',display:'none'}}  />
                 </div>
                 <div id='chatBody'>
-                <video autoplay='true' id='myVideo' style={{width:'100%',height:'100%',display:'none',objectFit:'fill'}}></video>
-                <video id="resultVideo" onClick={playButton} style={{width:'100%',height:'100%',display:'none',objectFit:'fill'}} controls='true' ></video>
+                  <video autoplay='true' id='myVideo' style={{width:'100%',height:'100%',display:'none',objectFit:'fill'}}></video>
+                  <video id="resultVideo" onClick={playButton} style={{width:'100%',height:'100%',display:'none',objectFit:'fill'}} controls='true' ></video>
                 
                 {/* <div id='outer'>
                   <video id='chatVideo' style={{display:'none',position:'relative'}}></video>
@@ -498,6 +607,43 @@ export default function Chatbox() {
     margin-right: 18px;
     margin-top: 23px;
     border-radius: 8px; */}
+
+            <Collapse in={alertOpen} id="alertContainer">
+              <Alert
+                 variant="filled" severity="" 
+                 id='alertMessage'
+                action={
+                  <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={() => {
+                      setAlertOpen(false);
+                    }}
+                  >
+                    <CloseIcon fontSize="inherit" />
+                  </IconButton>
+                }
+              >
+                You can send another another message only after you get a reply
+              </Alert>
+            </Collapse>
+          
+                  <div id='noCreditWarning' style={{display:'none'}}>
+                    <p>Oh no..<span>☹️</span></p>
+                    <p>You need message credits to send this message</p>
+                    <Button
+                      variant='contained'
+                      color='primary'
+                      onClick={() => {
+                          history.push('/buy_message');
+                      }}
+                      id='noCreditBuyNowButton'
+                      >
+                        Buy Now
+                    </Button>
+                  </div>
+            
                 
                 </div>
                 <div id='chatFooter' className='text-center'>
@@ -538,24 +684,7 @@ export default function Chatbox() {
 
             </div>
 
-            <Collapse in={alertOpen}>
-            <Alert
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
-                    setOpen(false);
-                  }}
-                >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
-            >
-              Close me!
-            </Alert>
-          </Collapse>
+            
 
             <Dialog
                 fullWidth={fullWidth}

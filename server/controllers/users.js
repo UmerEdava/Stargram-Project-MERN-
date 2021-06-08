@@ -3,7 +3,8 @@ import {
 } from 'express';
 import {
     userDetails,
-    celebrityDetails
+    celebrityDetails,
+    chatDetails
 } from '../models/users.js';
 import bcrypt from 'bcrypt';
 import base64ToImage from 'base64-to-image';
@@ -590,7 +591,30 @@ export const getUserDetails = async (req, res) => {
         }
         
     } catch (error) {
+        console.log(error)
+    }
+}
 
+export const getUserDetailsAndIdentification = async (req,res) => {
+    try {
+        let user = await userDetails.findOne({
+            _id: mongoose.Types.ObjectId(req.userId)
+        })
+
+        let star = await celebrityDetails.findOne({
+            _id: mongoose.Types.ObjectId(req.userId)
+        })
+
+        console.log('user', user,star);
+        if(user){
+            res.json({details:user,isUser:true})
+        }else if(star){
+            res.json({details:star,isStar:true})
+        }
+        
+    } catch (error) {
+        console.log(error)
+        res.json({error:error})
     }
 }
 
@@ -1037,11 +1061,17 @@ export const checkVerified = async(req,res) => {
 }
 
 export const checkMessageSent = async (req,res) => {
-    console.log('in checking...!')
     let userId = req.userId
-    let isStarSent = await celebrityDetails.findOne({$and:[{_id:mongoose.Types.ObjectId(userId)},{messageSent:true}]})
-    let isUserSent = await celebrityDetails.findOne({$and:[{_id:mongoose.Types.ObjectId(userId)},{messageSent:true}]})
+    console.log('in checking...!',userId)
 
+    let isStarSent = await celebrityDetails.findOne({
+        $and: [{ _id: mongoose.Types.ObjectId(userId) }, { messageSent: true }]
+      })
+    let isUserSent = await userDetails.findOne({
+        $and: [{ _id: mongoose.Types.ObjectId(userId) }, { messageSent: true }]
+      })
+
+    console.log('wih',isStarSent,isUserSent)
     if(isStarSent || isUserSent){
         res.json({isMessageSent:true})
     }else{
@@ -1049,24 +1079,57 @@ export const checkMessageSent = async (req,res) => {
     }
 }
 
-export const makeMessageSent = async (req,res) => {
-    console.log('in changing')
-    let userId = req.userId
-    let isUser = await userDetails.findOne({_id:mongoose.Types.ObjectId(userId)})
-    let isCelebrity = await celebrityDetails.findOne({_id:mongoose.Types.ObjectId(userId)})
-    if(isUser){
-        userDetails.updateOne({_id:mongoose.Types.ObjectId(userId)},{$set:{messageSent:true}}).then((data)=>{
+export const makeMessageSentAndReceived = async (req,res) => {
+    console.log('in new changing function',req.body)
+    let senderId = req.body.senderId
+    let receiverId = req.body.receiverId
+    let isUserSender = await userDetails.findOne({_id:mongoose.Types.ObjectId(senderId)})
+    let isCelebritySender = await celebrityDetails.findOne({_id:mongoose.Types.ObjectId(senderId)})
+
+    let isUserReceiver = await userDetails.findOne({_id:mongoose.Types.ObjectId(receiverId)})
+    let isCelebrityReceiver = await celebrityDetails.findOne({_id:mongoose.Types.ObjectId(receiverId)})
+
+    if(isUserSender){
+        let isMessageReceived = userDetails.findOne({_id:mongoose.Types.ObjectId(senderId)},{messageReceived:true})
+        if(isMessageReceived){
+            userDetails.updateOne({_id:mongoose.Types.ObjectId(senderId)},{$set:{messageReceived:false}}).then((data)=>{
+                console.log(data)
+            })
+        }else{
+            userDetails.updateOne({_id:mongoose.Types.ObjectId(senderId)},{$set:{messageSent:true}}).then((data)=>{
+                console.log(data)
+            })
+        }
+    }else if(isCelebritySender){
+        let isMessageReceived = celebrityDetails.findOne({_id:mongoose.Types.ObjectId(senderId)},{messageReceived:true})
+        if(isMessageReceived){
+            celebrityDetails.updateOne({_id:mongoose.Types.ObjectId(senderId)},{$set:{messageReceived:false}}).then((data)=>{
+                console.log(data)
+            })
+        }else{
+            celebrityDetails.updateOne({_id:mongoose.Types.ObjectId(senderId)},{$set:{messageSent:true}}).then((data)=>{
+                console.log(data)
+            })
+        }
+    }
+
+    if(isUserReceiver){
+        userDetails.updateOne({_id:mongoose.Types.ObjectId(receiverId)},{$set:{messageReceived:true}}).then((data)=>{
             console.log(data)
             res.json({updated:true})
         })
-        
-    }else if(isCelebrity){
-        userDetails.updateOne({_id:mongoose.Types.ObjectId(userId)},{$set:{messageSent:true}}).then((data)=>{
+    }else if(isCelebrityReceiver){
+        celebrityDetails.updateOne({_id:mongoose.Types.ObjectId(receiverId)},{$set:{messageReceived:true}}).then((data)=>{
             console.log(data)
             res.json({updated:true})
         })
     }
 }
+
+// userDetails.updateOne({_id:mongoose.Types.ObjectId(userId)},{$set:{messageSent:true}}).then((data)=>{
+//     console.log(data)
+//     res.json({updated:true})
+// })
 
 export const forgotPasswordNumber = async (req,res) => {
     let otpNumber = req.body.otpNumber
@@ -1102,6 +1165,23 @@ export const forgotPasswordNumber = async (req,res) => {
         })        
     }else{
         res.json({inValidUser:true})
+    }
+}
+
+export const getOldChat = async (req,res) => {
+    console.log('in oldChat',req.body);
+    let thisUser = req.body.thisUser
+    let otherUser = req.body.otherUser
+    let oldChat = await chatDetails.find({$and:[
+        {sender : {$in : [thisUser,otherUser]}},
+        {receiver : {$in : [thisUser,otherUser]}}
+        ]
+    })
+    console.log('old chat',oldChat)
+    if(oldChat.length>0){
+        res.json({oldChat})
+    }else{
+        res.json({noOldChat:true})
     }
 }
 

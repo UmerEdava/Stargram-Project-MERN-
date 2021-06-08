@@ -4,11 +4,12 @@ import jwt from 'jsonwebtoken'
 
 import {home,getLogin,userSignup,checkExisting,sendOTP,addProfilePic,verifyOTP,googleSignup,googleLogin,profile,getUserDetails} from '../controllers/users.js'
 import {changeProfilePic,changeUserDetails,buyMessages,paymentSuccess,addCredit,sendCelebrityOTP,verifyCelebrityOTP} from '../controllers/users.js';
-import {checkCelebrityExisting,checkMessageSent,forgotPasswordNumber,makeMessageSent,checkCelebrityVerification,addImage,checkVerified,getAllVerifiedCelebrities,getCelebrityDetails,follow,unFollow,search} from '../controllers/users.js';
+import {checkCelebrityExisting,checkMessageSent,getOldChat,getUserDetailsAndIdentification,forgotPasswordNumber,makeMessageSentAndReceived,checkCelebrityVerification,addImage,checkVerified,getAllVerifiedCelebrities,getCelebrityDetails,follow,unFollow,search} from '../controllers/users.js';
 
 const router = express.Router();
 
 const verifyJWT = (req, res, next) => {
+    console.log('verifying jwt')
     const token = req.headers["x-access-token"];
     // const starToken = req.headers["x-access-token"]
     // console.log('tooken',token);
@@ -69,7 +70,9 @@ router.post('/unFollow', verifyJWT, unFollow)
 router.post('/search', search)
 router.post('/checkVerified', checkVerified)
 router.get('/checkMessageSent', verifyJWT, checkMessageSent)
-router.get('/makeMessageSent', verifyJWT, makeMessageSent)
+router.post('/makeMessageSentAndReceived', verifyJWT, makeMessageSentAndReceived)
 router.post('/forgotPasswordNumber', verifyJWT, forgotPasswordNumber)
+router.get('/getUserDetailsAndIdentification', verifyJWT, getUserDetailsAndIdentification)
+router.post('/getOldChat', getOldChat)
  
 export default router; 

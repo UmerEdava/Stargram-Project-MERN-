@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { response } from 'express';
 import bodyparser from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -13,6 +13,11 @@ import {Server} from 'socket.io'
 
 import userRouter from './routes/user.js'
 import moment from 'moment'
+import {
+    userDetails,
+    celebrityDetails,
+    chatDetails
+} from './models/users.js';  
 
 const app = express();
 const server = http.createServer(app)
@@ -58,12 +63,29 @@ io.on('connection', async (socket) => {
         socket.join(updatedRoomName);
         console.log('joined to updatedRoomName',updatedRoomName)
     
-        socket.on(`emitMessage`, message => {
+        socket.on(`emitMessage`, async message => {
             console.log('MESSAGE RECEIVED')
             // let date = new Date()
             let date = moment(new Date()).format("DD-MM-YYYY HH:mm");
             console.log('date',date)
             message.date = date
+
+            let chatId = ''
+
+            const newChat = new chatDetails(message)
+            await newChat.save().then((response)=>{
+                console.log('response after chat insertion',response)
+                chatId = response._id
+            })
+
+            const path = './public/chatVideos';
+            const filename = `${chatId}.mp4`;
+
+            let chatVideo = message.msg.replace(/^data:(.*?);base64,/, ""); // <--- make it any type
+            chatVideo = chatVideo.replace(/ /g, '+'); // <--- this is important
+            fs.writeFile(`${path}/${filename}`, chatVideo, 'base64', function(err) {
+                console.log(err);
+            });
             
             Array.from(socket.rooms)
                 .filter(it => it !== socket.id)
@@ -119,3 +141,67 @@ mongoose.connect(CONNECTION_URL,{useNewUrlParser:true,useUnifiedTopology:true})
     .catch((error)=>console.log(error.message))
 
 mongoose.set('useFindAndModify', false)
+
+//First Story
+
+// let senderId = message.sender
+// let receiverId = message.receiver
+
+// console.log('testing',senderId,receiverId)
+
+// let isUserSender = await userDetails.findOne({_id:mongoose.Types.ObjectId(senderId)})
+// let isCelebritySender = await userDetails.findOne({_id:mongoose.Types.ObjectId(senderId)})
+
+// let isUserReceiver = await userDetails.findOne({_id:mongoose.Types.ObjectId(receiverId)})
+// let isCelebrityReceiver = await celebrityDetails.findOne({_id:mongoose.Types.ObjectId(receiverId)})
+
+// console.log('testing',isUserSender,isCelebritySender,isUserReceiver,isCelebrityReceiver)
+
+// if(isUserSender){
+//     let isMessageReceived = await userDetails.findOne({_id:mongoose.Types.ObjectId(senderId)},{messageReceived:true})
+//     if(isMessageReceived){
+//         await userDetails.updateOne({_id:mongoose.Types.ObjectId(senderId)},{$set:{messageReceived:false}}).then((data)=>{
+//             console.log(data)
+//         })
+
+//         userDetails.updateOne({_id:mongoose.Types.ObjectId(senderId)},{$inc:{creditMessages:-1}})
+//     }else{
+//         console.log('not message received***')
+//         await userDetails.updateOne({_id:mongoose.Types.ObjectId(senderId)},{$set:{messageSent:true}}).then((data)=>{
+//             console.log(data)
+//         })
+
+//         userDetails.updateOne({_id:mongoose.Types.ObjectId(senderId)},{$inc:{creditMessages:-1}})
+//     }
+// }else if(isCelebritySender){
+//     let isMessageReceived = await celebrityDetails.findOne({_id:mongoose.Types.ObjectId(senderId)},{messageReceived:true})
+//     if(isMessageReceived){
+//         await celebrityDetails.updateOne({_id:mongoose.Types.ObjectId(senderId)},{$set:{messageReceived:false}}).then((data)=>{
+//         console.log(data)
+//         })
+//         if(isCelebrityReceiver){
+//             celebrityDetails.updateOne({_id:mongoose.Types.ObjectId(senderId)},{$inc:{creditMessages:-1}}).then((data)=>{
+//                 console.log(data)
+//             })
+//         }
+//     }else{
+//         await celebrityDetails.updateOne({_id:mongoose.Types.ObjectId(senderId)},{$set:{messageSent:true}}).then((data)=>{
+//             console.log(data)
+//         })
+//         if(isCelebrityReceiver){
+//                 celebrityDetails.updateOne({_id:mongoose.Types.ObjectId(senderId)},{$inc:{creditMessages:-1}}).then((data)=>{
+//                 console.log(data)
+//             })
+//         }
+//     }
+// }
+
+// if(isUserReceiver){
+//     userDetails.updateOne({_id:mongoose.Types.ObjectId(receiverId)},{$set:{messageReceived:true}}).then((data)=>{
+//         console.log(data)
+//     })
+// }else if(isCelebrityReceiver){
+//     celebrityDetails.updateOne({_id:mongoose.Types.ObjectId(receiverId)},{$set:{messageReceived:true}}).then((data)=>{
+//         console.log(data)
+//     })
+// }

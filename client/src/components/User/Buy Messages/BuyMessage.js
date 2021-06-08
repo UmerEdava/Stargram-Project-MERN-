@@ -180,9 +180,26 @@ export default function BuyMessage() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Container maxWidth="sm" className="text-center" style={{paddingTop:"7rem"}}>
-        <h5 className="text-left" >Buy Message Credit</h5>
-        <RadioGroup aria-label="messagePack" name="messagePack" value={messagePack} onChange={handleChange}>
+      <Container maxWidth="sm" className="text-center" style={{paddingTop:"6rem"}}>
+        
+        <div>
+          <h5 className="text-left" style={{marginBottom:'2rem'}} >Buy Message Credit</h5>
+          <h5 className='text-left font-weight-bold'>Invite friends to Stargram</h5>
+          <p className='text-left' style={{fontSize:'18px'}}>You'll earn free message credit when they signup on Stargram</p>
+          <div style={{marginBottom:'1.5rem'}}>
+          <input id='promoCodeField' type='text' className='form-control' placeholder='Promo Code'></input>
+          <Button
+            variant='contained'
+            color='primary'
+            id='promoCodeButton'
+            >
+              Redeem
+          </Button>
+          </div>
+          <hr/>
+        </div>
+
+        <RadioGroup aria-label="messagePack" style={{marginTop:'1.5rem'}} name="messagePack" value={messagePack} onChange={handleChange}>
 
         <Card className={classes.root} id='messagePackCard1'>
           {/* <CardContent> */}
@@ -231,7 +248,7 @@ export default function BuyMessage() {
 
     </RadioGroup>
 
-    <Button variant="contained" className="mt-5 mb-5" onClick={displayRazorpay} style={{width:"11rem"}} color="primary">
+    <Button variant="contained" className="mt-5 mb-5" onClick={displayRazorpay} style={{width:"11rem",backgroundColor:'#3a86fe'}} color="primary">
       Continue
     </Button>
 
