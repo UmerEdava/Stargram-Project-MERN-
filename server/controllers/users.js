@@ -1185,6 +1185,26 @@ export const getOldChat = async (req,res) => {
     }
 }
 
+export const addToFavourites = async(req,res) => {
+    console.log('message id',req.body)
+    let messageId = req.body.messageId
+    let userId = req.body.userId
+
+    let user = await userDetails.findOne({_id:mongoose.Types.ObjectId(userId)})
+    let star = await celebrityDetails.findOne({_id:mongoose.Types.ObjectId(userId)})
+    
+    if(user) {
+        userDetails.updateOne({_id:mongoose.Types.ObjectId(userId)},{$push:{
+            favourites:messageId
+        }})
+    }else if(star) {
+        celebrityDetails.updateOne({_id:mongoose.Types.ObjectId(userId)},{$push:{
+            favourites:messageId
+        }})
+    }
+    
+}
+
 // export const addPost = (req,res) => {
 //     try {
 //         console.log('yes in here');

@@ -27,7 +27,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-
+import ShareIcon from '@material-ui/icons/Share';
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -65,6 +65,18 @@ export default function Chatbox() {
   
     const handleClose = () => {
       setOpen(false);
+    };
+
+    const [shareAlertOpen, setShareAlertOpen] = useState(false);
+    const [selectedToFavourites, setSelectedToFavourites] = useState()
+
+    const handleShareClickOpen = (messageId) => {
+      setShareAlertOpen(true);
+      setSelectedToFavourites(messageId)
+    };
+
+    const handleShareAlertClose = () => {
+      setShareAlertOpen(false);
     };
 
 
@@ -169,60 +181,6 @@ export default function Chatbox() {
       
       let chatBody = document.getElementById('chatBody')
 
-      // let chatVideo = document.getElementsByClassName('chatVideo')
-      // chatVideo.style.display = 'block'
-      // chatVideo.src = data 
-
-      let video = document.createElement("video");
-      let outer = document.createElement("div");
-      let bubble = document.createElement("div");
-      let dateText = document.createElement("p");
-      
-      video.classList.add('chatVideo');
-      outer.classList.add('outer');
-      dateText.classList.add('dateText');
-      bubble.classList.add('bubble');
-
-      video.src = message.msg
-      dateText.textContent = message.date
-      video.onclick = function(event) {
-        video.requestFullscreen();
-        video.play();
-      }
-      
-      video.addEventListener(
-        'fullscreenchange',
-        function(event) {
-          if (!document.fullscreenElement) {
-            video.pause();
-          }
-        },
-        false
-      );
-
-      outer.appendChild(video)
-      // chatBody.append(outer)
-      // chatBody.appendChild(dateText) 
-      bubble.appendChild(outer)
-      bubble.appendChild(dateText)
-      chatBody.append(bubble)
-
-      var elem = document.getElementById('chatBody'); 
-      elem.scrollTop = elem.scrollHeight;
-    });
-    
-    }, [])
-
-    useEffect(() => {
-      axios.post(server+'/getOldChat',{
-        thisUser:userId,
-        otherUser:starId
-      }).then((response)=>{
-        console.log('oldChat',response.data)
-        
-        if(response.data.oldChat){
-          let chatBody = document.getElementById('chatBody')
-
           // let chatVideo = document.getElementsByClassName('chatVideo')
           // chatVideo.style.display = 'block'
           // chatVideo.src = data 
@@ -235,6 +193,7 @@ export default function Chatbox() {
             let bubble = document.createElement("div");
             let shareContainer = document.createElement("div")
             let downloadContainer = document.createElement("div")
+            let optionsDiv = document.createElement("div")
             let dateText = document.createElement("p");
             
             video.classList.add('chatVideo');
@@ -242,8 +201,8 @@ export default function Chatbox() {
               outer.classList.add('outerLeft')
               dateText.classList.add('dateTextLeft');
 
-              shareContainer.classList.add('shareContainer')
-              downloadContainer.classList.add('downloadContainer')
+              // shareContainer.classList.add('shareContainer')
+              // downloadContainer.classList.add('downloadContainer')
 
             }else if(message.sender == userId){
               outer.classList.add('outer');
@@ -273,10 +232,120 @@ export default function Chatbox() {
             // chatBody.append(outer)
             // chatBody.appendChild(dateText) 
             bubble.appendChild(outer)
-            bubble.appendChild(shareContainer)
-            bubble.appendChild(downloadContainer)
+            optionsDiv.appendChild(shareContainer)
+            optionsDiv.appendChild(downloadContainer)
+            bubble.appendChild(optionsDiv)
+            // bubble.appendChild(shareContainer)
+            // bubble.appendChild(downloadContainer)
             bubble.appendChild(dateText)
             chatBody.append(bubble)
+  
+            var elem = document.getElementById('chatBody'); 
+            elem.scrollTop = elem.scrollHeight;
+          })
+    });
+    
+    }, [])
+
+    useEffect(() => {
+      axios.post(server+'/getOldChat',{
+        thisUser:userId,
+        otherUser:starId
+      }).then((response)=>{
+        console.log('oldChat',response.data)
+        
+        if(response.data.oldChat){
+          let chatBody = document.getElementById('chatBody')
+
+          // let chatVideo = document.getElementsByClassName('chatVideo')
+          // chatVideo.style.display = 'block'
+          // chatVideo.src = data 
+
+          let oldChat = response.data.oldChat
+
+          oldChat.map((message,index)=>{
+            let video = document.createElement("video");
+            let outer = document.createElement("div");
+            let bubble = document.createElement("div");
+            let shareContainer = document.createElement("div")
+            let downloadContainer = document.createElement("div")
+            let optionsDiv = document.createElement("div")
+            let dateText = document.createElement("p");
+            let share = document.createElement("i")
+            let download = document.createElement("i")        
+            
+            shareContainer.addEventListener('click',(e)=>{
+              handleShareClickOpen(message._id)
+            })
+
+            shareContainer.classList.add('shareContainer')
+            downloadContainer.classList.add('downloadContainer')
+            share.classList.add('fas', 'fa-share-alt');
+            share.classList.add('shareIcon')
+            download.classList.add('fas', 'fa-arrow-down')
+            download.classList.add('downloadIcon')
+            
+            video.classList.add('chatVideo');
+            if(message.sender == starId){
+              outer.classList.add('outerLeft')
+              dateText.classList.add('dateTextLeft');
+
+              optionsDiv.classList.add('optionsDiv')
+
+            }else if(message.sender == userId){
+              outer.classList.add('outer');
+              dateText.classList.add('dateText'); 
+              optionsDiv.classList.add('optionsDivRight')
+
+            }
+            
+            bubble.classList.add('bubble');
+  
+            video.src = `${server}/chatVideos/${message._id}.mp4`
+            dateText.textContent = message.date
+            video.onclick = function(event) {
+              video.requestFullscreen();
+              video.play();
+            }
+            
+            video.addEventListener(
+              'fullscreenchange',
+              function(event) {
+                if (!document.fullscreenElement) {
+                  video.pause();
+                }
+              },
+              false
+            );
+  
+            outer.appendChild(video)
+            // chatBody.append(outer)
+            // chatBody.appendChild(dateText) 
+            // if(message.sender == starId) {
+              bubble.appendChild(outer)
+              shareContainer.appendChild(share)
+              downloadContainer.appendChild(download)
+              optionsDiv.appendChild(shareContainer)
+              optionsDiv.appendChild(downloadContainer)
+              bubble.appendChild(optionsDiv)
+              // bubble.appendChild(shareContainer)
+              // bubble.appendChild(downloadContainer)
+              bubble.appendChild(dateText)
+              chatBody.append(bubble)
+            // }else if(message.sender == userId) {
+            //   shareContainer.appendChild(share)
+            //   downloadContainer.appendChild(download)
+            //   optionsDiv.appendChild(shareContainer)
+            //   optionsDiv.appendChild(downloadContainer)
+            //   bubble.appendChild(optionsDiv)
+            //   bubble.appendChild(outer)
+            //   // bubble.appendChild(shareContainer)
+            //   // bubble.appendChild(downloadContainer)
+            //   bubble.appendChild(dateText)
+            //   chatBody.append(bubble)
+            // }
+            
+            
   
             var elem = document.getElementById('chatBody'); 
             elem.scrollTop = elem.scrollHeight;
@@ -573,8 +642,15 @@ export default function Chatbox() {
     //   // Other browsers will fall back to image/png
     //   img.src = canvas.toDataURL("image/webp");
     // }; 
-    
 
+    function addToFavourites () {
+      axios.post(server+'/addToFavourites',{
+        messageId:selectedToFavourites,
+      }).then((response) => {
+        console.log(response)
+      })
+    }
+    
     return (
         
         <div style={{paddingTop: '3.53rem'}}>        
@@ -707,6 +783,28 @@ export default function Chatbox() {
                     Close
                 </Button>
                 </DialogActions>
+            </Dialog>
+
+            {/* Share alert popup */}
+            <Dialog
+              open={shareAlertOpen}
+              onClose={handleShareAlertClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description" style={{color:'black',fontWeight:'600'}}>
+                  Do you want to share this message to your profile?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleShareAlertClose} color="primary" style={{color:'black'}}>
+                  Cancel
+                </Button>
+                <Button  color="primary" onClick={addToFavourites} autoFocus style={{color:'black'}}>
+                  Share
+                </Button>
+              </DialogActions>
             </Dialog>
 
         </div>

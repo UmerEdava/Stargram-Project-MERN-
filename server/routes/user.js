@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 
 import {home,getLogin,userSignup,checkExisting,sendOTP,addProfilePic,verifyOTP,googleSignup,googleLogin,profile,getUserDetails} from '../controllers/users.js'
 import {changeProfilePic,changeUserDetails,buyMessages,paymentSuccess,addCredit,sendCelebrityOTP,verifyCelebrityOTP} from '../controllers/users.js';
-import {checkCelebrityExisting,checkMessageSent,getOldChat,getUserDetailsAndIdentification,forgotPasswordNumber,makeMessageSentAndReceived,checkCelebrityVerification,addImage,checkVerified,getAllVerifiedCelebrities,getCelebrityDetails,follow,unFollow,search} from '../controllers/users.js';
+import {checkCelebrityExisting,addToFavourites,checkMessageSent,getOldChat,getUserDetailsAndIdentification,forgotPasswordNumber,makeMessageSentAndReceived,checkCelebrityVerification,addImage,checkVerified,getAllVerifiedCelebrities,getCelebrityDetails,follow,unFollow,search} from '../controllers/users.js';
 
 const router = express.Router();
 
@@ -74,5 +74,6 @@ router.post('/makeMessageSentAndReceived', verifyJWT, makeMessageSentAndReceived
 router.post('/forgotPasswordNumber', verifyJWT, forgotPasswordNumber)
 router.get('/getUserDetailsAndIdentification', verifyJWT, getUserDetailsAndIdentification)
 router.post('/getOldChat', getOldChat)
+router.post('/addToFavourites', addToFavourites)
  
 export default router; 

@@ -73,7 +73,7 @@
     left: 0px;
     top: 0;
     opacity: 1;
-    width: 17rem;
+    width: 19rem;
 }
 .outer {
     width: 20vw;
@@ -83,8 +83,7 @@
     position: relative;
     margin-bottom: 32px;
     margin: 1rem;
-    /* float: right; */
-    margin-left: 56%;
+    /* margin-left: 56%; */
     float: right;
 }
 .outerLeft {
@@ -98,7 +97,6 @@
     /* float: right; */
     margin-left: 4%;
     display: inline-block;
-    float: left;
 }
 .dateText {
     float: right;
@@ -106,16 +104,17 @@
     color: #9c9c9c;
     margin-top: -15px;
     margin-right: 2rem;
+    margin-left: 16rem
 }
 .dateTextLeft {
-    float: left;
     font-size: 13px;
     color: #9c9c9c;
-    margin-top: -15px;
+    margin-top: -22px;
     margin-left: 2rem;
 }
 .bubble{
-    margin-bottom: 3rem;
+    margin-bottom: 0rem;
+    width: 100%;
 }
 #alertMessage{
     color: rgb(247 247 247);
@@ -132,21 +131,43 @@
     height: 2rem;
     width: 2rem;
     background-color: white;
-    display: inline-block;
     border-radius: 50%;
-    position: absolute;
     margin-top: 5rem;
-    margin-left: 0rem;
+    margin-bottom: 1rem;
+    /* position: absolute;
+    margin-top: 5rem;
+    margin-left: 0rem; */
+}
+.optionsDiv {
+    display: inline-block;
+    position: absolute;
+}
+.optionsDivRight {
+    /* display: inline-block;
+    position: absolute; */
+    float: right;
 }
 .downloadContainer{
     height: 2rem;
     width: 2rem;
     background-color: white;
-    display: inline-block;
+    
     border-radius: 50%;
-    position: absolute;
+    /* position: absolute;
     margin-top: 49rem;
-    margin-left: 0rem;
+    margin-left: 0rem; */
+}
+.shareIcon{
+    line-height: 2rem;
+    margin-left: 7px;
+    color: #4e4d4d;
+    cursor: pointer;
+}
+.downloadIcon{
+    line-height: 2rem;
+    margin-left: 9px;
+    color: #4e4d4d;
+    cursor: pointer;
 }
 @media only screen and (max-width: 600px){
 	/*Big smartphones [426px -> 600px]*/
@@ -188,6 +209,16 @@
             left: 35%;
         }
 }
+@media only screen and (max-width: 753px){
+    .dateText{
+        margin-left: 10rem;
+    }
+}
+/* @media only screen and (min-width: 1365px){
+    .chatVideo{
+        width: 19rem;
+    }
+} */
 /* video::-webkit-media-controls {
     display:none !important;
 } */

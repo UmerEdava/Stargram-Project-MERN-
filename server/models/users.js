@@ -40,7 +40,8 @@ const userSchema = mongoose.Schema({
     wallet: {
         type: Number,
         default: 0
-    }
+    },
+    favourites: Array
 })
 
 const celebritySchema = mongoose.Schema({
@@ -83,7 +84,8 @@ const celebritySchema = mongoose.Schema({
     wallet: {
         type: Number,
         default: 0
-    }
+    },
+    favourites: Array
 })
 
 const chatSchema = mongoose.Schema({
